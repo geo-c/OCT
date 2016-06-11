@@ -1,0 +1,9 @@
+{
+  "name": "OCT-Core",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "express": "~4.2.0"
+  },
+  "devDependencies": {}
+}

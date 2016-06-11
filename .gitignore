@@ -1,2 +1,4 @@
-
+node_modules/*
+public/docs/*
+public/api/*
 .DS_Store
