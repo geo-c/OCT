@@ -83,11 +83,11 @@ if(db_settings.status && email_settings.status){
 
     // Load dependencies
     var signup = require ('./routes/signup');
-    var login = require ('./routes/login');
+    var reset = require ('./routes/reset');
 
     // Load Routes
     app.use('/api', signup);
-    app.use('/api', login);
+    app.use('/api', reset);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");

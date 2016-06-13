@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-var post = require('../controllers/login');
+var post = require('../controllers/reset');
 
 
-// LOGIN
-router.post('/login', post.request);
+// RESET
+router.post('/reset', post.request);
 
 
 module.exports = router;
