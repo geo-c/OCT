@@ -6,7 +6,7 @@ var db_settings = require('../server.js').db_settings;
 var errors = require('./../config/errors');
 
 var Ajv = require('ajv');
-var schema = require('./../models/login');
+var schema = require('./../models/query');
 var ajv = Ajv({"format": "full"});
 var validate = ajv.compile(schema);
 
@@ -33,7 +33,7 @@ exports.request = function(req, res){
                 // - Log app_name in Logs-Table
                 // - Find results for query
             }
-            
+
         });
     }
 };
