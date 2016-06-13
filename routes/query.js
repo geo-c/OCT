@@ -5,7 +5,7 @@ var post = require('../controllers/query');
 
 
 // LOGIN
-router.post('/query', post.request);
+router.get('/query', post.request);
 
 
 module.exports = router;
