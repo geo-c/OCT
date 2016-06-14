@@ -10,10 +10,11 @@ var schema = require('./../models/query');
 var ajv = Ajv({"format": "full"});
 var validate = ajv.compile(schema);
 
-var CouchDB_Client = require('../controllers/CouchDB_Client.js');
-var EnviroCar_Client = require('../controllers/EnviroCar_Client.js');
-var Postgres_Client = require('../controllers/Postgres_Client.js');
-var Sparql_Client = require('../controllers/Sparql_Client.js');
+var CouchDB_Client = require('../controllers/connectors/CouchDB_Client.js');
+var EnviroCar_Client = require('../controllers/connectors/EnviroCar_Client.js');
+var Postgres_Client = require('../controllers/connectors/Postgres_Client.js');
+var Sparql_Client = require('../controllers/connectors/Sparql_Client.js');
+
 
 // POST
 exports.request = function(req, res){
@@ -64,7 +65,7 @@ exports.request = function(req, res){
                                             return console.error(errors.database.error_2.message, err);
                                         }*/
                                     });
-                                    
+
 
 
                                     var Answer = {
