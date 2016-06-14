@@ -34,8 +34,10 @@ exports.request = function(req, res){
                 res.status(errors.authentication.error_1.code).send(errors.authentication.error_1);
                 return console.error(errors.authentication.error_1.message);
             } else {
+
                 var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
+                // Connect to Database
                 pg.connect(url, function(err, client, done) {
                     if (err) {
                         res.status(errors.database.error_1.code).send(errors.database.error_1);
@@ -59,73 +61,81 @@ exports.request = function(req, res){
                                     console.error(errors.query.error_1.message);
                                 } else {
 
-                                    // Prepare result
+                                    // Prepare Result
                                     var app = result.rows[0];
+
+                                    // Logging
                                     client.query('INSERT INTO Logs VALUES($1, now());', [
                                         decoded.app_name
                                     ], function(err, result) {
-                                        /* if (err) {
+                                        if (err) {
                                             res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                             return console.error(errors.database.error_2.message, err);
-                                        }*/
-                                    });
+                                        } else {
 
+                                            // Prepare Connectors
+                                            var Answer = {
+                                                enviroCar: {
+                                                    time: 0,
+                                                    count: 0,
+                                                    data: []
+                                                },
+                                                postgres: {
+                                                    time: 0,
+                                                    count: 0,
+                                                    data: []
+                                                },
+                                                parliament: {
+                                                    time: 0,
+                                                    count: 0,
+                                                    data: []
+                                                },
+                                                couchDB: {
+                                                    time: 0,
+                                                    count: 0,
+                                                    data: []
+                                                }
+                                            };
+                                            var answerCount = 0;
 
-                                    var Answer = {
-                                        enviroCar: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
-                                        },
-                                        postgres: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
-                                        },
-                                        parliament: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
-                                        },
-                                        couchDB: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
+                                            // EnviroCar
+                                            var enviroCar_Client = new EnviroCar_Client();
+                                            enviroCar_Client.query("sensors", function(data) {
+                                                Answer.enviroCar.time = (Date.now() - time) / 1000 + " s";
+                                                Answer.enviroCar.data = data.results;
+                                                answerCount += 1;
+                                                finish(res, Answer, answerCount, 1);
+                                            });
+
+                                            // PostgreSQL
+                                            var postgres_Client = new Postgres_Client(url);
+                                            // postgres_Client.setURL(url);
+                                            postgres_Client.query('SELECT logs."timestamp", logs.app_name FROM public.logs;', [], function(result) {
+                                                Answer.postgres.time = (Date.now() - time) / 1000 + " s";
+                                                Answer.postgres.data = result.parseRowsByColNames("Datasets").Datasets;
+                                                answerCount += 1;
+                                                finish(res, Answer, answerCount, 1);
+                                            });
+
+                                            // Parliament
+                                            var sparql_Client = new Sparql_Client();
+                                            sparql_Client.query("SELECT ?p ?o { <http://vocab.lodcom.de/muenster> ?p ?o }", function(result) {
+                                                Answer.parliament.time = (Date.now() - time) / 1000 + " s";
+                                                Answer.parliament.data = result;
+                                                answerCount += 1;
+                                                finish(res, Answer, answerCount, 1);
+                                            });
+
+                                            // CouchDB
+                                            var couchDB_Client = new CouchDB_Client();
+                                            couchDB_Client.query(function (result) {
+                                                Answer.couchDB.time = (Date.now()-time) / 1000 + " s";
+                                                Answer.couchDB.data = result;
+                                                answerCount += 1;
+                                                finish(res, Answer, answerCount, 1);
+                                            });
+
                                         }
-                                    };
-                                    var answerCount = 0;
-                                    //Envirocar
-                                    var enviroCar_Client = new EnviroCar_Client();
-                                    enviroCar_Client.query("sensors", function(data) {
-                                        Answer.enviroCar.time = (Date.now() - time) / 1000 + " s";
-                                        Answer.enviroCar.data = data.results;
-                                        answerCount += 1;
-                                        finish(res, Answer, answerCount, 1);
-                                    });
-                                    //postgres
-                                    var postgres_Client = new Postgres_Client(url);
-                                    //postgres_Client.setURL(url);
-                                    postgres_Client.query('SELECT logs."timestamp", logs.app_name FROM public.logs;', [], function(result) {
-                                        Answer.postgres.time = (Date.now() - time) / 1000 + " s";
-                                        Answer.postgres.data = result.parseRowsByColNames("Datasets").Datasets;
-                                        answerCount += 1;
-                                        finish(res, Answer, answerCount, 1);
-                                    });
-                                    //parliament
-                                    var sparql_Client = new Sparql_Client();
-                                    sparql_Client.query("SELECT ?p ?o { <http://vocab.lodcom.de/muenster> ?p ?o }", function(result) {
-                                        Answer.parliament.time = (Date.now() - time) / 1000 + " s";
-                                        Answer.parliament.data = result;
-                                        answerCount += 1;
-                                        finish(res, Answer, answerCount, 1);
-                                    });
-                                    //CouchDB
-                                    var couchDB_Client = new CouchDB_Client();
-                                    couchDB_Client.query(function (result) {
-                                        Answer.couchDB.time = (Date.now()-time) / 1000 + " s";
-                                        Answer.couchDB.data = result;
-                                        answerCount += 1;
-                                        finish(res, Answer, answerCount, 1);
                                     });
                                 }
                             }
