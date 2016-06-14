@@ -18,7 +18,10 @@ var Sparql_Client = require('../controllers/connectors/Sparql_Client.js');
 
 // POST
 exports.request = function(req, res){
+
+    // Create timestamp
     var time = Date.now();
+
     // Check if Header contains Access-Token
     if(!req.headers.authorization || req.headers.authorization === ""){
         res.status(errors.authentication.error_2.code).send(errors.authentication.error_2);
@@ -38,6 +41,7 @@ exports.request = function(req, res){
                         res.status(errors.database.error_1.code).send(errors.database.error_1);
                         return console.error(errors.database.error_1.message, err);
                     } else {
+
                         // Database Query
                         client.query('SELECT * FROM Apps WHERE app_name=$1;', [
                             decoded.app_name
@@ -67,7 +71,6 @@ exports.request = function(req, res){
                                     });
 
 
-
                                     var Answer = {
                                         enviroCar: {
                                             time: 0,
@@ -92,7 +95,7 @@ exports.request = function(req, res){
                                     };
                                     var answerCount = 0;
                                     //Envirocar
-                                    var enviroCar_Client = new EnviroCar_Client;
+                                    var enviroCar_Client = new EnviroCar_Client();
                                     enviroCar_Client.query("sensors", function(data) {
                                         Answer.enviroCar.time = (Date.now() - time) / 1000 + " s";
                                         Answer.enviroCar.data = data.results;
@@ -109,7 +112,7 @@ exports.request = function(req, res){
                                         finish(res, Answer, answerCount, 1);
                                     });
                                     //parliament
-                                    var sparql_Client = new Sparql_Client;
+                                    var sparql_Client = new Sparql_Client();
                                     sparql_Client.query("SELECT ?p ?o { <http://vocab.lodcom.de/muenster> ?p ?o }", function(result) {
                                         Answer.parliament.time = (Date.now() - time) / 1000 + " s";
                                         Answer.parliament.data = result;
@@ -117,7 +120,7 @@ exports.request = function(req, res){
                                         finish(res, Answer, answerCount, 1);
                                     });
                                     //CouchDB
-                                    var couchDB_Client = new CouchDB_Client;
+                                    var couchDB_Client = new CouchDB_Client();
                                     couchDB_Client.query(function (result) {
                                         Answer.couchDB.time = (Date.now()-time) / 1000 + " s";
                                         Answer.couchDB.data = result;
@@ -129,19 +132,20 @@ exports.request = function(req, res){
                         });
                     }
                 });
-
-                // TODO:
-                // - Find app_name in Apps-Table
-                // - Log app_name in Logs-Table
-                // - Find results for query
             }
-
         });
     }
 };
 
+
+/**
+ * Check
+ * @param  {number} count
+ * @param  {number} maximum
+ * @return {boolean} true or false
+ */
 var check = function (count, max) {
-    max = max*4
+    max = max*4;
     if(count == max) {
         return true;
     } else {
@@ -149,6 +153,10 @@ var check = function (count, max) {
     }
 };
 
+
+/**
+ * Finish
+ */
 var finish = function (res, Answer, answerCount, max) {
     if(check(answerCount, max)) {
         Answer.enviroCar.count = Answer.enviroCar.data.length;
