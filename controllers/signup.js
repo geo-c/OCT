@@ -42,15 +42,13 @@ exports.request = function(req, res) {
 				// Create Access-Token
 				accessToken = jwt.sign({
 					app_name: req.body.app_name
-				}, secret.key, {
-					expiresIn: 1440 // expires in 24 hours
-				});
-
+				}, secret.key);
+				
 	            // Database Query
 	            client.query('INSERT INTO Apps VALUES(now(), now(), $1, $2, $3, $4, $5, $6);', [
 	                req.body.app_name,
-	                req.body.app_description,
 	                accessToken,
+	                req.body.app_description,
 	                req.body.email_address,
 	                req.body.first_name,
 	                req.body.last_name
