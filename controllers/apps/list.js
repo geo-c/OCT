@@ -34,14 +34,13 @@ exports.request = function(req, res) {
                     } else {
 
                         // Database Query
-                        client.query('SELECT * FROM Apps;', function(err, result) {
+                        client.query('SELECT apps.app_name, apps.app_description, (SELECT COUNT(*) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS Calls FROM public.apps;', function(err, result) {
                             done();
 
                             if (err) {
                                 res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                 return console.error(errors.database.error_2.message, err);
                             } else {
-
                                 // Send Result
                                 res.status(200).send(result.rows);
                             }

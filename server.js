@@ -69,6 +69,13 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
+//Allow cross origin
+app.use( function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 // Set folder for static files (WebClient)
 app.use(express.static(__dirname + '/public'));
 
