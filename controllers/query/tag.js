@@ -57,15 +57,16 @@ exports.request = function(req, res){
                             // Prepare Result
                             var app = result.rows[0];
                             // Logging
-                            client.query('INSERT INTO Logs VALUES($1, now());', [
-                                accessToken
+                            client.query('INSERT INTO Logs VALUES($1, now(), $2, NULL);', [
+                                accessToken,
+                                2
                             ], function(err, result) {
                                 if (err) {
                                     res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                     return console.error(errors.database.error_2.message, err);
                                 } else {
-                                    client.query('SELECT tags.tag_name, queries.query_intern, queries.query_extern, queries.query_description, sub_datasets.sd_name, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance FROM public.tags INNER JOIN public.sub_datasets ON tags.sd_id=sub_datasets.sd_id INNER JOIN public.queries ON tags.sd_id=queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id WHERE tags.tag_name=$1;', [
-                                        req.params.tag
+                                    client.query('SELECT tags.tag_name, queries.query_intern, queries.query_extern, queries.query_description, sub_datasets.sd_name, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance FROM public.tags INNER JOIN public.sub_datasets ON tags.sd_id=sub_datasets.sd_id INNER JOIN public.queries ON tags.sd_id=queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id INNER JOIN categories_relationships ON categories_relationships.md_id=main_datasets.md_id WHERE tags.tag_name=$1;', [
+                                        req.params.tag_name
                                     ], function(err, result) {
                                         if(err) {
                                             console.log(err);
@@ -73,6 +74,7 @@ exports.request = function(req, res){
                                             if(result.rows.length === 0) {
                                                 console.log("No entry for this tag");
                                             } else {
+                                                res.status(201).send(result.rows);
                                                 var Answers = {
                                                     searched_Tag: req.params ,
                                                     results: []
@@ -110,9 +112,11 @@ exports.request = function(req, res){
                                                             _url = "postgres://" + result.rows[index].db_user + ":" + result.rows[index].db_password + "@" + result.rows[index].db_host + ":" + result.rows[index].db_port + "/" + result.rows[index].db_instance;
                                                             var postgres_Client = new Postgres_Client(url);
                                                             // postgres_Client.setURL(url);
-                                                            postgres_Client.query(result.rows[index].query_intern, [], function(_result, err) {
+                                                            /*postgres_Client.query(result.rows[index].query_intern, [], function(_result, err) {
                                                                 if(err) {
-                                                                    console.log(err);
+                                                                    //console.log(err);
+                                                                    answerCount += 1;
+                                                                    finish(res, Answers, answerCount, result.rows.length+1);
                                                                 } else {
                                                                     Result = {
                                                                         preview: _result.parseRowsByColNames("Datasets").Datasets,
@@ -127,7 +131,7 @@ exports.request = function(req, res){
                                                                     answerCount += 1;
                                                                     finish(res, Answers, answerCount, result.rows.length+1);
                                                                 }
-                                                            });
+                                                            });*/
                                                             break;
 
                                                         default:
@@ -197,6 +201,8 @@ var check = function (count, max) {
  * Finish
  */
 var finish = function (res, Answers, answerCount, max) {
+    console.log(answerCount);
+    console.log(max);
     if(check(answerCount, max)) {
         res.status(201).send(Answers);
     }

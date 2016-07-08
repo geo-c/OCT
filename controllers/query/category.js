@@ -57,40 +57,92 @@ exports.request = function(req, res){
                             // Prepare Result
                             var app = result.rows[0];
                             // Logging
-                            client.query('INSERT INTO Logs VALUES($1, now());', [
-                                accessToken
+                            client.query('INSERT INTO Logs VALUES($1, now(), NULL, $2);', [
+                                accessToken,
+                                1
                             ], function(err, result) {
                                 if (err) {
                                     res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                     return console.error(errors.database.error_2.message, err);
                                 } else {
+                                    client.query('SELECT categories.catgegory_name, queries.query_intern, queries.query_extern, queries.query_description, sub_datasets.sd_name, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance FROM public.sub_datasets INNER JOIN public.queries ON sub_datasets.sd_id=queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id INNER JOIN categories_relationships ON categories_relationships.md_id=main_datasets.md_id INNER JOIN categories ON categories.category_id=categories_relationships.category_id WHERE categories.catgegory_name=$1;', [
+                                        req.params.category_name
+                                    ], function(err, result) {
+                                        if(err) {
+                                            console.log(err);
+                                        } else {
+                                            if(result.rows.length === 0) {
+                                                console.log("No entry for this category");
+                                            } else {
+                                                res.status(201).send(result.rows);
+                                                var Answers = {
+                                                    searched_Tag: req.params ,
+                                                    results: []
+                                                };
+                                                var answerCount = 0;
+                                                for(index in result.rows) {
+                                                    console.log(result.rows[index]);
+                                                    // Prepare Connectors
+                                                    var Answer = {
+                                                        enviroCar: {
+                                                            time: 0,
+                                                            count: 0,
+                                                            data: []
+                                                        },
+                                                        postgres: {
+                                                            time: 0,
+                                                            count: 0,
+                                                            data: []
+                                                        },
+                                                        parliament: {
+                                                            time: 0,
+                                                            count: 0,
+                                                            data: []
+                                                        },
+                                                        couchDB: {
+                                                            time: 0,
+                                                            count: 0,
+                                                            data: []
+                                                        }
+                                                    };
 
-                                    // Prepare Connectors
-                                    var Answer = {
-                                        enviroCar: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
-                                        },
-                                        postgres: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
-                                        },
-                                        parliament: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
-                                        },
-                                        couchDB: {
-                                            time: 0,
-                                            count: 0,
-                                            data: []
+                                                    switch(result.rows[index].ds_type) {
+                                                        case("POSTGRESQL"):
+                                                            // PostgreSQL
+                                                            _url = "postgres://" + result.rows[index].db_user + ":" + result.rows[index].db_password + "@" + result.rows[index].db_host + ":" + result.rows[index].db_port + "/" + result.rows[index].db_instance;
+                                                            var postgres_Client = new Postgres_Client(url);
+                                                            // postgres_Client.setURL(url);
+                                                            /*postgres_Client.query(result.rows[index].query_intern, [], function(_result, err) {
+                                                                if(err) {
+                                                                    //console.log(err);
+                                                                    answerCount += 1;
+                                                                    finish(res, Answers, answerCount, result.rows.length+1);
+                                                                } else {
+                                                                    Result = {
+                                                                        preview: _result.parseRowsByColNames("Datasets").Datasets,
+                                                                        query: result.rows[index].query_intern,
+                                                                        query_description: result.rows[index].query_description,
+                                                                        sd_name: result.rows[index].sd_name,
+                                                                        sd_description: result.rows[index].sd_description,
+                                                                        md_name: result.rows[index].md_name,
+                                                                        md_description: result.rows[index].md_description
+                                                                    }
+                                                                    Answers.results.push(Result);
+                                                                    answerCount += 1;
+                                                                    finish(res, Answers, answerCount, result.rows.length+1);
+                                                                }
+                                                            });*/
+                                                            break;
+
+                                                        default:
+                                                            console.log("unknown Database");
+                                                            break;
+                                                    }
+                                                }
+                                            }
                                         }
-                                    };
-                                    var answerCount = 0;
-
-                                    // EnviroCar
+                                    });
+                                    /*// EnviroCar
                                     var enviroCar_Client = new EnviroCar_Client();
                                     enviroCar_Client.query("sensors", function(data) {
                                         Answer.enviroCar.time = (Date.now() - time) / 1000 + " s";
@@ -99,15 +151,7 @@ exports.request = function(req, res){
                                         finish(res, Answer, answerCount, 1);
                                     });
 
-                                    // PostgreSQL
-                                    var postgres_Client = new Postgres_Client(url);
-                                    // postgres_Client.setURL(url);
-                                    postgres_Client.query('SELECT logs."timestamp" FROM public.logs;', [], function(result) {
-                                        Answer.postgres.time = (Date.now() - time) / 1000 + " s";
-                                        Answer.postgres.data = result.parseRowsByColNames("Datasets").Datasets;
-                                        answerCount += 1;
-                                        finish(res, Answer, answerCount, 1);
-                                    });
+                                    
 
                                     // Parliament
                                     var sparql_Client = new Sparql_Client();
@@ -125,7 +169,7 @@ exports.request = function(req, res){
                                         Answer.couchDB.data = result;
                                         answerCount += 1;
                                         finish(res, Answer, answerCount, 1);
-                                    });
+                                    });*/
 
                                 }
                             });
@@ -145,7 +189,6 @@ exports.request = function(req, res){
  * @return {boolean} true or false
  */
 var check = function (count, max) {
-    max = max*4;
     if(count == max) {
         return true;
     } else {
@@ -157,12 +200,10 @@ var check = function (count, max) {
 /**
  * Finish
  */
-var finish = function (res, Answer, answerCount, max) {
+var finish = function (res, Answers, answerCount, max) {
+    console.log(answerCount);
+    console.log(max);
     if(check(answerCount, max)) {
-        Answer.enviroCar.count = Answer.enviroCar.data.length;
-        Answer.parliament.count = Answer.parliament.data.length;
-        Answer.postgres.count = Answer.postgres.data.length;
-        Answer.couchDB.count = Answer.couchDB.data.length;
-        res.status(201).send(Answer);
+        res.status(201).send(Answers);
     }
 };

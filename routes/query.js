@@ -6,8 +6,8 @@ var queryCategory = require('../controllers/query/category');
 
 
 // Query
-router.get('/query/tag/:tag', queryTag.request);
+router.get('/query/tag/:tag_name', queryTag.request);
 
-router.get('/query/category/:category', queryCategory.request);
+router.get('/query/category/:category_name', queryCategory.request);
 
 module.exports = router;

@@ -34,15 +34,37 @@ exports.request = function(req, res) {
                     } else {
 
                         // Database Query
-                        client.query('SELECT apps.app_hash, apps.app_name, apps.app_description, (SELECT COUNT(*) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS Calls FROM public.apps;', function(err, result) {
+                        client.query('SELECT * FROM Apps WHERE app_hash=$1;', [
+                            req.params.app_hash
+                        ], function(err, result) {
                             done();
-
                             if (err) {
                                 res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                 return console.error(errors.database.error_2.message, err);
                             } else {
-                                // Send Result
-                                res.status(200).send(result.rows);
+
+                                // Check if App exists
+                                if (result.rows.length === 0) {
+                                    res.status(errors.query.error_1.code).send(errors.query.error_1);
+                                    console.error(errors.query.error_1.message);
+                                } else {
+
+                                    // Database Query
+                                    client.query('SELECT count(tags) AS count, tag_name FROM logs INNER JOIN tags on logs.tag_id=tags.tag_id WHERE app_hash=$1 GROUP BY tag_name;', [
+                                        req.params.app_hash
+                                    ], function(err, result) {
+                                        done();
+
+                                        if (err) {
+                                            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                                            return console.error(errors.database.error_2.message, err);
+                                        } else {
+
+                                            // Send Result
+                                            res.status(200).send(result.rows);
+                                        }
+                                    });
+                                }
                             }
                         });
                     }
@@ -50,5 +72,4 @@ exports.request = function(req, res) {
             /*}
         });
     }*/
-
 };
