@@ -34,11 +34,10 @@ exports.request = function(req, res) {
                     } else {
 
                         // Database Query
-                        client.query('SELECT * FROM Apps WHERE app_name=$1;', [
-                            req.params.app_name
+                        client.query('SELECT * FROM Apps WHERE app_hash=$1;', [
+                            req.params.app_hash
                         ], function(err, result) {
                             done();
-
                             if (err) {
                                 res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                 return console.error(errors.database.error_2.message, err);
@@ -51,8 +50,8 @@ exports.request = function(req, res) {
                                 } else {
 
                                     // Database Query
-                                    client.query('SELECT * FROM Logs WHERE app_name=$1;', [
-                                        req.params.app_name
+                                    client.query('SELECT * FROM Logs WHERE app_hash=$1;', [
+                                        req.params.app_hash
                                     ], function(err, result) {
                                         done();
 

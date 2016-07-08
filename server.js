@@ -54,7 +54,7 @@ var app = express();
 var server = require('http').createServer(app);
 
 // Set Server-Port
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 8081;
 server.listen(port, function () {
     console.log('Webserver is listening at port %d', port);
 });
@@ -94,6 +94,8 @@ if(db_settings.status && email_settings.status){
     var query = require('./routes/query');
     var apps = require('./routes/apps');
     var logs = require('./routes/logs');
+    var tags = require('./routes/tags');
+    var categories = require('./routes/categories');
 
     // Load Routes
     app.use('/api', signup);
@@ -101,6 +103,8 @@ if(db_settings.status && email_settings.status){
     app.use('/api', query);
     app.use('/api', apps);
     app.use('/api', logs);
+    app.use('/api', tags);
+    app.use('/api', categories);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");
