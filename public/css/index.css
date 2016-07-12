@@ -9,3 +9,11 @@ tr.shown td.details-control {
     background-repeat: no-repeat;
  	background-position: center;
 }
+
+table {
+	table-layout:fixed;
+}
+
+table td {
+	word-wrap:break-word;
+}
