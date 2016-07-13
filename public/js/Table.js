@@ -157,24 +157,27 @@ Table.prototype.Usage = function () {
 Table.prototype.moreInfo = function (data) {
 	switch(this.type) {
 		case("Apps"):
+			var ssdata = data.substring(0,16);
 			$.getJSON(this.url + "apps/" + data + '/logsByTag', function(json){
 				for(index in json) {
-					$('#tags').append('<tr><td>'+json[index].tag_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+ssdata+'-tags').append('<tr><td>'+json[index].tag_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
 			$.getJSON(this.url + "apps/" + data + '/logsByCategory', function(json){
 				for(index in json) {
-					$('#categories').append('<tr><td>'+json[index].catgegory_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+ssdata+'-categories').append('<tr><td>'+json[index].catgegory_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="detail"><thead><th>Tags</th><th>Categories</th></thead><tr><td id="tags"></td><td id="categories"></td></tr></table>';
+			return '<table id="'+ssdata+'-detail"><thead><th>Tags</th><th>Categories</th></thead><tr><td id="'+ssdata+'-tags"></td><td id="'+ssdata+'-categories"></td></tr></table>';
 		case("Categories"):
 			$.getJSON(this.url + "categories/" + data + '/apps', function(json){
 				for(index in json) {
-					$('#app').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+data+'-app').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="detail"><thead><th>App</th><th>Calls</th></thead><tr><td id="app"></td><td id="Calls"></td></tr></table>';
+			return '<table id="'+data+'-detail"><thead><th>App</th><th>Calls</th></thead><tr><td id="'+data+'-app"></td><td id="Calls"></td></tr></table>';
+		case("Usage"):
+			return '<table></table>'
 		default:
 			return null;
 			break;
