@@ -40,6 +40,10 @@ module.exports = {
         error_2: {
             code: 404,
             message: 'Log-entry not found'
+        },
+        error_3: {
+            code: 404,
+            message: 'No Datasets found for this category'
         }
     },
     development: {

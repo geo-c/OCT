@@ -65,14 +65,55 @@ exports.request = function(req, res){
                                     res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
                                     return console.error(errors.database.error_2.message, err);
                                 } else {
-                                    client.query('SELECT categories.catgegory_name, queries.query_intern, queries.query_extern, queries.query_description, sub_datasets.sd_name, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance FROM public.sub_datasets INNER JOIN public.queries ON sub_datasets.sd_id=queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id INNER JOIN categories_relationships ON categories_relationships.md_id=main_datasets.md_id INNER JOIN categories ON categories.category_id=categories_relationships.category_id WHERE categories.catgegory_name=$1;', [
-                                        req.params.category_name
-                                    ], function(err, result) {
+                                    query = "SELECT categories.catgegory_name, queries.query_intern, queries.query_extern, queries.query_description, sub_datasets.sd_name, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance "
+                                    query += "FROM public.sub_datasets INNER JOIN public.queries ON sub_datasets.sd_id=queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id INNER JOIN categories_relationships ON categories_relationships.md_id=main_datasets.md_id INNER JOIN categories ON categories.category_id=categories_relationships.category_id "
+                                    words = req.params.category_name.split("&");
+                                    var index = 1;
+                                    var params = [];
+                                    for(i in words) {
+                                        word = words[i].split(",");
+                                        if(i==0) {
+                                            for(j in word) {
+                                                if(j==0) {
+                                                    tmp = "WHERE categories.catgegory_name LIKE '%' || $"+index+" || '%' ";
+                                                    query += tmp;
+                                                    console.log(tmp);
+                                                    params.push(word[j]);
+                                                    index++;
+                                                } else {
+                                                    tmp = "OR categories.catgegory_name LIKE '%' || $"+index+" || '%' ";
+                                                    query += tmp;
+                                                    console.log(tmp);
+                                                    params.push(word[j]);
+                                                    index++;
+                                                }
+                                            }
+                                        } else {
+                                            for(j in word) {
+                                                if(j==0) {
+                                                    tmp = "AND categories.catgegory_name LIKE '%' || $"+index+" || '%' ";
+                                                    query += tmp;
+                                                    console.log(tmp);
+                                                    params.push(word[j]);
+                                                    index++;
+                                                } else {
+                                                    tmp = "OR categories.catgegory_name LIKE '%' || $"+index+" || '%' ";
+                                                    query += tmp;
+                                                    console.log(tmp);
+                                                    params.push(word[j]);
+                                                    index++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    query += ";";
+                                    client.query(query, params, function(err, result) {
                                         if(err) {
                                             console.log(err);
                                         } else {
                                             if(result.rows.length === 0) {
                                                 console.log("No entry for this category");
+                                                res.status(errors.query.error_3.code).send(errors.query.error_3);
                                             } else {
                                                 res.status(201).send(result.rows);
                                                 var Answers = {
