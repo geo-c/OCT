@@ -19,6 +19,7 @@ $(document).ready(function() {
 	   	showTable();
 	});
 
+	//Listen on Button-Group Clicks
 	$(".btn-group button").on("click", function(){
 		$(".btn-group").find(".active").removeClass("active");
 		$(this).addClass("active");
@@ -29,10 +30,12 @@ $(document).ready(function() {
 		}
 	});
 
+	//Init the table. Show first Tab content (Apps)
 	function init() {
 		showTable();
 	}
 
+	//Show Table depending on status
 	function showTable() {
 		switch(status) {
 			case("Apps"):
@@ -49,6 +52,7 @@ $(document).ready(function() {
 		}
 	}
 
+	//Show Table depending on status
 	function showGraph() {
 		switch(status) {
 			case("Apps"):

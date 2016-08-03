@@ -8,6 +8,7 @@ var errors = require('./../../config/errors');
 
 // LIST
 exports.request = function(req, res) {
+    
     var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
     pg.connect(url, function(err, client, done) {

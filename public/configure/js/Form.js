@@ -5,14 +5,23 @@ Form.prototype.status = "";
 Form.prototype.url = "http://giv-oct.uni-muenster.de:8081/api/";
 Form.prototype.data = [];
 
+/*
+ * Empty #content
+ */
 Form.prototype.empty = function () {
 	$("#content").empty();
 }
 
+/*
+ * Empty #inputForm
+ */
 Form.prototype.emptyForm = function () {
 	$("#inputForm").empty();
 }
 
+/*
+ * Show Fields for Login
+ */
 Form.prototype.login = function (callback) {
 	this.status = "login";
 	this.empty();
@@ -22,6 +31,9 @@ Form.prototype.login = function (callback) {
 	this.btnSend("Login", callback);
 }
 
+/*
+ * Show Fields for Signup
+ */
 Form.prototype.signup = function (callback) {
 	this.status = "signup";
 	this.empty();
@@ -31,6 +43,9 @@ Form.prototype.signup = function (callback) {
 	this.btnSend("Sign up", callback);
 }
 
+/*
+ * Show Fields for adding a Database
+ */
 Form.prototype.addDatabase = function () {
 	this.status = "";
 	this.empty();
@@ -62,12 +77,18 @@ Form.prototype.addDatabase = function () {
 	});
 }
 
+/*
+ * Show Fields for modifying a Database
+ */
 Form.prototype.modifyDatabase = function () {
 	this.status = "";
 	this.empty();
 	this.catchMD();
 }
 
+/*
+ * Get Main Datasets and append to page
+ */
 Form.prototype.catchMD = function () {
 	var that = this;
 
@@ -91,6 +112,9 @@ Form.prototype.catchMD = function () {
 	});
 }
 
+/*
+ * Get all Sub Datasets from a Main Dataset
+ */
 Form.prototype.catchSD = function (md) {
 	var that = this;
 	console.log(md);
@@ -100,6 +124,9 @@ Form.prototype.catchSD = function (md) {
 	});
 }
 
+/*
+ * Show Fields for a Postgres Database
+ */
 Form.prototype.Postgres = function () {
 	this.emptyForm();
 	this.db_name();
@@ -111,6 +138,9 @@ Form.prototype.Postgres = function () {
 	this.btnSend("Send");
 }
 
+/*
+ * Show Fields for a Rest-API
+ */
 Form.prototype.API = function () {
 	this.emptyForm();
 	this.url();
@@ -121,11 +151,17 @@ Form.prototype.API = function () {
 	this.btnSend("Send");
 }
 
+/*
+ * Show Fields required for a Admin
+ */
 Form.prototype.admin = function () {
 	this.username();
 	this.user();
 }
 
+/*
+ * Show Field for Username
+ */
 Form.prototype.username = function () {
 	$usernameLabel = $('<label for="username-label">User Name</label>');
 	$username = $('<input type="text" class="form-control" id="username" aria-describedby="basic-addon3">');
@@ -133,6 +169,9 @@ Form.prototype.username = function () {
 	$("#inputForm").append($username);
 }
 
+/*
+ * Show Fields for User
+ */
 Form.prototype.user = function () {
 	$firstNameLabel = $('<label for="first-name-label">First Name</label>');
 	$firstName = $('<input type="text" class="form-control" id="first-name" aria-describedby="basic-addon3">');
@@ -145,6 +184,9 @@ Form.prototype.user = function () {
 	this.email();
 }
 
+/*
+ * Show Field for Email Address
+ */
 Form.prototype.email = function () {
 	$emailLabel = $('<label for="email-label">Email</label>');
 	$email = $('<input type="text" id="email" class="form-control" placeholder="max.mustermann@example.com" aria-describedby="basic-addon2">');
@@ -152,6 +194,9 @@ Form.prototype.email = function () {
 	$("#inputForm").append($email);
 }
 
+/*
+ * Show Field for Database Name
+ */
 Form.prototype.db_name = function () {
 	$label = $('<label for="db-name-label">Database Name</label>');
 	$db_name = $('<input type="text" class="form-control" id="db-name" aria-describedby="basic-addon3">');
@@ -159,6 +204,9 @@ Form.prototype.db_name = function () {
 	$("#inputForm").append($db_name);
 }
 
+/*
+ * Show Field for Database Host
+ */
 Form.prototype.db_host = function () {
 	$label = $('<label for="db-host-label">Database Host</label>');
 	$db_host = $('<input type="text" class="form-control" id="db-host" aria-describedby="basic-addon3">');
@@ -166,6 +214,9 @@ Form.prototype.db_host = function () {
 	$("#inputForm").append($db_host);
 }
 
+/*
+ * Show Field for Database Port
+ */
 Form.prototype.db_port = function () {
 	$label = $('<label for="db-port-label">Database Port</label>');
 	$db_port = $('<input type="text" class="form-control" id="db-port" aria-describedby="basic-addon3">');
@@ -173,6 +224,9 @@ Form.prototype.db_port = function () {
 	$("#inputForm").append($db_port);
 }
 
+/*
+ * Show Field for URL
+ */
 Form.prototype.url = function () {
 	$label = $('<label for="url-label">URL</label>');
 	$url = $('<div class="input-group"><span class="input-group-addon" id="basic-addon3">http://</span><input type="text" class="form-control" id="url" aria-describedby="basic-addon3"></div>');
@@ -180,6 +234,9 @@ Form.prototype.url = function () {
 	$("#inputForm").append($url);
 }
 
+/*
+ * Show Field for Database Description
+ */
 Form.prototype.db_description = function () {
 	$label = $('<label for="db-description-label">Description</label>');
 	$description = $('<input type="text" class="form-control" id="db-description" aria-describedby="basic-addon3">');
@@ -187,6 +244,9 @@ Form.prototype.db_description = function () {
 	$("#inputForm").append($description);
 }
 
+/*
+ * Show Field for Password
+ */
 Form.prototype.password = function () {
 	$label = $('<label for="password-label">Password</label>');
 	$password = $('<input type="text" class="form-control" id="password" aria-describedby="basic-addon3">');
@@ -194,12 +254,18 @@ Form.prototype.password = function () {
 	$("#inputForm").append($password);
 }
 
+/*
+ * Add a Button, Add a Click Listener
+ */
 Form.prototype.btnSend = function (text, callback) {
 	var that = this;
 	var cb = callback;
 	$btnSend = $('<br><button type="button" class="btn btn-primary right">'+text+'</button>');
 	$("#inputForm").append($btnSend);
+
+	//Listen on Button Clicks
 	$btnSend.click(function () {
+		//Check which status is active
 		switch(that.status) {
 			case("login"):
 				$.getJSON( "http://giv-oct.uni-muenster.de:8081/api/admin/login/" + $('#username').val(), function (json) {

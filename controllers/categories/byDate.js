@@ -6,7 +6,7 @@ var db_settings = require('../../server.js').db_settings;
 var errors = require('./../../config/errors');
 
 
-// LIST
+// GET
 exports.request = function(req, res) {
     var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 

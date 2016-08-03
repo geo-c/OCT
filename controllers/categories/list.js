@@ -16,9 +16,6 @@ exports.request = function(req, res) {
             res.status(errors.database.error_1.code).send(errors.database.error_1);
             return console.error(errors.database.error_1.message, err);
         } else {
-            // Database Query
-            //client.query('SELECT date(logs."timestamp") as date, count(logs."timestamp") FROM public.logs GROUP BY date(logs."timestamp");', function(err, result) {
-            url = '';
             client.query('SELECT categories.category_id, categories.category_name, count(logs.category_id) AS calls FROM public.categories INNER JOIN logs ON categories.category_id=logs.category_id GROUP BY categories.category_name, categories.category_id ORDER BY categories.category_name;', function(err, result) {
                 done();
 

@@ -3,20 +3,22 @@ $(document).ready(function() {
 	var form = new Form();
 	var login = false;
 
+	//Callback fired when User is logged in or signed up
 	var signup_login_callback = function (data) {
 		username = data.username;
 		login = true;
+		//Enable left Navbar
 		$(".navbar-left li").removeClass("disabled");
-		
-
+		//Remove right Navbar
 		$(".navbar-right li").remove();
 
+		//Add Label to the right
 		$label = $('<li><a class="navbar-brand" href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+username+'</a></li>');
 		$(".navbar-right").append($label)
 		form.addDatabase();
 	}
 
-	//Listen on Tab Changes
+	//Listen on Left Tab Changes
 	$(".navbar-left a").on("click", function(){
 		if(login) {
 			$(".nav").find(".active").removeClass("active");
@@ -34,7 +36,7 @@ $(document).ready(function() {
 		}
 	});
 
-	//Listen on Tab Changes
+	//Listen on Right Tab Changes
 	$(".navbar-right a").on("click", function(){
 		if(!login) {
 			$(".btn-group").hide();

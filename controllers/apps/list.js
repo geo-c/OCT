@@ -8,47 +8,26 @@ var errors = require('./../../config/errors');
 
 // LIST
 exports.request = function(req, res) {
+    var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
-    // TODO: Verify authenticated user is admin
+    pg.connect(url, function(err, client, done) {
+        if (err) {
+            res.status(errors.database.error_1.code).send(errors.database.error_1);
+            return console.error(errors.database.error_1.message, err);
+        } else {
 
-    // Check if Header contains Access-Token
-    /*if(!req.headers.authorization || req.headers.authorization === ""){
-        res.status(errors.authentication.error_2.code).send(errors.authentication.error_2);
-        return console.error(errors.authentication.error_2.message);
-    } else {
+            // Database Query
+            client.query('SELECT apps.app_hash, apps.app_name, apps.app_description, (SELECT COUNT(*) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS Calls FROM public.apps;', function(err, result) {
+                done();
 
-        // Verify Access-Token
-        jwt.verify(req.headers.authorization, secret.key, function(err, decoded) {
-            if (err) {
-                res.status(errors.authentication.error_1.code).send(errors.authentication.error_1);
-                return console.error(errors.authentication.error_1.message);
-            } else {*/
-
-
-                var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
-
-                pg.connect(url, function(err, client, done) {
-                    if (err) {
-                        res.status(errors.database.error_1.code).send(errors.database.error_1);
-                        return console.error(errors.database.error_1.message, err);
-                    } else {
-
-                        // Database Query
-                        client.query('SELECT apps.app_hash, apps.app_name, apps.app_description, (SELECT COUNT(*) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS Calls FROM public.apps;', function(err, result) {
-                            done();
-
-                            if (err) {
-                                res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-                                return console.error(errors.database.error_2.message, err);
-                            } else {
-                                // Send Result
-                                res.status(200).send(result.rows);
-                            }
-                        });
-                    }
-                });
-            /*}
-        });
-    }*/
-
+                if (err) {
+                    res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                    return console.error(errors.database.error_2.message, err);
+                } else {
+                    // Send Result
+                    res.status(200).send(result.rows);
+                }
+            });
+        }
+    });
 };

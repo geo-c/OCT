@@ -6,10 +6,16 @@ Table.prototype.type = "Apps";
 Table.prototype.data = [];
 Table.prototype.dataTable = null;
 
+/*
+ * Empty Table
+ */
 Table.prototype.empty = function () {
 	$("#content").empty();
 }
 
+/*
+ * Draw Table
+ */
 Table.prototype.draw = function () {
 	columns = [];
 	columnDefs = [
@@ -65,11 +71,13 @@ Table.prototype.draw = function () {
     } );
 }
 
+/*
+ * Get Data From Apps and Parse them
+ */
 Table.prototype.Apps = function () {
 	this.type = "Apps";
 	this.data = [];
 	this.empty();
-	//$("#content").html('<table id="table" class="display" style="width=100%;"><thead><tr><th style=\"display:none;\"></th><th class=\"details-control sorting_disabled headrow\" rowspan=\"1\" colspan=\"1\" aria-label=\"\" style=\"width: 18px;\">More</th><th>Name</th><th>Description</th><th>Calls</th></tr></thead><tbody></tbody></table>');
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
 	$.getJSON(this.url + "apps", function(json){
@@ -77,6 +85,7 @@ Table.prototype.Apps = function () {
 			that.data.push([json[index].app_hash, '', json[index].app_name, json[index].app_description, json[index].calls]);
 		}
 		that.draw();
+		//Set listener on Click for more Details
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
@@ -95,6 +104,9 @@ Table.prototype.Apps = function () {
 	});	
 }
 
+/*
+ * Get Data From Categories and Parse them
+ */
 Table.prototype.Categories = function () {
 	this.type = "Categories";
 	this.data = [];
@@ -106,6 +118,7 @@ Table.prototype.Categories = function () {
 			that.data.push([json[index].category_id, '', json[index].category_name, json[index].calls]);
 		}
 		that.draw();
+		//Set listener on Click for more Details
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
@@ -124,11 +137,13 @@ Table.prototype.Categories = function () {
 	});	
 }
 
+/*
+ * Get Data From Usage and Parse them
+ */
 Table.prototype.Usage = function () {
 	this.type = "Usage";
 	this.data = [];
 	this.empty();
-	//$("#content").html('<table id="table" class="display" style="width=100%;"><thead><tr><th style=\"display:none;\"></th><th class=\"details-control sorting_disabled headrow\" rowspan=\"1\" colspan=\"1\" aria-label=\"\" style=\"width: 18px;\">More</th><th>Name</th><th>Description</th><th>Calls</th></tr></thead><tbody></tbody></table>');
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
 	$.getJSON(this.url + "logs/countByDay", function(json){
@@ -137,6 +152,7 @@ Table.prototype.Usage = function () {
 			that.data.push([date, '',date, json[index].count]);
 		}
 		that.draw();
+		//Set listener on Click for more Details
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
@@ -155,7 +171,11 @@ Table.prototype.Usage = function () {
 	});
 }
 
+/*
+ * Expand Table to show more Information
+ */
 Table.prototype.moreInfo = function (data) {
+	//Check which Type is active
 	switch(this.type) {
 		case("Apps"):
 			var ssdata = data.substring(0,16);

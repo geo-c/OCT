@@ -3,7 +3,7 @@ var pg = require('pg');
 var errors = require('./../../config/errors');
 
 
-// POST
+// GET
 exports.request = function(req, res) {
     var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
@@ -23,7 +23,7 @@ exports.request = function(req, res) {
 						return console.error(errors.database.error_2.message, err);
                     } else {
 
-                        // Check if App exists
+                        // Check if Admin exists
                         if (result.rows.length === 0) {
                             res.status(errors.query.error_1.code).send(errors.query.error_1);
                             console.error(errors.query.error_1.message);

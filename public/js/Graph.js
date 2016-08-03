@@ -9,6 +9,9 @@ Graph.prototype.ctx = $("#grid");
 Graph.prototype.url = "api/";
 Graph.prototype.chart = null;
 
+/*
+ * Draw the Graph.
+ */
 Graph.prototype.draw = function () {
 	console.log(this.data);
 	console.log(this.labels);
@@ -42,6 +45,9 @@ Graph.prototype.draw = function () {
 	});
 }
 
+/*
+ * Reset all Data.
+ */
 Graph.prototype.reset = function () {
 	this.labels = [];
 	this.data = [];
@@ -49,6 +55,9 @@ Graph.prototype.reset = function () {
 	this.borderColors = [];
 }
 
+/*
+ * Get Data from Apps
+ */
 Graph.prototype.Apps = function () {
 	$("#content").html('<div><canvas id="grid"></canvas><div>');
 	this.reset();
@@ -81,6 +90,9 @@ Graph.prototype.Apps = function () {
 	var myPieChart = new Chart(this.ctx, config);
 }*/
 
+/*
+ * Get Data from Categories
+ */
 Graph.prototype.Categories = function () {
 	$("#content").html('<div><canvas id="grid"></canvas><div>');
 	this.reset();
@@ -96,6 +108,9 @@ Graph.prototype.Categories = function () {
 	});
 }
 
+/*
+ * Get Data from Usage
+ */
 Graph.prototype.Usage = function () {
 	$("#content").html('<div><canvas id="grid"></canvas><div>');
 	this.reset();
