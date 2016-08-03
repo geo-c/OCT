@@ -56,6 +56,20 @@ exports.request = function(req, res){
 
                             // Prepare Result
                             var app = result.rows[0];
+                            
+                            //Find ID from category
+                            client.query("SELECT category_id FROM categories WHERE catgegory_name LIKE '%' || $1 || '%'", [
+                            req.params.category_name
+                            ], function(err, result) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                                    return console.error(errors.database.error_2.message, err);
+                                } else {
+                                    console.log(result.rows);
+                                }
+                            });
+
                             // Logging
                             client.query('INSERT INTO Logs VALUES($1, now(), NULL, $2);', [
                                 accessToken,
