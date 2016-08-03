@@ -50,7 +50,7 @@ exports.request = function(req, res) {
                                 } else {
 
                                     // Database Query
-                                    client.query('SELECT count(logs.category_id) AS count, categories.catgegory_name FROM logs INNER JOIN categories on logs.category_id=categories.category_id WHERE app_hash=$1 GROUP BY categories.catgegory_name;', [
+                                    client.query('SELECT count(logs.category_id) AS count, categories.category_name FROM logs INNER JOIN categories on logs.category_id=categories.category_id WHERE app_hash=$1 GROUP BY categories.category_name;', [
                                         req.params.app_hash
                                     ], function(err, result) {
                                         done();

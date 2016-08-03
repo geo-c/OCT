@@ -103,7 +103,7 @@ Table.prototype.Categories = function () {
 	var that = this;
 	$.getJSON(this.url + "categories", function(json){
 		for(index in json) {
-			that.data.push([json[index].category_id, '', json[index].catgegory_name, json[index].calls]);
+			that.data.push([json[index].category_id, '', json[index].category_name, json[index].calls]);
 		}
 		that.draw();
 		$('#table tbody').on('click', 'td.details-control', function () {
@@ -133,7 +133,8 @@ Table.prototype.Usage = function () {
 	var that = this;
 	$.getJSON(this.url + "logs/countByDay", function(json){
 		for(index in json) {
-			that.data.push([index, '', json[index].date.slice(0, json[index].date.lastIndexOf("T")), json[index].count]);
+			date =  json[index].date.slice(0, json[index].date.lastIndexOf("T"))
+			that.data.push([date, '',date, json[index].count]);
 		}
 		that.draw();
 		$('#table tbody').on('click', 'td.details-control', function () {
@@ -158,26 +159,31 @@ Table.prototype.moreInfo = function (data) {
 	switch(this.type) {
 		case("Apps"):
 			var ssdata = data.substring(0,16);
-			$.getJSON(this.url + "apps/" + data + '/logsByTag', function(json){
-				for(index in json) {
-					$('#'+ssdata+'-tags').append('<tr><td>'+json[index].tag_name+'</td><td>'+ json[index].count +'</td></tr>');
-				}
-			});
 			$.getJSON(this.url + "apps/" + data + '/logsByCategory', function(json){
 				for(index in json) {
-					$('#'+ssdata+'-categories').append('<tr><td>'+json[index].catgegory_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+ssdata+'-categories').append('<tr><td>'+json[index].category_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+ssdata+'-detail"><thead><th>Tags</th><th>Categories</th></thead><tr><td id="'+ssdata+'-tags"></td><td id="'+ssdata+'-categories"></td></tr></table>';
+			return '<table id="'+ssdata+'-detail"><thead><th>Categories</th><th>Count</th></thead><tr><td id="'+ssdata+'-categories"></td></tr></table>';
 		case("Categories"):
 			$.getJSON(this.url + "categories/" + data + '/apps', function(json){
 				for(index in json) {
 					$('#'+data+'-app').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+data+'-detail"><thead><th>App</th><th>Calls</th></thead><tr><td id="'+data+'-app"></td><td id="Calls"></td></tr></table>';
+			return '<table id="'+data+'-detail"><thead><th>App</th><th>Count</th></thead><tr><td id="'+data+'-app"></td><td id="Calls"></td></tr></table>';
 		case("Usage"):
-			return '<table></table>'
+			$.getJSON(this.url + "apps/byDate/" + data, function(json){
+				for(index in json) {
+					$('#'+data+'-apps').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
+				}
+			});
+			$.getJSON(this.url + "categories/byDate/" + data, function(json){
+				for(index in json) {
+					$('#'+data+'-categories').append('<tr><td>'+json[index].category_name+'</td><td>'+ json[index].count +'</td></tr>');
+				}
+			});
+			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Categoris</th></thead><tr><td id="'+data+'-apps"></td><td id="'+data+'-categories"></td></tr></table>';
 		default:
 			return null;
 			break;

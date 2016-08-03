@@ -8,9 +8,8 @@ $(document).ready(function() {
 	//Init
 	init();
 
-	//Listen on Tab Changes
+	//Listen on Left Tab Changes
 	$(".navbar-left a").on("click", function(){
-		console.log("clck")
 		$(".btn-group").show();
 	   	$(".nav").find(".active").removeClass("active");
 	   	$(this).parent().addClass("active");
@@ -18,23 +17,6 @@ $(document).ready(function() {
 	   	$("#btn-table").addClass("active");
 	   	$("#btn-graph").removeClass("active");
 	   	showTable();
-	});
-
-	//Listen on Tab Changes
-	$(".navbar-right a").on("click", function(){
-		$(".btn-group").hide();
-	   	$(".nav").find(".active").removeClass("active");
-	   	$(this).parent().addClass("active");
-	   	switch($(this).html()) {
-	   		case('Add'):
-	   			form.addDatabase();
-	   			break;
-	   		case('Modify'):
-	   			form.modifyDatabase();
-	   			break;
-	   		default:
-	   			break;
-	   	}
 	});
 
 	$(".btn-group button").on("click", function(){

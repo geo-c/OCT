@@ -6,9 +6,8 @@ var db_settings = require('../../server.js').db_settings;
 var errors = require('./../../config/errors');
 
 
-// Count of Logs by Day
+// LIST
 exports.request = function(req, res) {
-
     var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
     pg.connect(url, function(err, client, done) {
@@ -16,10 +15,13 @@ exports.request = function(req, res) {
             res.status(errors.database.error_1.code).send(errors.database.error_1);
             return console.error(errors.database.error_1.message, err);
         } else {
+
             // Database Query
-            //client.query('SELECT date(logs."timestamp") as date, count(logs."timestamp") FROM public.logs GROUP BY date(logs."timestamp");', function(err, result) {
-            url = '';
-            client.query('SELECT categories.category_id, categories.category_name, count(logs.category_id) AS calls FROM public.categories INNER JOIN logs ON categories.category_id=logs.category_id GROUP BY categories.category_name, categories.category_id ORDER BY categories.category_name;', function(err, result) {
+            client.query('SELECT logs."timestamp"::timestamp::date as date, count(logs."timestamp"), app_name FROM public.logs INNER JOIN apps ON apps.app_hash=logs.app_hash WHERE logs."timestamp"::timestamp::date=$1 GROUP BY app_name, date ORDER BY date;',
+                [
+                    req.params.date
+                ],
+                function(err, result) {
                 done();
 
                 if (err) {

@@ -60,12 +60,11 @@ Graph.prototype.Apps = function () {
 			that.backgroundColors.push('rgba(255, 99, 132, 0.2)');
 			that.borderColors.push('rgba(255,99,132,1)');
 		}
-		//that.draw();
-		that.AppsPie();
+		that.draw();
 	});
 }
 
-Graph.prototype.AppsPie = function () {
+/*Graph.prototype.AppsPie = function () {
 	    var config = {
         type: 'pie',
         data: {
@@ -80,7 +79,7 @@ Graph.prototype.AppsPie = function () {
         }
     };
 	var myPieChart = new Chart(this.ctx, config);
-}
+}*/
 
 Graph.prototype.Categories = function () {
 	$("#content").html('<div><canvas id="grid"></canvas><div>');
@@ -88,7 +87,7 @@ Graph.prototype.Categories = function () {
 	var that = this;
 	$.getJSON(that.url + "categories", function (json) {
 		for(index in json) {
-			that.labels.push(json[index].catgegory_name);
+			that.labels.push(json[index].category_name);
 			that.data.push(json[index].calls);
 			that.backgroundColors.push('rgba(255, 99, 132, 0.2)');
 			that.borderColors.push('rgba(255,99,132,1)');
