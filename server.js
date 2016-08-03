@@ -96,6 +96,9 @@ if(db_settings.status && email_settings.status){
     var logs = require('./routes/logs');
     var tags = require('./routes/tags');
     var categories = require('./routes/categories');
+    var main_database = require('./routes/main_database');
+    var sub_database = require('./routes/sub_database');
+    var admin = require('./routes/admin');
 
     // Load Routes
     app.use('/api', signup);
@@ -105,6 +108,9 @@ if(db_settings.status && email_settings.status){
     app.use('/api', logs);
     app.use('/api', tags);
     app.use('/api', categories);
+    app.use('/api', main_database);
+    app.use('/api', sub_database);
+    app.use('/api', admin);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");
