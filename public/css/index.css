@@ -1,3 +1,8 @@
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
 td.details-control {
     background: url('../img/More.png') no-repeat center center;
     cursor: pointer;
@@ -16,4 +21,18 @@ table {
 
 table td {
 	word-wrap:break-word;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+.container {
+	width: auto;
+	padding: 0 15px;
 }

@@ -60,8 +60,26 @@ Graph.prototype.Apps = function () {
 			that.backgroundColors.push('rgba(255, 99, 132, 0.2)');
 			that.borderColors.push('rgba(255,99,132,1)');
 		}
-		that.draw();
+		//that.draw();
+		that.AppsPie();
 	});
+}
+
+Graph.prototype.AppsPie = function () {
+	    var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: this.data,
+                backgroundColor: this.backgroundColors,
+            }],
+            labels: this.labels
+        },
+        options: {
+            responsive: true
+        }
+    };
+	var myPieChart = new Chart(this.ctx, config);
 }
 
 Graph.prototype.Categories = function () {
