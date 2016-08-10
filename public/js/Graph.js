@@ -34,6 +34,8 @@ Graph.prototype.draw = function () {
 	    	legend: {
 	            display: false
 	        },
+	        maintainAspectRatio:false,
+	        responsive:true,
 	        scales: {
 	            yAxes: [{
 	                ticks: {
@@ -59,7 +61,7 @@ Graph.prototype.reset = function () {
  * Get Data from Apps
  */
 Graph.prototype.Apps = function () {
-	$("#content").html('<div><canvas id="grid"></canvas><div>');
+	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
 	$.getJSON(that.url + "apps", function (json) {
@@ -94,7 +96,7 @@ Graph.prototype.Apps = function () {
  * Get Data from Categories
  */
 Graph.prototype.Categories = function () {
-	$("#content").html('<div><canvas id="grid"></canvas><div>');
+	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
 	$.getJSON(that.url + "categories", function (json) {
@@ -112,7 +114,7 @@ Graph.prototype.Categories = function () {
  * Get Data from Usage
  */
 Graph.prototype.Usage = function () {
-	$("#content").html('<div><canvas id="grid"></canvas><div>');
+	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
 	$.getJSON(that.url + "logs/countByDay", function (json) {
