@@ -71,6 +71,8 @@ Table.prototype.draw = function () {
     	responsive: true,
     	"searching": false,
     	"ordering": false,
+    	scrollY: '60vh',
+        scrollCollapse: true,
     	"paging": false,
     	"info": false,
         data: this.data,
