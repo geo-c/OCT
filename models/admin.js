@@ -18,12 +18,17 @@ module.exports = {
         "last_name": {
             "type": "string",
             "minLength": 1
+        },
+        "password": {
+            "type": "string",
+            "minLength": 1
         }
     },
     "required": [
         "username",
         "email_address",
         "first_name",
-        "last_name"
+        "last_name",
+        "password"
     ]
 };

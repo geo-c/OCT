@@ -22,6 +22,7 @@ exports.request = function(req, res) {
 
 	// Schema Validation
 	var valid = validate(req.body);
+	console.log(req.body);
 	if (!valid) {
 		res.status(errors.schema.error_1.code).send(_.extend(errors.schema.error_1, {
 			err: validate.errors[0].dataPath + ": " + validate.errors[0].message

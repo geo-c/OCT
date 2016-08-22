@@ -278,7 +278,9 @@ Form.prototype.btnSend = function (text, callback) {
 					"email_address": $("#email").val(),
 					"first_name": $("#first-name").val(),
 					"last_name": $("#last-name").val(),
+					"password": $("#password").val()
 				 };
+				 console.log(data);
 				$.ajax({
 				    type: "POST",
 				    url: "http://giv-oct.uni-muenster.de:8081/api/admin/signup",

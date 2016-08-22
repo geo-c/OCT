@@ -203,7 +203,7 @@ Table.prototype.moreInfo = function (data) {
 					$('#'+data+'-categories').append('<tr><td>'+json[index].category_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Categoris</th></thead><tr><td id="'+data+'-apps"></td><td id="'+data+'-categories"></td></tr></table>';
+			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Categories</th></thead><tr><td id="'+data+'-apps"></td><td id="'+data+'-categories"></td></tr></table>';
 		default:
 			return null;
 			break;

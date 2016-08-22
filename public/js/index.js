@@ -19,6 +19,24 @@ $(document).ready(function() {
 	   	showTable();
 	});
 
+	//Listen on Right Tab Changes
+	$(".navbar-right a").on("click", function(){
+		$(".btn-group").show();
+	   	$(".nav").find(".active").removeClass("active");
+	   	$(this).parent().addClass("active");
+	   	status = $(this).text().replace(/\s/g, '');
+	   	$("#btn-table").addClass("active");
+	   	$("#btn-graph").removeClass("active");
+	   	switch(status) {
+	   		case("Signup"):
+	   			signupForm();
+	   			break;
+	   		default:
+	   			console.log("Unknown Status: " + status);
+	   			break;
+	   	}
+	});
+
 	//Listen on Button-Group Clicks
 	$(".btn-group button").on("click", function(){
 		$(".btn-group").find(".active").removeClass("active");
@@ -33,6 +51,57 @@ $(document).ready(function() {
 	//Init the table. Show first Tab content (Apps)
 	function init() {
 		showTable();
+	}
+
+
+	function signupForm() {
+		$('#content').empty('');
+		$('#content').append($('<label for="appname-label">App Name (required)</label>'));
+		$('#content').append($('<input type="text" class="form-control" id="appname" aria-describedby="basic-addon3">'));
+
+		$('#content').append($('<label for="description-label">Description</label>'));
+		$('#content').append($('<input type="text" class="form-control" id="description" aria-describedby="basic-addon3">'));
+
+		$('#content').append($('<label for="email-label">Email (required)</label>'));
+		$('#content').append($('<input type="text" class="form-control" id="email" aria-describedby="basic-addon3">'));
+
+		$('#content').append($('<label for="firstname-label">First Name (required)</label>'));
+		$('#content').append($('<input type="text" class="form-control" id="firstname" aria-describedby="basic-addon3">'));
+
+		$('#content').append($('<label for="lastname-label">Last Name (required)</label>'));
+		$('#content').append($('<input type="text" class="form-control" id="lastname" aria-describedby="basic-addon3">'));
+
+		$btn = $('<br><button type="button" class="btn btn-primary right">Signup</button>');
+		$('#content').append($btn);
+		$btn.click(function () {
+			var data = {
+				"app_name": $('#appname').val(),
+				"app_description": $('#description').val(),
+    			"email_address": $('#email').val(),
+   				"first_name": $('#firstname').val(),
+    			"last_name": $('#lastname').val()
+			}
+			console.log(data);
+			if(data.app_name != "" || data.email_address != "" || data.first_name != "" || data.last_name != "") {
+				$.ajax({
+				    type: "POST",
+				    url: "http://giv-oct.uni-muenster.de:8081/api/signup",
+				    processData: false,
+				    contentType: 'application/json',
+				    data: JSON.stringify(data),
+				    success: function(r) {
+				    	$('#content').empty('');
+				    	$('#content').append('<label>Your App has been signed up.</label>');
+				    	$('#content').append('<br><label>Your API Key is:</label>');
+				    	$('#content').append('<br><label>' + r.app_hash + '</label>');
+				    	$('#content').append('<br><br><label>Your key has been sent to your email address</label>');
+				    	console.log(r);
+					}
+				});
+			} else {
+				alert("Not all required fiels have values");
+			}
+		});
 	}
 
 	//Show Table depending on status
