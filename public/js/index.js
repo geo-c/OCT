@@ -116,6 +116,9 @@ $(document).ready(function() {
 			case("Usage"):
 				table.Usage();
 				break;
+			case("Information"):
+				table.Information();
+				break;
 			default:
 				break;
 		}

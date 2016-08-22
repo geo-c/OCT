@@ -55,6 +55,14 @@ Table.prototype.draw = function () {
 	            { title: "Count" }
 			];
 			break;
+		case("Information"):
+			columns = [
+				{title: ""},
+				{title: "More"},
+				{title: "Category"},
+				{title: "Count"}
+			];
+			break;
 		default:
 			break;
 	}
@@ -171,6 +179,35 @@ Table.prototype.Usage = function () {
 	});
 }
 
+Table.prototype.Information = function () {
+	this.type = "Information";
+	this.data = [];
+	this.empty();
+	$("#content").html('<table id="table" class="display" width="100%"></table>');
+	var that = this;
+	$.getJSON(this.url + "categories/withDatasets", function(json){
+		for(index in json) {
+			that.data.push([json[index].category_id, '', json[index].category_name, json[index].count]);
+		}
+		that.draw();
+		$('#table tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = that.dataTable.row( tr );
+	 
+	        if ( row.child.isShown() ) {
+	            // This row is already open - close it
+	            row.child.hide();
+	            tr.removeClass('shown');
+	        }
+	        else {
+	            // Open this row
+	            row.child( that.moreInfo(row.data()[0]) ).show();
+	            tr.addClass('shown');
+	        }
+	    });
+    });
+}
+
 /*
  * Expand Table to show more Information
  */
@@ -204,6 +241,13 @@ Table.prototype.moreInfo = function (data) {
 				}
 			});
 			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Categories</th></thead><tr><td id="'+data+'-apps"></td><td id="'+data+'-categories"></td></tr></table>';
+		case("Information"):
+			$.getJSON(this.url + "categories/withDatasets/" + data, function(json){
+				for(index in json) {
+					$('#'+data+'-datasets').append('<tr><td>'+json[index].md_name+'</td></tr>');
+				}
+			});
+			return '<table id="'+data+'-detail"><thead><th>Datasets</th></thead><tr><td id="'+data+'-datasets"></td></tr></table>';
 		default:
 			return null;
 			break;
