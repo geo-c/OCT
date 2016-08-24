@@ -194,9 +194,22 @@ exports.request = function(req, res){
                                                         }
                                                     });
                                                     break;
+                                                case("COUCHDB"):
+                                                    answerCount ++;
+                                                    var data = result.rows[index];
+                                                    var length = result.rows.length;
+                                                    var couchdb_Client = new CouchDB_Client(data.ds_host, data.ds_port);
+                                                    couchdb_Client.useDatabase(data.db_instance);
+                                                    couchdb_Client.query(function (result) {
+                                                        Answer.data.couchDB.data.push(result);
+                                                        Answer.data.couchDB.count ++;
+                                                        finish(res, Answer, answerCount, length);
+                                                    });
+                                                    break;
                                                 default:
                                                     answerCount++;
                                                     console.log("unknown Database");
+                                                    console.log(result.rows[index].ds_type);
                                                     finish(res, Answer, answerCount, result.rows.length);
                                                     break;
                                             }

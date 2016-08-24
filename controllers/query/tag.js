@@ -15,7 +15,15 @@ var EnviroCar_Client = require('../connectors/EnviroCar_Client.js');
 var Postgres_Client = require('../connectors/Postgres_Client.js');
 var Sparql_Client = require('../connectors/Sparql_Client.js');
 
-
+/*
+ *   NOT USED
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 // POST
 exports.request = function(req, res){
 

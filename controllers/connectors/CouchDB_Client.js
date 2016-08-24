@@ -1,6 +1,8 @@
-var nano = require('nano')('http://giv-oct.uni-muenster.de:5984/');
+var nano;
 
-var CouchDB_Client = function() {
+var CouchDB_Client = function(host, port) {
+	url = host + ':' + port + '/';
+	nano = require('nano')(url)
 	var database = null;
 	var database_name = '';
 };
@@ -33,12 +35,14 @@ CouchDB_Client.prototype.query = function (cb) {
 						if(!err) {
 							result.push(body);
 						}
+						cb(result);
 					});
 			}
 		} else {
 			console.log(err);
+			cb(null);
 		}
-		cb(result);
+		//cb(result);
 	});
 }
 
