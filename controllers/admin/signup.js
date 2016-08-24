@@ -42,8 +42,9 @@ exports.request = function(req, res) {
 	        	console.log(req);
 				
 	            // Database Query
-	            client.query('INSERT INTO Admins (created, updated, username, role, email_address, first_name, last_name, expires_on) VALUES(now(), now(), $1, \'ADMIN\', $2, $3, $4, NULL);', [
+	            client.query('INSERT INTO Admins (created, updated, username, password, role, email_address, first_name, last_name, expires_on) VALUES(now(), now(), $1, $2, \'ADMIN\', $3, $4, $5, NULL);', [
 	                req.body.username,
+	                req.body.password,
 	                req.body.email_address,
 	                req.body.first_name,
 	                req.body.last_name

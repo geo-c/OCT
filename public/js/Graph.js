@@ -128,7 +128,7 @@ Graph.prototype.Usage = function () {
 	});
 }
 
-Graph.prototype.Information = function () {
+Graph.prototype.Datasets = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;

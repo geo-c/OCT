@@ -36,7 +36,7 @@ Table.prototype.draw = function () {
 	            { title: "More" },
 	            { title: "Name" },
 	            { title: "Description" },
-	            { title: "Count" }
+	            { title: "API Calls" }
 			];
 			break;
 		case("Categories"):
@@ -44,7 +44,7 @@ Table.prototype.draw = function () {
 				{ title: "" },
 	            { title: "More" },
 	            { title: "Name" },
-	            { title: "Count" }
+	            { title: "Calls" }
 			];
 			break;
 		case("Usage"):
@@ -52,33 +52,48 @@ Table.prototype.draw = function () {
 				{ title: "" },
 	            { title: "More" },
 	            { title: "Date" },
-	            { title: "Count" }
+	            { title: "API Calls" }
 			];
 			break;
-		case("Information"):
+		case("Datasets"):
 			columns = [
 				{title: ""},
 				{title: "More"},
 				{title: "Category"},
-				{title: "Count"}
+				{title: "Number of Datasets"}
 			];
 			break;
 		default:
 			break;
 	}
-    this.dataTable = $('#table').DataTable( {
-    	destroy: true,
-    	responsive: true,
-    	"searching": false,
-    	"ordering": false,
-    	scrollY: '60vh',
-        scrollCollapse: true,
-    	"paging": false,
-    	"info": false,
-        data: this.data,
-        columns: columns,
-        "columnDefs": columnDefs
-    } );
+	if(this.type == "Usage") {
+		this.dataTable = $('#table').DataTable( {
+	    	destroy: true,
+	    	responsive: true,
+	    	"searching": false,
+	    	"order": [[2, "desc"]],
+	    	scrollY: '60vh',
+	        scrollCollapse: true,
+	    	"paging": false,
+	    	"info": false,
+	        data: this.data,
+	        columns: columns,
+	        "columnDefs": columnDefs
+	    } );
+	} else {
+		this.dataTable = $('#table').DataTable( {
+	    	destroy: true,
+	    	responsive: true,
+	    	"searching": false,
+	    	scrollY: '60vh',
+	        scrollCollapse: true,
+	    	"paging": false,
+	    	"info": false,
+	        data: this.data,
+	        columns: columns,
+	        "columnDefs": columnDefs
+	    } );
+	}  
 }
 
 /*
@@ -99,17 +114,20 @@ Table.prototype.Apps = function () {
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
-	 
-	        if ( row.child.isShown() ) {
-	            // This row is already open - close it
-	            row.child.hide();
-	            tr.removeClass('shown');
-	        }
-	        else {
-	            // Open this row
-	            row.child( that.moreInfo(row.data()[0]) ).show();
-	            tr.addClass('shown');
-	        }
+	 		if(row.data()[4] != 0) {
+		        if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+		    } else {
+		    	tr.addClass("unavailable");
+		    }
 	    });
 	});	
 }
@@ -132,17 +150,20 @@ Table.prototype.Categories = function () {
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
-	 
-	        if ( row.child.isShown() ) {
-	            // This row is already open - close it
-	            row.child.hide();
-	            tr.removeClass('shown');
-	        }
-	        else {
-	            // Open this row
-	            row.child( that.moreInfo(row.data()[0]) ).show();
-	            tr.addClass('shown');
-	        }
+	 		if(row.data()[3] != 0) {
+		        if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	    	} else {
+		    	tr.addClass("unavailable");
+		    }
 	    });
 	});	
 }
@@ -166,23 +187,26 @@ Table.prototype.Usage = function () {
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
-	 
-	        if ( row.child.isShown() ) {
-	            // This row is already open - close it
-	            row.child.hide();
-	            tr.removeClass('shown');
-	        }
-	        else {
-	            // Open this row
-	            row.child( that.moreInfo(row.data()[0]) ).show();
-	            tr.addClass('shown');
-	        }
+	 		if(row.data()[3] != 0) {
+		        if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	    	} else {
+		    	tr.addClass("unavailable");
+		    }
 	    });
 	});
 }
 
-Table.prototype.Information = function () {
-	this.type = "Information";
+Table.prototype.Datasets = function () {
+	this.type = "Datasets";
 	this.data = [];
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
@@ -195,17 +219,20 @@ Table.prototype.Information = function () {
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
-	 
-	        if ( row.child.isShown() ) {
-	            // This row is already open - close it
-	            row.child.hide();
-	            tr.removeClass('shown');
-	        }
-	        else {
-	            // Open this row
-	            row.child( that.moreInfo(row.data()[0]) ).show();
-	            tr.addClass('shown');
-	        }
+	 		if(row.data()[3] != 0) {
+	 			if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	 		} else {
+		    	tr.addClass("unavailable");
+		    }
 	    });
     });
 }
@@ -243,7 +270,7 @@ Table.prototype.moreInfo = function (data) {
 				}
 			});
 			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Categories</th></thead><tr><td id="'+data+'-apps"></td><td id="'+data+'-categories"></td></tr></table>';
-		case("Information"):
+		case("Datasets"):
 			$.getJSON(this.url + "categories/withDatasets/" + data, function(json){
 				for(index in json) {
 					$('#'+data+'-datasets').append('<tr><td>'+json[index].md_name+'</td></tr>');

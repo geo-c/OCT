@@ -2,7 +2,7 @@ var Form = function () {
 }
 
 Form.prototype.status = "";
-Form.prototype.url = "http://giv-oct.uni-muenster.de:8081/api/";
+Form.prototype.url = "http://giv-oct.uni-muenster.de:8080/api/";
 Form.prototype.data = [];
 
 /*
@@ -92,7 +92,7 @@ Form.prototype.modifyDatabase = function () {
 Form.prototype.catchMD = function () {
 	var that = this;
 
-	$.getJSON( "http://giv-oct.uni-muenster.de:8081/api/main_database", function (json) {
+	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/main_database", function (json) {
 		that.data = [];
 		$dropdown = $('<select id="main_database"></select><br><br>');
 		for(index in json) {
@@ -119,7 +119,7 @@ Form.prototype.catchSD = function (md) {
 	var that = this;
 	console.log(md);
 
-	$.getJSON( "http://giv-oct.uni-muenster.de:8081/api/sub_database/"+md, function (json) {
+	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/sub_database/"+md, function (json) {
 		console.log(json);
 	});
 }
@@ -268,7 +268,7 @@ Form.prototype.btnSend = function (text, callback) {
 		//Check which status is active
 		switch(that.status) {
 			case("login"):
-				$.getJSON( "http://giv-oct.uni-muenster.de:8081/api/admin/login/" + $('#username').val(), function (json) {
+				$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/admin/login/" + $('#username').val(), function (json) {
 					callback(json);
 				});
 				break;
@@ -283,7 +283,7 @@ Form.prototype.btnSend = function (text, callback) {
 				 console.log(data);
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8081/api/admin/signup",
+				    url: "http://giv-oct.uni-muenster.de:8080/api/admin/signup",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),

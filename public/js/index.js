@@ -28,7 +28,7 @@ $(document).ready(function() {
 	   	$("#btn-table").addClass("active");
 	   	$("#btn-graph").removeClass("active");
 	   	switch(status) {
-	   		case("Signup"):
+	   		case("GetanAPIKey"):
 	   			signupForm();
 	   			break;
 	   		default:
@@ -85,7 +85,7 @@ $(document).ready(function() {
 			if(data.app_name != "" || data.email_address != "" || data.first_name != "" || data.last_name != "") {
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8081/api/signup",
+				    url: "http://giv-oct.uni-muenster.de:8080/api/signup",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
@@ -93,8 +93,12 @@ $(document).ready(function() {
 				    	$('#content').empty('');
 				    	$('#content').append('<label>Your App has been signed up.</label>');
 				    	$('#content').append('<br><label>Your API Key is:</label>');
-				    	$('#content').append('<br><label>' + r.app_hash + '</label>');
-				    	$('#content').append('<br><br><label>Your key has been sent to your email address</label>');
+				    	$('#content').append('<br><section><code>' + r.app_hash + '</code></section>');
+				    	$('#content').append('<br><br><label>Your key has also been sent to your email address</label>');
+				    	$('#content').append('<br><br><label>The URL of the API is: <a>http://giv-oct.uni-muenster.de:8080/api/</a>');
+				    	$('#content').append('<br><br><label>You can query the Databases with <a  href="http://giv-oct.uni-muenster.de:8080/api/query/Traffic?authorization='+r.app_hash+'">http://giv-oct.uni-muenster.de:8080/api/query/:categoryname:?authorization=YourAPIKey</a>');
+				    	$('#content').append('<br><br>If you have further Questions please visit: <a>http://giv-oct.uni-muenster.de:8080/docs/architecture/rest-api/</a>');
+
 				    	console.log(r);
 					}
 				});
@@ -116,8 +120,8 @@ $(document).ready(function() {
 			case("Usage"):
 				table.Usage();
 				break;
-			case("Information"):
-				table.Information();
+			case("Datasets"):
+				table.Datasets();
 				break;
 			default:
 				break;
@@ -136,8 +140,8 @@ $(document).ready(function() {
 			case("Usage"):
 				graph.Usage();
 				break;
-			case("Information"):
-				graph.Information();
+			case("Datasets"):
+				graph.Datasets();
 			default:
 				break;
 		}
