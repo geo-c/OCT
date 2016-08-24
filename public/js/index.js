@@ -136,6 +136,8 @@ $(document).ready(function() {
 			case("Usage"):
 				graph.Usage();
 				break;
+			case("Information"):
+				graph.Information();
 			default:
 				break;
 		}
