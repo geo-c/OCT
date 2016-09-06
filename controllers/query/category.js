@@ -75,6 +75,7 @@ exports.request = function(req, res){
                                 word = words[i].split(",");
                                 if(i==0) {
                                     for(j in word) {
+                                        console.log(word[j]);
                                         if(j==0) {
                                             tmp = "WHERE categories.category_name LIKE '%' || $"+index+" || '%' ";
                                             query += tmp;
@@ -83,6 +84,7 @@ exports.request = function(req, res){
                                             logCategory(client, word[j], accessToken);
                                         } else {
                                             tmp = "OR categories.category_name LIKE '%' || $"+index+" || '%' ";
+                                            query += tmp;
                                             params.push(word[j]);
                                             index++;
                                             logCategory(client, word[j], accessToken);
@@ -107,6 +109,7 @@ exports.request = function(req, res){
                                 }
                             }
                             query += ";";
+                            console.log(query);
                             client.query(query, params, function(err, result) {
                                 if(err) {
                                     console.log(err);
@@ -145,7 +148,6 @@ exports.request = function(req, res){
                                                     }
                                                 }
                                             }
-
                                             switch(result.rows[index].ds_type) {
                                                 /** TODO:
                                                  * Need to get query from database, then execute
@@ -177,32 +179,45 @@ exports.request = function(req, res){
                                                     finish(res, Answer, answerCount, result.rows.length);
                                                     break;
                                                 case("REST"):
-                                                    answerCount ++;
+                                                    var name = result.rows[index].sd_name;
+                                                    var description = result.rows[index].sd_description;
                                                     request(result.rows[index].ds_host, function(error, response, body) {
                                                         if(!error) {
                                                             dt = {
-                                                                name: result.rows[index].sd_name,
-                                                                descritpion: result.rows[index].sd_descripton,
+                                                                name: name,
+                                                                descritpion: description,
                                                                 preview: JSON.parse(body)
                                                             }
                                                             Answer.data.Rest.data.push(dt);
                                                             Answer.data.Rest.count ++;
+                                                            Answer.data.Rest.time = (Date.now()-time) / 1000 + " s";
+                                                            answerCount ++;
                                                             finish(res, Answer, answerCount, result.rows.length);
                                                         } else {
                                                             console.log(error);
                                                             console.log(response);
+                                                            answerCount ++;
+                                                            finish(res, Answer, answerCount, result.rows.length);
                                                         }
                                                     });
                                                     break;
                                                 case("COUCHDB"):
-                                                    answerCount ++;
                                                     var data = result.rows[index];
                                                     var length = result.rows.length;
+                                                    var name = result.rows[index].sd_name;
+                                                    var description = result.rows[index].sd_description;
                                                     var couchdb_Client = new CouchDB_Client(data.ds_host, data.ds_port);
                                                     couchdb_Client.useDatabase(data.db_instance);
-                                                    couchdb_Client.query(function (result) {
-                                                        Answer.data.couchDB.data.push(result);
+                                                    couchdb_Client.query(function (_result) {
+                                                        dt = {
+                                                            name: name,
+                                                            description: description,
+                                                            preview: _result
+                                                        }
+                                                        Answer.data.couchDB.data.push(dt);
                                                         Answer.data.couchDB.count ++;
+                                                        Answer.data.couchDB.time = (Date.now()-time) / 1000 + " s";
+                                                        answerCount ++;
                                                         finish(res, Answer, answerCount, length);
                                                     });
                                                     break;
@@ -281,7 +296,6 @@ var finish = function (res, Answer, answerCount, max) {
 };
 
 var logCategory = function (client, category_name, accessToken) {
-    console.log(category_name);
     client.query("SELECT category_id FROM categories WHERE category_name LIKE '%' || $1 || '%' ", [
         category_name
     ], function (err, result) {
