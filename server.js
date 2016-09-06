@@ -99,6 +99,7 @@ if(db_settings.status && email_settings.status){
     var main_database = require('./routes/main_database');
     var sub_database = require('./routes/sub_database');
     var admin = require('./routes/admin');
+    var spatial = require('./routes/spatial');
 
     // Load Routes
     app.use('/api', signup);
@@ -111,6 +112,7 @@ if(db_settings.status && email_settings.status){
     app.use('/api', main_database);
     app.use('/api', sub_database);
     app.use('/api', admin);
+    app.use('/api', spatial);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");

@@ -44,6 +44,10 @@ module.exports = {
         error_3: {
             code: 404,
             message: 'No Datasets found for this category'
+        },
+        error_4: {
+            code: 404,
+            message: 'No Datasets found near this Point'
         }
     },
     development: {
