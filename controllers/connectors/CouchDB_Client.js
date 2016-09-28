@@ -15,34 +15,17 @@ CouchDB_Client.prototype.useDatabase = function (name) {
 	this.database_name = name;
 }
 
-CouchDB_Client.prototype.query = function (cb) {
+CouchDB_Client.prototype.query = function (query_string, cb) {
 	if(this.database == null) {
 		this.useDatabase();
 	}
 	var name = this.database_name;
-	this.database.list('', function (err, body) {
-		var result = [];
-		if(!err) {
-			for(var i in body.rows) {
-				rev = body.rows[i].value;
-				doc = body.rows[i].key;
-				nano.request({
-					db: name,
-					doc:doc,
-					method:'get',
-					params: { rev:rev}
-					}, function (err, body) {
-						if(!err) {
-							result.push(body);
-						}
-						cb(result);
-					});
-			}
+	this.database.get(query_string, function (err, body) {
+		if(err) {
+			cb(err, null);
 		} else {
-			console.log(err);
-			cb(null);
+			cb(null, body);
 		}
-		//cb(result);
 	});
 }
 

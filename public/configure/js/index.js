@@ -1,11 +1,13 @@
 $(document).ready(function() {
 	var url = "api/";
 	var form = new Form();
+	var table = new Table();
 	var login = false;
 
 	//Callback fired when User is logged in or signed up
 	var signup_login_callback = function (data) {
 		username = data.username;
+		form.addUser(data);
 		login = true;
 		//Enable left Navbar
 		$(".navbar-left li").removeClass("disabled");
@@ -15,26 +17,12 @@ $(document).ready(function() {
 		//Add Label to the right
 		$label = $('<li><a class="navbar-brand" href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+username+'</a></li>');
 		$(".navbar-right").append($label)
-		form.addDatabase();
+
+		table.Queries();
+		form.addingButton();
 	}
 
-	//Listen on Left Tab Changes
-	$(".navbar-left a").on("click", function(){
-		if(login) {
-			$(".nav").find(".active").removeClass("active");
-		   	$(this).parent().addClass("active");
-		   	switch($(this).html()) {
-		   		case('Add'):
-		   			form.addDatabase();
-		   			break;
-		   		case('Modify'):
-		   			form.modifyDatabase();
-		   			break;
-		   		default:
-		   			break;
-		   	}
-		}
-	});
+
 
 	//Listen on Right Tab Changes
 	$(".navbar-right a").on("click", function(){

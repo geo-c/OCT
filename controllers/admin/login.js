@@ -13,7 +13,6 @@ exports.request = function(req, res) {
 			res.status(errors.database.error_1.code).send(errors.database.error_1);
 			return console.error(errors.database.error_1.message, err);
         } else {
-			console.log(req.body.username);
          	// Database Query
             client.query('SELECT * FROM Admins WHERE username = $1;', [
             req.params.username

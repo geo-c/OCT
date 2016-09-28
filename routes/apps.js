@@ -5,8 +5,10 @@ var list = require('../controllers/apps/list');
 var byDate = require('../controllers/apps/byDate');
 
 
-// LIST
+//Get all apps
 router.get('/apps', list.request);
+
+//Get all Appusage for given day
 router.get('/apps/byDate/:date', byDate.request);
 
 // TODO:

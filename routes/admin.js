@@ -5,9 +5,10 @@ var signup = require('../controllers/admin/signup');
 var login = require('../controllers/admin/login');
 
 
-// SIGN UP
+//Create a new admin account
 router.post('/admin/signup', signup.request);
 
+//Log in to an existing admin acount
 router.get('/admin/login/:username', login.request);
 
 

@@ -7,10 +7,10 @@ var byDate = require('../controllers/categories/byDate');
 var withDatasets = require('../controllers/categories/withDatasets');
 var withDatasetsByCategory = require('../controllers/categories/withDatasetsByCategory');
 
-// LIST
+// GET all categories with logged searches
 router.get('/categories', list.request);
 
-//CategoryByApp
+//GET all apps that searched for category with count of calls
 router.get('/categories/:category_id/apps', categoryByApp.request);
 
 //CategoryByDate
