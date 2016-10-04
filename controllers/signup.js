@@ -86,11 +86,14 @@ exports.request = function(req, res) {
 
 	                                    // Render HTML-content
 	                                    var output = mustache.render(data.toString(), app);
+	                                    console.log(app);
+	                                    console.log(output);
 
 	                                    // Create Text for Email-Previews and Email without HTML-support
 	                                    var text =
 	                                        'Hello ' + app.first_name + ' ' + app.last_name + '\n' +
 	                                        'Your new Access-Token has been generated!\n\n\n' +
+	                                        app.hash_token + 
 	                                        'OCT - Institute for Geoinformatics (Heisenbergstraße 2, 48149 Münster, Germany)';
 
 	                                    // Set Mail options
