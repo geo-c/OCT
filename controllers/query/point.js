@@ -14,7 +14,7 @@ var validate = ajv.compile(schema);
 var CouchDB_Client = require('../connectors/CouchDB_Client.js');
 var EnviroCar_Client = require('../connectors/EnviroCar_Client.js');
 var Postgres_Client = require('../connectors/Postgres_Client.js');
-var Sparql_Client = require('../connectors/Sparql_Client.js');
+var Parliament_Client = require('../connectors/Parliament_Client.js');
 
 
 // POST
