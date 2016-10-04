@@ -13,7 +13,8 @@ $(document).ready(function() {
 		$(".btn-group").show();
 	   	$(".nav").find(".active").removeClass("active");
 	   	$(this).parent().addClass("active");
-	   	status = $(this).html();
+	   	status = $(this).html().replace(/\s/g, '');
+	   	console.log(status);
 	   	$("#btn-table").addClass("active");
 	   	$("#btn-graph").removeClass("active");
 	   	showTable();
@@ -123,6 +124,9 @@ $(document).ready(function() {
 			case("Datasets"):
 				table.Datasets();
 				break;
+			case("DatasetsperCategory"):
+				table.DatasetsPerCategory();
+				break;
 			default:
 				break;
 		}
@@ -142,6 +146,10 @@ $(document).ready(function() {
 				break;
 			case("Datasets"):
 				graph.Datasets();
+				break;
+			case("DatasetsperCategory"):
+				graph.DatasetsPerCategory();
+				break;
 			default:
 				break;
 		}

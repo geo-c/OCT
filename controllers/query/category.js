@@ -314,7 +314,7 @@ var logCategory = function (client, category_name, accessToken) {
             } else {
                 console.log(result.rows[0].category_id);
                 category_id = result.rows[0].category_id;
-                client.query("INSERT INTO Logs VALUES ($1, now(), $2)", [accessToken, category_id], function (err, result) {
+                client.query("INSERT INTO Logs(app_hash, timestamp, category_id, sd_id) VALUES ($1, now(), $2, null)", [accessToken, category_id], function (err, result) {
                     if(err) {
                         console.log(err);
                     } else {

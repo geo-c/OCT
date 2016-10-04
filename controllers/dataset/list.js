@@ -18,7 +18,7 @@ exports.request = function(req, res) {
             categories = {
                 data: []
             };
-            client.query('SELECT c.category_name, c.category_id, (SELECT COUNT(cr.md_id) FROM categories_relationships cr WHERE cr.category_id=c.category_id) FROM categories c;', function(err, result) {
+            client.query('SELECT queries.query_extern as dataset, sub_datasets.sd_id, (SELECT COUNT(logs.sd_id) FROM logs WHERE logs.sd_id=sub_datasets.sd_id) FROM queries INNER JOIN sub_datasets ON sub_datasets.sd_id = queries.sd_id;', function(err, result) {
                 done();
 
                 if (err) {

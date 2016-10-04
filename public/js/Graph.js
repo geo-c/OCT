@@ -132,6 +132,21 @@ Graph.prototype.Datasets = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
+	$.getJSON(that.url + "tdataset", function (json) {
+		for(index in json) {
+			that.labels.push(json[index].dataset);
+			that.data.push(json[index].count);
+			that.backgroundColors.push('rgba(255, 99, 132, 0.2)');
+			that.borderColors.push('rgba(255,99,132,1)');
+		}
+		that.draw();
+	});	
+}
+
+Graph.prototype.DatasetsPerCategory = function () {
+	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
+	this.reset();
+	var that = this;
 	$.getJSON(that.url + "categories/withDatasets", function (json) {
 		for(index in json) {
 			that.labels.push(json[index].category_name);

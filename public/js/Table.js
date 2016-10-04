@@ -59,6 +59,14 @@ Table.prototype.draw = function () {
 			columns = [
 				{title: ""},
 				{title: "More"},
+				{title: "Dataset"},
+				{title: "API Calls"}
+			];
+			break;
+		case("DatasetsPerCategory"):
+			columns = [
+				{title: ""},
+				{title: "More"},
 				{title: "Category"},
 				{title: "Number of Datasets"}
 			];
@@ -211,6 +219,39 @@ Table.prototype.Datasets = function () {
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
+	$.getJSON(this.url + "tdataset", function(json){
+		for(index in json) {
+			console.log(json[index])
+			that.data.push([json[index].sd_id, '', json[index].dataset, json[index].count]);
+		}
+		that.draw();
+		$('#table tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = that.dataTable.row( tr );
+	 		if(row.data()[3] != 0) {
+	 			if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	 		} else {
+		    	tr.addClass("unavailable");
+		    }
+	    });
+    });
+}
+
+Table.prototype.DatasetsPerCategory = function () {
+	this.type = "DatasetsPerCategory";
+	this.data = [];
+	this.empty();
+	$("#content").html('<table id="table" class="display" width="100%"></table>');
+	var that = this;
 	$.getJSON(this.url + "categories/withDatasets", function(json){
 		for(index in json) {
 			that.data.push([json[index].category_id, '', json[index].category_name, json[index].count]);
@@ -219,6 +260,7 @@ Table.prototype.Datasets = function () {
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
+	 		console.log(row.data())
 	 		if(row.data()[3] != 0) {
 	 			if ( row.child.isShown() ) {
 		            // This row is already open - close it
@@ -250,7 +292,12 @@ Table.prototype.moreInfo = function (data) {
 					$('#'+ssdata+'-categories').append('<tr><td>'+json[index].category_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+ssdata+'-detail"><thead><th>Categories</th><th>Count</th></thead><tr><td id="'+ssdata+'-categories"></td></tr></table>';
+			$.getJSON(this.url + "apps/" + data + '/logsByDataset', function(json){
+				for(index in json) {
+					$('#'+ssdata+'-dataset').append('<tr><td>'+json[index].dataset+'</td><td>'+ json[index].count +'</td></tr>');
+				}
+			});
+			return '<table id="'+ssdata+'-detail"><thead><th>Categories</th><th>Count</th><th>Dataset</th><th>Count</th></thead><tr><td id="'+ssdata+'-categories"></td><td id="'+ssdata+'-dataset"></td></tr></table>';
 		case("Categories"):
 			$.getJSON(this.url + "categories/" + data + '/apps', function(json){
 				for(index in json) {
@@ -271,12 +318,19 @@ Table.prototype.moreInfo = function (data) {
 			});
 			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Categories</th></thead><tr><td id="'+data+'-apps"></td><td id="'+data+'-categories"></td></tr></table>';
 		case("Datasets"):
-			$.getJSON(this.url + "categories/withDatasets/" + data, function(json){
+			$.getJSON(this.url + "tdataset/" + data, function(json){
 				for(index in json) {
-					$('#'+data+'-datasets').append('<tr><td>'+json[index].md_name+'</td></tr>');
+					$('#'+data+'-datasets').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+data+'-detail"><thead><th>Datasets</th></thead><tr><td id="'+data+'-datasets"></td></tr></table>';
+			return '<table id="'+data+'-detail"><thead><th>Datasets</th><th>Count</th></thead><tr><td id="'+data+'-datasets"></td></tr></table>';
+		case("DatasetsPerCategory"):
+			$.getJSON(this.url + "categories/withDatasets/" + data, function(json){
+				for(index in json) {
+					$('#'+data+'-datasetsPerCategory').append('<tr><td>'+json[index].md_name+'</td></tr>');
+				}
+			});
+			return '<table id="'+data+'-detail"><thead><th>Datasets</th></thead><tr><td id="'+data+'-datasetsPerCategory"></td></tr></table>';
 		default:
 			return null;
 			break;

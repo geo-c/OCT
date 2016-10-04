@@ -14,7 +14,7 @@ var validate = ajv.compile(schema);
 var CouchDB_Client = require('../connectors/CouchDB_Client.js');
 var EnviroCar_Client = require('../connectors/EnviroCar_Client.js');
 var Postgres_Client = require('../connectors/Postgres_Client.js');
-var Sparql_Client = require('../connectors/Sparql_Client.js');
+var Parliament_Client = require('../connectors/Parliament_Client.js');
 
 
 // POST
@@ -66,8 +66,8 @@ exports.request = function(req, res){
                             res.status(errors.query.error_1.code).send(errors.query.error_1);
                             console.error(errors.query.error_1.message);
                         } else {
-                            query = "SELECT sub_datasets.sd_name, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance, queries.query_intern, queries.query_extern, queries.query_description "
-                            query += "FROM public.sub_datasets INNER JOIN queries ON sub_datasets.sd_id = queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id "
+                            query = "SELECT sub_datasets.sd_name, sub_datasets.sd_id, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance, queries.query_intern, queries.query_extern, queries.query_description "
+                            query += "FROM sub_datasets INNER JOIN queries ON sub_datasets.sd_id = queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id "
                             query += "WHERE queries.query_extern = $1"
                             client.query(query, [
                                 req.params.query_extern
@@ -82,6 +82,7 @@ exports.request = function(req, res){
                                         //res.status(201).send(result.rows);
                                         var answerCount = 0;
                                         for(index in result.rows) {
+                                            logDataset(client, accessToken, result.rows[index].sd_id);
                                             // Prepare Connectors
                                             switch(result.rows[index].ds_type) {
                                                 /** TODO:
@@ -154,3 +155,14 @@ exports.request = function(req, res){
         });
     }
 };
+
+
+var logDataset = function (client, accessToken, sd_id) {
+    client.query("INSERT INTO Logs(app_hash, timestamp, category_id, sd_id) VALUES ($1, now(), null, $2)", [accessToken, sd_id], function (err, result) {
+        if(err) {
+            console.log(err);
+        } else {
+            //Logged the search
+        }
+    });
+}

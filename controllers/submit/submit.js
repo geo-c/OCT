@@ -31,18 +31,23 @@ exports.request = function(req, res) {
 
 	    // Create URL
 	    var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
-
 	    // Connect to Database
 	    pg.connect(url, function(err, client, done) {
 	        if (err) {
 				res.status(errors.database.error_1.code).send(errors.database.error_1);
 				return console.error(errors.database.error_1.message, err);
 	        } else {
-	        	client.query("INSERT INTO Datastores (created, updated, ds_type, ds_description, ds_host, ds_port, db_instance, db_user, db_password) VALUES (now(), now(), $1, $2, $3, null, null, null, null) RETURNING ds_id;", [
-	        		req.body.ds_type,
+	        	query = "INSERT INTO Datastores (created, updated, ds_type, ds_description, ds_host, ds_port, db_instance, db_user, db_password) VALUES (now(), now(), $1, $2, $3, $4, $5, $6, $7) RETURNING ds_id;";
+        		params = [
+        			req.body.ds_type,
 	        		req.body.ds_description,
-	        		req.body.ds_host
-	        	], function (err, result) {
+	        		req.body.ds_host,
+	        		req.body.ds_port,
+	        		req.body.db_instance,
+	        		req.body.db_user,
+	        		req.body.db_password
+        		]
+	        	client.query(query, params, function (err, result) {
 	        		if(err) {
 	        			console.log(err);
 	        			res.status(404).send(err);

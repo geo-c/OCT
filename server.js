@@ -43,7 +43,6 @@ if(program.email_user != "user@gmail.com" && program.email_password != "password
     exports.email_settings = email_settings;
 }
 
-
 /**
  * Start Webserver
  */
@@ -101,6 +100,7 @@ if(db_settings.status && email_settings.status){
     var admin = require('./routes/admin');
     var spatial = require('./routes/spatial');
     var submit = require('./routes/submit');
+    var dataset = require('./routes/dataset');
 
     // Load Routes
     app.use('/api', signup);
@@ -115,6 +115,7 @@ if(db_settings.status && email_settings.status){
     app.use('/api', admin);
     app.use('/api', spatial);
     app.use('/api', submit);
+    app.use('/api', dataset);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");

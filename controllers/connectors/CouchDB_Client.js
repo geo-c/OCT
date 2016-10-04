@@ -2,7 +2,7 @@ var nano;
 
 var CouchDB_Client = function(host, port) {
 	url = host + ':' + port + '/';
-	nano = require('nano')(url)
+	nano = require('nano')(url);
 	var database = null;
 	var database_name = '';
 };
