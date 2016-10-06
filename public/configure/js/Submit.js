@@ -92,7 +92,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(JSON.stringyfy(e));
+								callback(e);
 							}
 						});
 					}, 
@@ -156,7 +156,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(JSON.stringyfy(e));
+								callback(e);
 							}
 						});
 					}, 
@@ -198,7 +198,7 @@ Submit.prototype.submit = function (status, callback) {
 					license: "",
 					sd_name: "",
 					sd_description: "",
-					query: query,
+					query_intern: query,
 					query_extern: query_id,
 					query_description: query_description,
 					categories: this.categories
@@ -222,12 +222,12 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(JSON.stringyfy(e));
+								callback(e);
 							}
 						});
 					}, 
 					error: function (e) {
-						callback(JSON.stringyfy(e));
+						callback(e);
 					}
 				});
 			}
@@ -285,7 +285,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(JSON.stringyfy(e));
+								callback(e);
 							}
 						});
 					}, 
