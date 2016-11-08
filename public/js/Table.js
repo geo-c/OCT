@@ -36,6 +36,7 @@ Table.prototype.draw = function () {
 	            { title: "More" },
 	            { title: "Name" },
 	            { title: "Description" },
+	            { title: "Searches" },
 	            { title: "API Calls" }
 			];
 			break;
@@ -115,7 +116,7 @@ Table.prototype.Apps = function () {
 	var that = this;
 	$.getJSON(this.url + "apps", function(json){
 		for(index in json) {
-			that.data.push([json[index].app_hash, '', json[index].app_name, json[index].app_description, json[index].calls]);
+			that.data.push([json[index].app_hash, '', json[index].app_name, json[index].app_description, json[index].searches, json[index].api_calls]);
 		}
 		that.draw();
 		//Set listener on Click for more Details
@@ -297,7 +298,7 @@ Table.prototype.moreInfo = function (data) {
 					$('#'+ssdata+'-dataset').append('<tr><td>'+json[index].dataset+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+ssdata+'-detail"><thead><th>Categories</th><th>Count</th><th>Dataset</th><th>Count</th></thead><tr><td id="'+ssdata+'-categories"></td><td id="'+ssdata+'-dataset"></td></tr></table>';
+			return '<div class="row"><div class="col-md-6"><h3>Searches</h3><div id="'+ssdata+'-categories"></div></div> <div class="col-md-6"><h3>API Calls</h3><div id="'+ssdata+'-dataset"></div></div></div>';
 		case("Categories"):
 			$.getJSON(this.url + "categories/" + data + '/apps', function(json){
 				for(index in json) {

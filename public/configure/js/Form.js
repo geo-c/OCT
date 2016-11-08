@@ -183,6 +183,7 @@ Form.prototype.Postgres = function () {
 	
 	this.btnSend("Send", function (e) {
 		alert(e);
+		location.reload();
 	});
 }
 
@@ -250,6 +251,7 @@ Form.prototype.API = function () {
 	
 	this.btnSend("Send", function (e) {
 		alert(e);
+		location.reload();
 	});
 }
 
@@ -318,6 +320,7 @@ Form.prototype.CouchDB = function () {
 
 	this.btnSend("Send", function (e) {
 		alert(e);
+		location.reload();
 	});
 }
 
@@ -381,6 +384,7 @@ Form.prototype.Parliament = function () {
 
 	this.btnSend("Send", function (e) {
 		alert(e);
+		location.reload();
 	});
 }
 

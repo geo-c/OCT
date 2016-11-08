@@ -17,7 +17,7 @@ exports.request = function(req, res) {
         } else {
 
             // Database Query
-            client.query('SELECT apps.app_hash, apps.app_name, apps.app_description, (SELECT COUNT(*) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS Calls FROM public.apps;', function(err, result) {
+            client.query('SELECT apps.app_hash, apps.app_name, apps.app_description, (SELECT COUNT(logs.category_id) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS Searches, (SELECT COUNT(logs.sd_id) FROM public.logs WHERE logs.app_hash = apps.app_hash) AS API_Calls FROM public.apps;', function(err, result) {
                 done();
 
                 if (err) {

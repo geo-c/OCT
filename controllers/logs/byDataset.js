@@ -33,7 +33,7 @@ exports.request = function(req, res) {
                     } else {
 
                         // Database Query
-                        client.query('SELECT count(logs.sd_id) AS count, queries.query_extern AS dataset FROM logs INNER JOIN sub_datasets on logs.sd_id=sub_datasets.sd_id INNER JOIN queries ON queries.sd_id = sub_datasets.sd_id WHERE app_hash=$1 GROUP BY queries.query_extern;', [
+                        client.query('SELECT count(logs.sd_id) AS count, queries.query_extern AS dataset FROM logs INNER JOIN sub_datasets on logs.sd_id=sub_datasets.sd_id INNER JOIN queries ON queries.sd_id = sub_datasets.sd_id WHERE app_hash=$1 GROUP BY queries.query_extern ORDER BY count DESC;', [
                             req.params.app_hash
                         ], function(err, result) {
                             done();
