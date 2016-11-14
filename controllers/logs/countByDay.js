@@ -17,7 +17,7 @@ exports.request = function(req, res) {
             return console.error(errors.database.error_1.message, err);
         } else {
             // Database Query
-            client.query('SELECT logs."timestamp"::timestamp::date as date, count(logs."timestamp") FROM public.logs GROUP BY date ORDER BY date;', function(err, result) {
+            client.query('SELECT logs."timestamp"::timestamp::date as date,count(logs.category_id) AS Searches, count(logs.sd_id) AS API_Calls FROM public.logs GROUP BY date ORDER BY date;', function(err, result) {
                 done();
 
                 if (err) {

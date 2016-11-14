@@ -34,10 +34,10 @@ Table.prototype.draw = function () {
 			columns = [
 				{ title: "" },
 	            { title: "More" },
-	            { title: "Name" },
-	            { title: "Description" },
-	            { title: "Searches" },
-	            { title: "API Calls" }
+	            { title: 'Name' },
+	            { title: 'Description' },
+	            { title: 'Searches  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
+	            { title: 'API Calls  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
 			break;
 		case("Categories"):
@@ -45,7 +45,8 @@ Table.prototype.draw = function () {
 				{ title: "" },
 	            { title: "More" },
 	            { title: "Name" },
-	            { title: "Calls" }
+	            { title: 'Searches   <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
+	            {title: 'Number of Datasets  <a id="help-numodata"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>'}
 			];
 			break;
 		case("Usage"):
@@ -53,7 +54,8 @@ Table.prototype.draw = function () {
 				{ title: "" },
 	            { title: "More" },
 	            { title: "Date" },
-	            { title: "API Calls" }
+	            { title: 'Searches  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
+	            { title: 'API Calls  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
 			break;
 		case("Datasets"):
@@ -61,15 +63,7 @@ Table.prototype.draw = function () {
 				{title: ""},
 				{title: "More"},
 				{title: "Dataset"},
-				{title: "API Calls"}
-			];
-			break;
-		case("DatasetsPerCategory"):
-			columns = [
-				{title: ""},
-				{title: "More"},
-				{title: "Category"},
-				{title: "Number of Datasets"}
+				{ title: 'API Calls  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
 			break;
 		default:
@@ -119,6 +113,21 @@ Table.prototype.Apps = function () {
 			that.data.push([json[index].app_hash, '', json[index].app_name, json[index].app_description, json[index].searches, json[index].api_calls]);
 		}
 		that.draw();
+
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-search"):
+					$("#txtSearch").show();
+					break;
+				case("help-api"):
+					$("#txtAPI").show();
+					break;
+			}
+		});
 		//Set listener on Click for more Details
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
@@ -152,9 +161,23 @@ Table.prototype.Categories = function () {
 	var that = this;
 	$.getJSON(this.url + "categories", function(json){
 		for(index in json) {
-			that.data.push([json[index].category_id, '', json[index].category_name, json[index].calls]);
+			that.data.push([json[index].category_id, '', json[index].category_name, json[index].searches, json[index].datasets]);
 		}
 		that.draw();
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-search"):
+					$("#txtSearch").show();
+					break;
+				case("help-numodata"):
+					$("#txtNumOData").show();
+					break;
+			}
+		});
 		//Set listener on Click for more Details
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
@@ -189,9 +212,23 @@ Table.prototype.Usage = function () {
 	$.getJSON(this.url + "logs/countByDay", function(json){
 		for(index in json) {
 			date =  json[index].date.slice(0, json[index].date.lastIndexOf("T"))
-			that.data.push([date, '',date, json[index].count]);
+			that.data.push([date, '',date, json[index].searches, json[index].api_calls]);
 		}
 		that.draw();
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-search"):
+					$("#txtSearch").show();
+					break;
+				case("help-api"):
+					$("#txtAPI").show();
+					break;
+			}
+		});
 		//Set listener on Click for more Details
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
@@ -222,46 +259,23 @@ Table.prototype.Datasets = function () {
 	var that = this;
 	$.getJSON(this.url + "tdataset", function(json){
 		for(index in json) {
-			console.log(json[index])
 			that.data.push([json[index].sd_id, '', json[index].dataset, json[index].count]);
 		}
 		that.draw();
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-api"):
+					$("#txtAPI").show();
+					break;
+			}
+		});
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
-	 		if(row.data()[3] != 0) {
-	 			if ( row.child.isShown() ) {
-		            // This row is already open - close it
-		            row.child.hide();
-		            tr.removeClass('shown');
-		        }
-		        else {
-		            // Open this row
-		            row.child( that.moreInfo(row.data()[0]) ).show();
-		            tr.addClass('shown');
-		        }
-	 		} else {
-		    	tr.addClass("unavailable");
-		    }
-	    });
-    });
-}
-
-Table.prototype.DatasetsPerCategory = function () {
-	this.type = "DatasetsPerCategory";
-	this.data = [];
-	this.empty();
-	$("#content").html('<table id="table" class="display" width="100%"></table>');
-	var that = this;
-	$.getJSON(this.url + "categories/withDatasets", function(json){
-		for(index in json) {
-			that.data.push([json[index].category_id, '', json[index].category_name, json[index].count]);
-		}
-		that.draw();
-		$('#table tbody').on('click', 'td.details-control', function () {
-	        var tr = $(this).closest('tr');
-	        var row = that.dataTable.row( tr );
-	 		console.log(row.data())
 	 		if(row.data()[3] != 0) {
 	 			if ( row.child.isShown() ) {
 		            // This row is already open - close it
@@ -298,14 +312,19 @@ Table.prototype.moreInfo = function (data) {
 					$('#'+ssdata+'-dataset').append('<tr><td>'+json[index].dataset+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<div class="row"><div class="col-md-6"><h3>Searches</h3><div id="'+ssdata+'-categories"></div></div> <div class="col-md-6"><h3>API Calls</h3><div id="'+ssdata+'-dataset"></div></div></div>';
+			return '<div class="row"><div class="col-md-4"><h3>Searches</h3><div id="'+ssdata+'-categories"></div></div> <div class="col-md-4"><h3>API Calls</h3><div id="'+ssdata+'-dataset"></div></div></div>';
 		case("Categories"):
 			$.getJSON(this.url + "categories/" + data + '/apps', function(json){
 				for(index in json) {
-					$('#'+data+'-app').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+data+'-apps').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+data+'-detail"><thead><th>App</th><th>Count</th></thead><tr><td id="'+data+'-app"></td><td id="Calls"></td></tr></table>';
+			$.getJSON(this.url + "categories/withDatasets/" + data, function(json){
+				for(index in json) {
+					$('#'+data+'-datasets').append('<tr><td>'+json[index].md_name+'</td></tr>');
+				}
+			});
+			return '<div class="row"><div class="col-md-4"><h3>Apps</h3><div id="'+data+'-apps"></div></div> <div class="col-md-4"><h3>Datasets</h3><div id="'+data+'-datasets"></div></div></div>'
 		case("Usage"):
 			$.getJSON(this.url + "apps/byDate/" + data, function(json){
 				for(index in json) {
@@ -321,17 +340,10 @@ Table.prototype.moreInfo = function (data) {
 		case("Datasets"):
 			$.getJSON(this.url + "tdataset/" + data, function(json){
 				for(index in json) {
-					$('#'+data+'-datasets').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+data+'-datasets').append('<tr><td>'+json[index].app_name+'</td><td align="right">'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+data+'-detail"><thead><th>Datasets</th><th>Count</th></thead><tr><td id="'+data+'-datasets"></td></tr></table>';
-		case("DatasetsPerCategory"):
-			$.getJSON(this.url + "categories/withDatasets/" + data, function(json){
-				for(index in json) {
-					$('#'+data+'-datasetsPerCategory').append('<tr><td>'+json[index].md_name+'</td></tr>');
-				}
-			});
-			return '<table id="'+data+'-detail"><thead><th>Datasets</th></thead><tr><td id="'+data+'-datasetsPerCategory"></td></tr></table>';
+			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>API Calls</th></thead><tbody id="'+data+'-datasets"></tbody></table>';
 		default:
 			return null;
 			break;

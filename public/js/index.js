@@ -8,6 +8,12 @@ $(document).ready(function() {
 	//Init
 	init();
 
+	$(document).on('click','.navbar-collapse.in',function(e) {
+	    if( $(e.target).is('a') ) {
+	        $(this).collapse('hide');
+	    }
+	});
+
 	//Listen on Left Tab Changes
 	$(".navbar-left a").on("click", function(){
 		$(".btn-group").show();
@@ -39,7 +45,7 @@ $(document).ready(function() {
 	});
 
 	//Listen on Button-Group Clicks
-	$(".btn-group button").on("click", function(){
+	$(".btn-group-justified div button").on("click", function(){
 		$(".btn-group").find(".active").removeClass("active");
 		$(this).addClass("active");
 		if($(this).html() == "Table") {

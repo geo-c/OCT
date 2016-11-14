@@ -27,34 +27,79 @@
 </head>
 
   <body style="overflow-x:hidden;">
+
     <nav class="navbar navbar-default">
       <div class="container-fluid">
+
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">OCT Core</a>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+            <span class="sr-only">Navigation ein-/ausblenden</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+            OCT Core
+          </a>
         </div>
-        <ul class="nav navbar-nav navbar-left">
-          <li class="active"><a id="tab0" href="#">Apps</a></li>
-          <li><a id="tab1" href="#">Categories</a></li>
-          <li><a id="tab2" href="#">Usage</a></li> 
-          <li><a id="tab3" href="#">Datasets</a></li>
-          <li><a id="tab4" href="#">Datasets per Category</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>  Get an API Key</a></li>
-          <li><a id="tab3" href="/configure"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configure</a></li>
-        </ul>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li class="active"><a id="tab0" href="#">Apps</a></li>
+            <li><a id="tab1" href="#">Categories</a></li>
+            <li><a id="tab2" href="#">Usage</a></li> 
+            <li><a id="tab3" href="#">Datasets</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>  Get an API Key</a></li>
+            <li><a id="tab3" href="/configure"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configure</a></li>
+          </ul>
+        </div>
       </div>
     </nav>
 
     <div class="row container-fluid">
-      <div class="col-sm-1" id="btn-group1">
-        <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary btn-block active" id="btn-table">Table</button>
-          <button type="button" class="btn btn-secondary btn-block" id="btn-graph">Graph</button>
+      <div class="col-md-1 col-sm-12 col-xs-12" id="btn-group1">
+          <div class="row">
+            <div class="btn-group-justified" role="group" aria-label="Basic example">
+            <div class="col-md-12 col-sm-6 col-xs-6">
+              <button type="button" class="btn btn-secondary btn-block active" id="btn-table">Table</button>
+            </div>
+            <div class="col-md-12 col-sm-6 col-xs-6">
+              <button type="button" class="btn btn-secondary btn-block" id="btn-graph">Graph</button>
+            </div>
+          </div>  
         </div>
       </div>
-      <div class="col-sm-10" id="content" style="overflow-y:auto;"></div>
-      <div class="col-sm-1"></div>
+      <div class="col-md-10 col-sm-12" id="content" style="overflow-y:auto;"></div>
+      <div class="col-md-1 col-sm-0"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <b>Information</b>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="txtAPI" style="display:none;">
+              <p>This number indicates how often a dataset has been accessed.<p>
+              <p>To access a dataset use this url: http://giv-oct.uni-muenster.de:8080/api/dataset/ + Query</p>
+            </div>
+            <div id="txtSearch" style="display:none;">
+              <p>This number indicates how often a category has been searched.</p>
+              <p>To search a category use this url: http://giv-oct.uni-muenster.de:8080/api/query/ + Category Name</p>
+            </div>
+            <div id="txtNumOData" style="display:none;">
+              <p>This number indicates how many datasets are linked to a given category.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="footer container-fluid">

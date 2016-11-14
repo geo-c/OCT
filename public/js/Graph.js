@@ -3,6 +3,7 @@ var Graph = function () {
 
 Graph.prototype.data = {first: [], second: []};
 Graph.prototype.labels = [];
+Graph.prototype.label = {first: "", second: ""}
 Graph.prototype.backgroundColors = {first: [], second: []};
 Graph.prototype.borderColors = {first: [], second: []};
 Graph.prototype.ctx = $("#grid");
@@ -16,14 +17,14 @@ Graph.prototype.draw = function (multiple) {
 	var datasets = [];
 	if(multiple) {
 		datasets = [{
-            label: '# Searches',
+            label: this.label.first,
             data: this.data.first,
             backgroundColor: this.backgroundColors.first,
             borderColor: this.borderColors.first,
             borderWidth: 1
         },
         {
-        	label: '# API Calls',
+        	label: this.label.second,
         	data: this.data.second,
         	backgroundColor: this.backgroundColors.second,
         	borderColor: this.borderColors.second,
@@ -38,10 +39,6 @@ Graph.prototype.draw = function (multiple) {
 			borderWidth: 1
 		}]
 	}
-	console.log(this.data);
-	console.log(this.labels);
-	console.log(this.backgroundColors);
-	console.log(this.borderColors);
 	this.ctx = $("#grid");
 	this.chart = new Chart(this.ctx, {
 	    type: 'bar',
@@ -85,6 +82,8 @@ Graph.prototype.Apps = function () {
 	var that = this;
 	$.getJSON(that.url + "apps", function (json) {
 		for(index in json) {
+			that.label.first = "# Searches";
+			that.label.second = "# API Calls"
 			that.labels.push(json[index].app_name);
 			that.data.first.push(json[index].searches);
 			that.data.second.push(json[index].api_calls);
@@ -106,12 +105,17 @@ Graph.prototype.Categories = function () {
 	var that = this;
 	$.getJSON(that.url + "categories", function (json) {
 		for(index in json) {
+			that.label.first = "# Searches";
+			that.label.second = "# Datasets";
 			that.labels.push(json[index].category_name);
-			that.data.push(json[index].calls);
+			that.data.first.push(json[index].searches);
+			that.data.second.push(json[index].datasets);
 			that.backgroundColors.first.push('rgba(255, 99, 132, 0.2)');
+			that.backgroundColors.second.push('rgba(54, 162, 235, 0.2)');
 			that.borderColors.first.push('rgba(255,99,132,1)');
+			that.borderColors.second.push('rgba(54, 162, 235, 1)');
 		}
-		that.draw();
+		that.draw(true);
 	});
 }
 
@@ -124,12 +128,17 @@ Graph.prototype.Usage = function () {
 	var that = this;
 	$.getJSON(that.url + "logs/countByDay", function (json) {
 		for(index in json) {
+			that.label.first = "# Searches";
+			that.label.second = "# API Calls";
 			that.labels.push(json[index].date.slice(0, json[index].date.lastIndexOf("T")));
-			that.data.push(json[index].count);
+			that.data.first.push(json[index].searches);
+			that.data.second.push(json[index].api_calls);
 			that.backgroundColors.first.push('rgba(255, 99, 132, 0.2)');
+			that.backgroundColors.second.push('rgba(54, 162, 235, 0.2)');
 			that.borderColors.first.push('rgba(255,99,132,1)');
+			that.borderColors.second.push('rgba(54, 162, 235, 1)');
 		}
-		that.draw();
+		that.draw(true);
 	});
 }
 
@@ -140,22 +149,7 @@ Graph.prototype.Datasets = function () {
 	$.getJSON(that.url + "tdataset", function (json) {
 		for(index in json) {
 			that.labels.push(json[index].dataset);
-			that.data.push(json[index].count);
-			that.backgroundColors.first.push('rgba(255, 99, 132, 0.2)');
-			that.borderColors.first.push('rgba(255,99,132,1)');
-		}
-		that.draw();
-	});	
-}
-
-Graph.prototype.DatasetsPerCategory = function () {
-	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
-	this.reset();
-	var that = this;
-	$.getJSON(that.url + "categories/withDatasets", function (json) {
-		for(index in json) {
-			that.labels.push(json[index].category_name);
-			that.data.push(json[index].count);
+			that.data.first.push(json[index].count);
 			that.backgroundColors.first.push('rgba(255, 99, 132, 0.2)');
 			that.borderColors.first.push('rgba(255,99,132,1)');
 		}

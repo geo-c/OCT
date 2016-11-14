@@ -16,7 +16,7 @@ exports.request = function(req, res) {
             res.status(errors.database.error_1.code).send(errors.database.error_1);
             return console.error(errors.database.error_1.message, err);
         } else {
-            client.query('SELECT categories.category_id, categories.category_name, count(logs.category_id) AS calls FROM public.categories INNER JOIN logs ON categories.category_id=logs.category_id GROUP BY categories.category_name, categories.category_id ORDER BY categories.category_name;', function(err, result) {
+            client.query('SELECT c.category_id, c.category_name, count(logs.category_id) AS Searches, (SELECT COUNT(cr.md_id) FROM categories_relationships cr WHERE cr.category_id=c.category_id) AS Datasets FROM public.categories c INNER JOIN logs ON c.category_id=logs.category_id GROUP BY c.category_name, c.category_id ORDER BY c.category_name;', function(err, result) {
                 done();
 
                 if (err) {
