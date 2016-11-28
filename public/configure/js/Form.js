@@ -3,7 +3,7 @@ var Form = function () {
 
 Form.prototype.elements = new Elements();
 Form.prototype.status = "";
-Form.prototype.url = "http://giv-oct.uni-muenster.de:8081/api/";
+Form.prototype.url = "http://giv-oct.uni-muenster.de:8080/api/";
 Form.prototype.data = [];
 Form.prototype.user = {};
 Form.prototype.categories = [];
@@ -178,7 +178,7 @@ Form.prototype.Postgres = function () {
 	//Category
 
 	var that = this;
-	$.getJSON( that.url + "categories/withDatasets/", function (json) {
+	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
 		dropdown = '<div class="dropdown">'
 	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
 	    dropdown += 'Add Category'
@@ -243,7 +243,7 @@ Form.prototype.API = function () {
 	//Category
 
 	var that = this;
-	$.getJSON( that.url + "categories/withDatasets/", function (json) {
+	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
 		dropdown = '<div class="dropdown">'
 	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
 	    dropdown += 'Add Category'
@@ -313,7 +313,7 @@ Form.prototype.CouchDB = function () {
 	//Category
 
 	var that = this;
-	$.getJSON( that.url + "categories/withDatasets/", function (json) {
+	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
 		dropdown = '<div class="dropdown">'
 	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
 	    dropdown += 'Add Category'
@@ -377,7 +377,7 @@ Form.prototype.Parliament = function () {
 	//Category
 
 	var that = this;
-	$.getJSON( that.url + "withDatasets/", function (json) {
+	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
 		dropdown = '<div class="dropdown">'
 	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
 	    dropdown += 'Add Category'

@@ -55,9 +55,7 @@ $(document).ready(function() {
 
 	function init () {
 		//Remove right Navbar
-		//form.login(signup_login_callback);
-		username = 'test';
-		table.QueriesByUser(username, form);
+		form.login(signup_login_callback);
 	}
 
 	init();

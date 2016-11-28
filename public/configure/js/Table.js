@@ -1,7 +1,7 @@
 var Table = function () {
 }
 
-Table.prototype.url = "http://giv-oct.uni-muenster.de:8081/api/";
+Table.prototype.url = "http://giv-oct.uni-muenster.de:8080/api/";
 Table.prototype.type = "Apps";
 Table.prototype.data = [];
 Table.prototype.dataTable = null;
@@ -41,24 +41,23 @@ Table.prototype.draw = function (form) {
 		case("QueriesByUser"):
 			columns = [
 				{ title : "Modify"},
-				{ title : "Active"},
 				{ title : "query_id"},
 				{ title : "query"},
 				{ title : "query_description"},
 				{ title : "category"},
 				{ title : "endpoint"},
-				{ title : "database type"}
+				{ title : "database type"},
+				{ title : "database"}
 			]
 			columnDefs = [
+				{
+		            "visible": true,
+		            "targets": [0]
+		        },
 		        {
 		            "targets": 0,
 		            "data": null,
 		            "defaultContent": '<button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>'
-		        },
-		        {
-		            "targets": 1,
-		            "data": null,
-		            "defaultContent": '<div class="checkbox"><label><input type="checkbox" checked="checked"></label></div>'
 		        }
 			];
 			break;
@@ -142,18 +141,18 @@ Table.prototype.QueriesByUser = function (username, form) {
 			if(json[index].ds_port != null && json[index].ds_port != "") {
 				_dsUrl += ":" + json[index].ds_port+"/";
 			}
+			console.log(json[index].active)
 			that.data.push([
 				json[index].query_id,
-				json[index].active,
 				json[index].query_extern,
 				json[index].query_intern,
 				json[index].query_description,
 				json[index].category_name,
 				_url,
-				json[index].ds_type
+				json[index].ds_type,
+				_dsUrl
 				]);
 		}
-		console.log(that.data);
 		that.draw(form);
 	});	
 }
