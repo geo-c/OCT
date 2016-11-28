@@ -271,14 +271,14 @@ Submit.prototype.submit = function (status, callback) {
 				    type: "POST",
 				    url: "http://giv-oct.uni-muenster.de:8080/api/querycheck",
 				    processData: false,
-				    contentType: 'application/json',
+				    contentType: 'application/sparql-results+json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
 						    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
 						    processData: false,
-						    contentType: 'application/json',
+						    contentType: 'application/sparql-results+json',
 						    data: JSON.stringify(data),
 						    success: function(r) {
 						    	callback(r);
