@@ -267,32 +267,23 @@ Submit.prototype.submit = function (status, callback) {
 					query_description: query_description,
 					categories: this.categories
 				}
-				$.ajax({
+			
+		    	$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8080/api/querycheck",
+				    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
 				    processData: false,
 				    contentType: 'application/sparql-results+json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
-				    	$.ajax({
-						    type: "POST",
-						    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
-						    processData: false,
-						    contentType: 'application/sparql-results+json',
-						    data: JSON.stringify(data),
-						    success: function(r) {
-						    	callback(r);
-						    	$('#myModal').modal('hide');
-							}, 
-							error: function (e) {
-								callback(e);
-							}
-						});
+				    	callback(r);
+				    	$('#myModal').modal('hide');
 					}, 
 					error: function (e) {
 						callback(e);
 					}
 				});
+					
+			
 			}
 			break;
 		default:

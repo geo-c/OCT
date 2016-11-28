@@ -32,6 +32,7 @@ exports.request = function(req, res) {
 		}));
 		return console.error(validate.errors[0].dataPath + ": " + validate.errors[0].message);
 	} else {
+        console.log(req.body)
     	switch(req.body.ds_type) {
     		case('REST'):
     			_url = req.body.ds_host;
