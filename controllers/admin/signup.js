@@ -1,7 +1,6 @@
 var pg = require('pg');
 var _ = require('underscore');
 var jwt = require('jsonwebtoken');
-var secret = require('./../../config/secret');
 var db_settings = require('../../server.js').db_settings;
 var errors = require('./../../config/errors');
 
@@ -16,13 +15,15 @@ var schema = require('./../../models/admin');
 var ajv = Ajv({"format": "full"});
 var validate = ajv.compile(schema);
 
+var bcrypt = require('bcrypt');
+var secret = require('./../../config/secret');
+
 
 // POST
 exports.request = function(req, res) {
 
 	// Schema Validation
 	var valid = validate(req.body);
-	console.log(req.body);
 	if (!valid) {
 		res.status(errors.schema.error_1.code).send(_.extend(errors.schema.error_1, {
 			err: validate.errors[0].dataPath + ": " + validate.errors[0].message
@@ -39,12 +40,14 @@ exports.request = function(req, res) {
 				res.status(errors.database.error_1.code).send(errors.database.error_1);
 				return console.error(errors.database.error_1.message, err);
 	        } else {
-	        	console.log(req);
-				
+	        	//secure password
+				var passwordToSave = bcrypt.hashSync(req.body.password, secret.key)
+
+
 	            // Database Query
-	            client.query('INSERT INTO Admins (created, updated, username, password, role, email_address, first_name, last_name, expires_on) VALUES(now(), now(), $1, $2, \'ADMIN\', $3, $4, $5, NULL);', [
+	            client.query('INSERT INTO Admins (created, updated, username, password, role, email_address, first_name, last_name, expires_on) VALUES(now(), now(), $1, $2, \'GUEST\', $3, $4, $5, NULL);', [
 	                req.body.username,
-	                req.body.password,
+	                passwordToSave,
 	                req.body.email_address,
 	                req.body.first_name,
 	                req.body.last_name
@@ -74,7 +77,6 @@ exports.request = function(req, res) {
 
 									// Prepare result
 									var app = result.rows[0];
-									console.log(app);
 	                                // Read Template
 	                                fs.readFile(path.join(__dirname, '../../templates/registration.html'), function(err, data) {
 	                                    if (err) throw err;

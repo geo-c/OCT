@@ -1,17 +1,24 @@
 var Submit = function (user, categories) {
 	this.user = user;
 	this.categories = categories;
+	this.url = "http://giv-oct.uni-muenster.de:8080/api/"
 };
 
 
 Submit.prototype.submit = function (status, callback) {
-	console.log(this.user);
-	console.log(status);
 	var validator = new Validator();
 	switch(status) {
 		case("login"):
-			$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/admin/login/" + $('#username').val(), function (json) {
+			$.getJSON( this.url + "admin/login/" + $('#username').val() + "/" + $('#password').val(), function (json) {
 				callback(json);
+			}).error(function (e) {
+				console.log(e);
+				if(e.status == 401) {
+					alert(e.responseText);
+				}
+				if(e.status == 404) {
+					alert("Fill in username and password");
+				}
 			});
 			break;
 		case("signup"):
@@ -25,7 +32,7 @@ Submit.prototype.submit = function (status, callback) {
 			 console.log(data);
 			$.ajax({
 			    type: "POST",
-			    url: "http://giv-oct.uni-muenster.de:8080/api/admin/signup",
+			    url: this.url + "admin/signup",
 			    processData: false,
 			    contentType: 'application/json',
 			    data: JSON.stringify(data),
@@ -76,14 +83,14 @@ Submit.prototype.submit = function (status, callback) {
 				}
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8080/api/querycheck",
+				    url: this.url + "querycheck",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
+						    url: this.url + "submit",
 						    processData: false,
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),
@@ -140,14 +147,14 @@ Submit.prototype.submit = function (status, callback) {
 				}
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8080/api/querycheck",
+				    url: this.url + "querycheck",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
+						    url: this.url + "submit",
 						    processData: false,
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),
@@ -206,14 +213,14 @@ Submit.prototype.submit = function (status, callback) {
 				console.log(data);
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8080/api/querycheck",
+				    url: this.url + "querycheck",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
+						    url: this.url + "submit",
 						    processData: false,
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),
@@ -269,14 +276,14 @@ Submit.prototype.submit = function (status, callback) {
 				}
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8080/api/querycheck",
+				    url: this.url + "querycheck",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: "http://giv-oct.uni-muenster.de:8080/api/submit",
+						    url: this.url + "submit",
 						    processData: false,
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),

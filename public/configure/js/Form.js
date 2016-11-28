@@ -118,6 +118,36 @@ Form.prototype.addDatabase = function () {
 	});
 }
 
+Form.prototype.Modify = function (data) {
+	var that = this;
+	this.emptyForm();
+	$(".modal-body").append('<div id=inputForm></div>');
+	$('#inputForm').append('<div id="inputContent"></div>');
+	console.log(data)
+	console.log(data[6])
+	switch(data[6]) {
+		case("POSTGRES"):
+			that.Postgres();
+			break;
+		case("Rest-API"):
+			that.API();
+			break;
+		case("COUCHDB"):
+			that.CouchDB();
+			$('#query-id').val(data[1]);
+			$('#query').val(data[2]);
+			$('#query-description').val(data[3]);
+			//$().text(data[4]);
+			//$().text(data[5]);
+			break;
+		case("PARLIAMENT"):
+			that.Parliament();
+			break;
+		default:
+			break;
+	}
+}
+
 /*
  * Show Fields for a Postgres Database
  */

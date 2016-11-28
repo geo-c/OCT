@@ -9,7 +9,7 @@ var login = require('../controllers/admin/login');
 router.post('/admin/signup', signup.request);
 
 //Log in to an existing admin acount
-router.get('/admin/login/:username', login.request);
+router.get('/admin/login/:username/:password', login.request);
 
 
 module.exports = router;
