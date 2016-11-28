@@ -233,7 +233,7 @@ Table.prototype.Usage = function () {
 		$('#table tbody').on('click', 'td.details-control', function () {
 	        var tr = $(this).closest('tr');
 	        var row = that.dataTable.row( tr );
-	 	
+	 		if(row.data()[3] != 0) {
 		        if ( row.child.isShown() ) {
 		            // This row is already open - close it
 		            row.child.hide();
@@ -244,6 +244,9 @@ Table.prototype.Usage = function () {
 		            row.child( that.moreInfo(row.data()[0]) ).show();
 		            tr.addClass('shown');
 		        }
+	    	} else {
+		    	tr.addClass("unavailable");
+		    }
 	    });
 	});
 }

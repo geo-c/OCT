@@ -30,10 +30,6 @@ module.exports = {
         error_2: {
             code: 401,
             message: 'Failed to authenticate, no token has been sent'
-        },
-        error_3: {
-            code: 401,
-            message: 'Failed to authenticate. Wrong username and/or password.'
         }
     },
     query: {

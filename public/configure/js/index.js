@@ -2,10 +2,10 @@ $(document).ready(function() {
 	var url = "api/";
 	var form = new Form();
 	var table = new Table();
-	var login = false;
+	//var login = false;
 
 	//Callback fired when User is logged in or signed up
-	var signup_login_callback = function (data) {
+	/*var signup_login_callback = function (data) {
 		username = data.username;
 		form.addUser(data);
 		login = true;
@@ -13,28 +13,17 @@ $(document).ready(function() {
 		$(".navbar-right li").remove();
 
 		//Add Label to the right
-		$menu = $('<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+username+'</a><ul class="dropdown-menu"><li><a href="#">My Datasets</a></li><li role="separator" class="divider"></li><li><a href="#">Logout</a></li></ul></li>');
-		$(".navbar-right").append($menu);
+		$label = $('<li><a class="navbar-brand" href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+username+'</a></li>');
+		$(".navbar-right").append($label)
 
 		table.Queries();
 		form.addingButton();
-
-		$(".navbar-right .dropdown ul li a").on("click", function (e) {
-			switch($(this).text()) {
-				case("Logout"):
-					location.reload();
-					break;
-				case("My Datasets"): 
-					table.QueriesByUser(username, form);
-					break;
-			}
-		})
-	}
+	}*/
 
 
 
 	//Listen on Right Tab Changes
-	$(".navbar-right a").on("click", function(){
+	/*$(".navbar-right a").on("click", function(){
 		if(!login) {
 			$(".btn-group").hide();
 		   	$(".nav").find(".active").removeClass("active");
@@ -47,15 +36,19 @@ $(document).ready(function() {
 		   			form.signup(signup_login_callback);
 		   			break;
 		   		default:
-		   		console.log("jaa")
 		   			break;
 		   	}
 		}
-	});
+	});*/
 
 	function init () {
 		//Remove right Navbar
-		form.login(signup_login_callback);
+		$(".navbar-right li").remove();
+		
+		form.addUser({username: "test"});
+		table.Queries();
+		form.addingButton();
+		//form.login(signup_login_callback);
 	}
 
 	init();
