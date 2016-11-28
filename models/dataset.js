@@ -61,8 +61,5 @@ module.exports = {
         "categories": {
             "type": "array"
         }
-    },
-    "required": [
-        "ds_host"
-    ]
+    }
 };
