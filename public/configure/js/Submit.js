@@ -1,7 +1,7 @@
 var Submit = function (user, categories) {
 	this.user = user;
 	this.categories = categories;
-	this.url = "http://giv-oct.uni-muenster.de:8080/api/"
+	this.url = "http://giv-oct.uni-muenster.de:8081/api/"
 };
 
 
@@ -10,6 +10,8 @@ Submit.prototype.submit = function (status, callback) {
 	switch(status) {
 		case("login"):
 			$.getJSON( this.url + "admin/login/" + $('#username').val() + "/" + $('#password').val(), function (json) {
+				console.log("normal");
+				console.log(json);
 				callback(json);
 			}).error(function (e) {
 				console.log(e);
