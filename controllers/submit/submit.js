@@ -19,6 +19,7 @@ var validate = ajv.compile(schema);
 
 // POST
 exports.request = function(req, res) {
+	console.log(req.body);
 
 	// Schema Validation
 	var valid = validate(req.body);
@@ -37,6 +38,7 @@ exports.request = function(req, res) {
 				res.status(errors.database.error_1.code).send(errors.database.error_1);
 				return console.error(errors.database.error_1.message, err);
 	        } else {
+	        	console.log(req.body);
 	        	query = "INSERT INTO Datastores (created, updated, ds_type, ds_description, ds_host, ds_port, db_instance, db_user, db_password) VALUES (now(), now(), $1, $2, $3, $4, $5, $6, $7) RETURNING ds_id;";
         		params = [
         			req.body.ds_type,
