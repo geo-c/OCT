@@ -290,7 +290,7 @@ Submit.prototype.submit = function (status, callback) {
 						});
 					}, 
 					error: function (e) {
-						callback(JSON.stringyfy(e));
+						callback(e);
 					}
 				});
 			}
