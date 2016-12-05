@@ -39,7 +39,7 @@ exports.request = function(req, res) {
 				return console.error(errors.database.error_1.message, err);
 	        } else {
 	        	console.log(req.body);
-	        	query = "INSERT INTO Datastores (created, updated, ds_type, ds_description, ds_host, ds_port, db_instance, db_user, db_password) VALUES (now(), now(), $1, $2, $3, $4, $5, $6, $7) RETURNING ds_id;";
+	        	query = "UPDATE Datastores (created, updated, ds_type, ds_description, ds_host, ds_port, db_instance, db_user, db_password) VALUES (now(), now(), $1, $2, $3, $4, $5, $6, $7) RETURNING ds_id;";
         		params = [
         			req.body.ds_type,
 	        		req.body.ds_description,

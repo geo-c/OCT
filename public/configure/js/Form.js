@@ -3,7 +3,6 @@ var Form = function () {
 
 Form.prototype.elements = new Elements();
 Form.prototype.status = "";
-Form.prototype.url = "http://giv-oct.uni-muenster.de:8080/api/";
 Form.prototype.data = [];
 Form.prototype.user = {};
 Form.prototype.categories = [];
@@ -118,6 +117,78 @@ Form.prototype.addDatabase = function () {
 	});
 }
 
+Form.prototype.Modify = function (data) {
+	var that = this;
+	this.emptyForm();
+	$(".modal-body").append('<div id=inputForm></div>');
+	$('#inputForm').append('<div id="inputContent"></div>');
+	console.log(data)
+	console.log(data[6])
+	switch(data[6]) {
+		case("POSTGRES"):
+			that.Postgres();
+			break;
+		case("Rest-API"):
+			that.API();
+			break;
+		case("COUCHDB"):
+			categories = data[4].split(',');
+			that.CouchDB(categories);
+			$('#query-id').val(data[1]);
+			$('#query').val(data[2]);
+			$('#query-description').val(data[3]);
+			//$().text(data[4]);
+			//$().text(data[5]);
+			for(i in categories) {
+				category = categories[i].replace(/ /g, '').replace(/,/g, '');
+				that.categories.push(category);
+	    		$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
+	    		$("#list-"+category).hide();
+			}	
+			$("#"+category).click(function (e) {
+	    		_category = $(this).attr('id');
+	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
+	    		var index = that.categories.indexOf(_category);
+				that.categories.splice(index, 1);
+	    		$(this).parent().empty();
+	    		$(this).parent().remove();
+	    	});	
+			break;
+		case("PARLIAMENT"):
+			this.status="Modify-Parliament";
+			var categories = data[4].split(',');
+
+			that.Parliament(categories);
+			$('#query-id').val(data[1]);
+			$('#query').val(data[2]);
+			$('#query-description').val(data[3]);
+
+			$('#db-name').val(data[3]);
+			$('#db-host').val(data[7]);
+			$('#db-description').val(data[3])
+			
+			for(i in categories) {
+				category = categories[i].replace(/ /g, '').replace(/,/g, '');
+				that.categories.push(category);
+	    		$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
+	    		$("#list-"+category).hide();
+			}	
+			$("#"+category).click(function (e) {
+	    		_category = $(this).attr('id');
+	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
+	    		var index = that.categories.indexOf(_category);
+				that.categories.splice(index, 1);
+	    		$(this).parent().empty();
+	    		$(this).parent().remove();
+	    	});
+
+
+			break;
+		default:
+			break;
+	}
+}
+
 /*
  * Show Fields for a Postgres Database
  */
@@ -146,40 +217,7 @@ Form.prototype.Postgres = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-
-	var that = this;
-	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
-		dropdown = '<div class="dropdown">'
-	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
-	    dropdown += 'Add Category'
-	    dropdown += '<span class="caret"></span>'
-	  	dropdown += '</button>'
-	  	dropdown += '<ul class="dropdown-menu category" aria-labelledby="dropdownMenu">'
-		for(i in json) {
-			dropdown += '<li id="list-'+json[i].category_name.replace(/ /g, '').replace(/,/g, '')+'"><a href="#">'+json[i].category_name+'</a></li>'
-		}
-		dropdown += '</ul>'
-		dropdown += '</div>'
-		$('#panelCategory').append($(dropdown));
-
-		$('ul.dropdown-menu.category li a').click(function (e) {
-		    var $div = $(this).parent().parent().parent(); 
-	    	$div.removeClass('open');
-	    	e.preventDefault();
-	    	category = $(this).text();
-	    	that.categories.push(category);
-	    	$("#panelCategory").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
-	    	$(this).parent().hide();
-	    	$("#"+category).click(function (e) {
-	    		_category = $(this).attr('id');
-	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
-	    		var index = that.categories.indexOf(_category);
-				that.categories.splice(index, 1);
-	    		$(this).parent().empty();
-	    		$(this).parent().remove();
-	    	});
-		});
-	});
+	this.Categories();
 	
 	this.btnSend("Send", function (e) {
 		alert(e);
@@ -211,43 +249,7 @@ Form.prototype.API = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-
-	var that = this;
-	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
-		dropdown = '<div class="dropdown">'
-	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
-	    dropdown += 'Add Category'
-	    dropdown += '<span class="caret"></span>'
-	  	dropdown += '</button>'
-	  	dropdown += '<ul class="dropdown-menu category" aria-labelledby="dropdownMenu">'
-		for(i in json) {
-			dropdown += '<li id="list-'+json[i].category_name.replace(/ /g, '').replace(/,/g, '')+'"><a href="#">'+json[i].category_name+'</a></li>'
-		}
-		dropdown += '</ul>'
-		dropdown += '</div>'
-		$('#panelCategory').append($(dropdown));
-
-		$('ul.dropdown-menu.category li a').click(function (e) {
-		    var $div = $(this).parent().parent().parent(); 
-	    	$div.removeClass('open');
-	    	e.preventDefault();
-	    	category = $(this).text();
-	    	that.categories.push(category);
-	    	$("#panelCategory").append('<div><span class="label label-default">'+category+'</span><a id="'+category.replace(/ /g, '').replace(/,/g, '')+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
-	    	$(this).parent().hide();
-	    	$("#"+category.replace(/ /g, '').replace(/,/g, '')).click(function (e) {
-	    		_category = $(this).attr('id');
-	    		console.log(_category)
-	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
-	    		var index = that.categories.indexOf(_category);
-				that.categories.splice(index, 1);
-				console.log($(this));
-				console.log($(this).parent());
-	    		$(this).parent().empty();
-	    		$(this).parent().remove();
-	    	});
-		});
-	});
+	this.Categories();
 	
 	this.btnSend("Send", function (e) {
 		alert(e);
@@ -258,7 +260,7 @@ Form.prototype.API = function () {
 /*
  * Show Fields for a CouchDB
  */
-Form.prototype.CouchDB = function () {
+Form.prototype.CouchDB = function (categories) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -281,42 +283,7 @@ Form.prototype.CouchDB = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-
-	var that = this;
-	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
-		dropdown = '<div class="dropdown">'
-	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
-	    dropdown += 'Add Category'
-	    dropdown += '<span class="caret"></span>'
-	  	dropdown += '</button>'
-	  	dropdown += '<ul class="dropdown-menu category" aria-labelledby="dropdownMenu">'
-		for(i in json) {
-			dropdown += '<li id="list-'+json[i].category_name.replace(/ /g, '').replace(/,/g, '')+'"><a href="#">'+json[i].category_name+'</a></li>'
-		}
-		dropdown += '</ul>'
-		dropdown += '</div>'
-		$('#panelCategory').append($(dropdown));
-
-		$('ul.dropdown-menu.category li a').click(function (e) {
-		    var $div = $(this).parent().parent().parent(); 
-	    	$div.removeClass('open');
-	    	e.preventDefault();
-	    	category = $(this).text();
-	    	that.categories.push(category);
-	    	$("#panelCategory").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
-	    	$(this).parent().hide();
-	    	$("#"+category).click(function (e) {
-	    		_category = $(this).attr('id');
-	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
-	    		var index = that.categories.indexOf(_category);
-				that.categories.splice(index, 1);
-	    		$(this).parent().empty();
-	    		$(this).parent().remove();
-	    	});
-		});
-	});
-	
-
+	this.Categories(categories);
 
 	this.btnSend("Send", function (e) {
 		alert(e);
@@ -324,7 +291,7 @@ Form.prototype.CouchDB = function () {
 	});
 }
 
-Form.prototype.Parliament = function () {
+Form.prototype.Parliament = function (categories) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -345,29 +312,50 @@ Form.prototype.Parliament = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
+	this.Categories(categories);
+	this.btnSend("Send", function (e) {
+		alert(e);
+		location.reload();
+	});
+	
+}
 
+Form.prototype.Categories = function (categories) {
 	var that = this;
-	$.getJSON( "http://giv-oct.uni-muenster.de:8080/api/categories/withDatasets/", function (json) {
-		dropdown = '<div class="dropdown">'
-	  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
-	    dropdown += 'Add Category'
-	    dropdown += '<span class="caret"></span>'
-	  	dropdown += '</button>'
-	  	dropdown += '<ul class="dropdown-menu category" aria-labelledby="dropdownMenu">'
-		for(i in json) {
-			dropdown += '<li id="list-'+json[i].category_name.replace(/ /g, '').replace(/,/g, '')+'"><a href="#">'+json[i].category_name+'</a></li>'
-		}
-		dropdown += '</ul>'
-		dropdown += '</div>'
-		$('#panelCategory').append($(dropdown));
 
-		$('ul.dropdown-menu.category li a').click(function (e) {
+	dropdown = '<div class="dropdown">'
+  	dropdown += '<button class="btn btn-success dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
+    dropdown += 'Add Category'
+    dropdown += '<span class="caret"></span>'
+  	dropdown += '</button>'
+  	dropdown += '<ul class="dropdown-menu category" aria-labelledby="dropdownMenu">'
+	dropdown += '</ul>'
+	dropdown += '</div>'
+	$('#panelCategoryDropdown').append($(dropdown));
+
+	$.getJSON( new API().endpoint + "categories/withDatasets/", function (json) {
+		list = "";
+		for(i in json) {
+			list += '<li id="list-'+json[i].category_name.replace(/ /g, '').replace(/,/g, '')+'"><a href="#">'+json[i].category_name+'</a></li>';
+		}
+		$('ul.dropdown-menu.category').append(list);
+		
+		if(categories) {
+			for(i in categories) {
+				category = categories[i].replace(/ /g, '').replace(/,/g, '');
+				console.log("hide: "+ category);
+				$("#list-"+category).hide();
+			}
+		}
+
+		$('ul.dropdown-menu.category').on('click', 'li a', function (e) {
+			console.log(e);
 		    var $div = $(this).parent().parent().parent(); 
 	    	$div.removeClass('open');
 	    	e.preventDefault();
 	    	category = $(this).text();
 	    	that.categories.push(category);
-	    	$("#panelCategory").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
+	    	$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
 	    	$(this).parent().hide();
 	    	$("#"+category).click(function (e) {
 	    		_category = $(this).attr('id');
@@ -378,13 +366,6 @@ Form.prototype.Parliament = function () {
 	    		$(this).parent().remove();
 	    	});
 		});
-	});
-	
-
-
-	this.btnSend("Send", function (e) {
-		alert(e);
-		location.reload();
 	});
 }
 
@@ -421,6 +402,8 @@ Form.prototype.PanelCategory = function () {
 	panel += '<div class="panel panel-default">'
 	panel += '<div class="panel-body" id="panelCategory">'
 	panel += '<div class="panel-heading"><h3 class="panel-title">Categories</h3></div>'
+	panel += '<div id="panelCategoryDropdown"></div>'
+	panel += '<div id="panelCategoryName"></div>'
 	panel += '</div></div></div>'
 	return $(panel);
 }
@@ -432,7 +415,7 @@ Form.prototype.btnSend = function (text, callback) {
 	$(".modal-footer").empty();
 	var that = this;
 	var cb = callback;
-	$btnSend = $('<button type="button" class="btn btn-primary right">'+text+'</button>');
+	$btnSend = $('<button type="button" id="submit" class="btn btn-primary right">'+text+'</button>');
 	switch(that.status) {
 		case("Postgres"):
 			$(".modal-footer").append('<button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">Close</button>');

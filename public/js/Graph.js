@@ -7,7 +7,6 @@ Graph.prototype.label = {first: "", second: ""}
 Graph.prototype.backgroundColors = {first: [], second: []};
 Graph.prototype.borderColors = {first: [], second: []};
 Graph.prototype.ctx = $("#grid");
-Graph.prototype.url = "api/";
 Graph.prototype.chart = null;
 
 /*
@@ -80,7 +79,7 @@ Graph.prototype.Apps = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
-	$.getJSON(that.url + "apps", function (json) {
+	$.getJSON(new API().endpoint + "apps", function (json) {
 		for(index in json) {
 			that.label.first = "# Searches";
 			that.label.second = "# API Calls"
@@ -103,7 +102,7 @@ Graph.prototype.Categories = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
-	$.getJSON(that.url + "categories", function (json) {
+	$.getJSON(new API().endpoint + "categories", function (json) {
 		for(index in json) {
 			that.label.first = "# Searches";
 			that.label.second = "# Datasets";
@@ -126,7 +125,7 @@ Graph.prototype.Usage = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
-	$.getJSON(that.url + "logs/countByDay", function (json) {
+	$.getJSON(new API().endpoint + "logs/countByDay", function (json) {
 		for(index in json) {
 			that.label.first = "# Searches";
 			that.label.second = "# API Calls";
@@ -146,7 +145,7 @@ Graph.prototype.Datasets = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
-	$.getJSON(that.url + "tdataset", function (json) {
+	$.getJSON(new API().endpoint + "tdataset", function (json) {
 		for(index in json) {
 			that.labels.push(json[index].dataset);
 			that.data.first.push(json[index].count);
