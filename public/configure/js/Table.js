@@ -109,7 +109,7 @@ Table.prototype.Queries = function () {
 			that.data.push([
 				json[index].query_id,
 				json[index].query_extern,
-				json[index].query_intern,
+				json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
 				json[index].query_description,
 				json[index].category_name,
 				_url,
@@ -143,7 +143,7 @@ Table.prototype.QueriesByUser = function (username, form) {
 			that.data.push([
 				json[index].query_id + '_' + json[index].active,
 				json[index].query_extern,
-				json[index].query_intern,
+				json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
 				json[index].query_description,
 				json[index].category_name,
 				_url,
