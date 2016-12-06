@@ -140,9 +140,8 @@ Table.prototype.QueriesByUser = function (username, form) {
 			if(json[index].ds_port != null && json[index].ds_port != "") {
 				_dsUrl += ":" + json[index].ds_port+"/";
 			}
-			console.log(json[index].active)
 			that.data.push([
-				json[index].query_id,
+				json[index].query_id + '_' + json[index].active,
 				json[index].query_extern,
 				json[index].query_intern,
 				json[index].query_description,

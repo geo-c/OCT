@@ -1,4 +1,5 @@
-var Form = function () {
+var Form = function (Table) {
+	this.Table = Table;
 }
 
 Form.prototype.elements = new Elements();
@@ -123,7 +124,6 @@ Form.prototype.Modify = function (data) {
 	$(".modal-body").append('<div id=inputForm></div>');
 	$('#inputForm').append('<div id="inputContent"></div>');
 	console.log(data)
-	console.log(data[6])
 	switch(data[6]) {
 		case("POSTGRES"):
 			that.Postgres();
@@ -132,6 +132,18 @@ Form.prototype.Modify = function (data) {
 			that.API();
 			break;
 		case("COUCHDB"):
+			$('#myModalLabel').text("Modify this database");
+			$('#additionalText').empty();
+			$('#additionalText').append('<input id="toggle" type="checkbox" data-width="150" checked data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger">');
+			$('#toggle').bootstrapToggle();
+			console.log(data[0].split("_")[1]);
+			if(data[0].split("_")[1] == "false") {
+				console.log("inactive");
+				$('#toggle').bootstrapToggle('off');
+			} else {
+				console.log("active");
+				$('#toggle').bootstrapToggle('on');
+			}
 			categories = data[4].split(',');
 			that.CouchDB(categories);
 			$('#query-id').val(data[1]);
@@ -156,6 +168,18 @@ Form.prototype.Modify = function (data) {
 			break;
 		case("PARLIAMENT"):
 			this.status="Modify-Parliament";
+			$('#myModalLabel').text("Modify this database");
+			$('#additionalText').empty();
+			$('#additionalText').append('<input id="toggle" type="checkbox" data-width="150" checked data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger">');
+			$('#toggle').bootstrapToggle();
+			console.log(data[0].split("_")[1]);
+			if(data[0].split("_")[1] == "false") {
+				console.log("inactive");
+				$('#toggle').bootstrapToggle('off');
+			} else {
+				console.log("active");
+				$('#toggle').bootstrapToggle('on');
+			}
 			var categories = data[4].split(',');
 
 			that.Parliament(categories);
@@ -221,7 +245,7 @@ Form.prototype.Postgres = function () {
 	
 	this.btnSend("Send", function (e) {
 		alert(e);
-		location.reload();
+		this.Table.Queries();
 	});
 }
 
@@ -253,7 +277,7 @@ Form.prototype.API = function () {
 	
 	this.btnSend("Send", function (e) {
 		alert(e);
-		location.reload();
+		this.Table.Queries();
 	});
 }
 
@@ -287,7 +311,7 @@ Form.prototype.CouchDB = function (categories) {
 
 	this.btnSend("Send", function (e) {
 		alert(e);
-		location.reload();
+		this.Table.Queries();
 	});
 }
 
@@ -315,7 +339,7 @@ Form.prototype.Parliament = function (categories) {
 	this.Categories(categories);
 	this.btnSend("Send", function (e) {
 		alert(e);
-		location.reload();
+		this.Table.Queries();
 	});
 	
 }

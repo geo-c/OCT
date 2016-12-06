@@ -21,27 +21,25 @@ exports.request = function(req, res) {
             client.query('SELECT username, email_address, password FROM Admins WHERE username = $1;', [
                 req.params.username
             ], function(err, result) {
-                 if (err) {
+                if (err) {
                     res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-                        return console.error(errors.database.error_2.message, err);
-                    } else {
+                    return console.error(errors.database.error_2.message, err);
+                } else {
 
-                        // Check if Admin exists
-                        if (result.rows.length === 0) {
-                            res.status(errors.query.error_1.code).send(errors.query.error_1);
-                            console.error(errors.query.error_1.message);
+                    // Check if Admin exists
+                    if (result.rows.length === 0) {
+                        res.status(errors.query.error_1.code).send(errors.query.error_1);
+                        console.error(errors.query.error_1.message);
+                    } else {                            //verify password
+                        if(bcrypt.hashSync(req.params.password, secret.key) === result.rows[0].password) {
+                            res.status(201).send(result.rows[0]);
                         } else {
-                            //verify password
-                            if(bcrypt.hashSync(req.params.password, secret.key) === result.rows[0].password) {
-                                res.status(201).send(result.rows[0]);
-                            } else {
-                                res.status(errors.authentication.error_3.code).send(errors.authentication.error_3.message)
-                            }
-                            
-                        }
+                            res.status(errors.authentication.error_3.code).send(errors.authentication.error_3.message)
+                        }                        
                     }
-                });
-            }
+                }
+            });
+        }
     });
     
 };

@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var url = "api/";
-	var form = new Form();
 	var table = new Table();
+	var form = new Form(table);
 	var login = false;
 
 	//Callback fired when User is logged in or signed up
@@ -22,7 +22,7 @@ $(document).ready(function() {
 		$(".navbar-right .dropdown ul li a").on("click", function (e) {
 			switch($(this).text()) {
 				case("Logout"):
-					table.Queries();
+					location.reload();
 					break;
 				case("My Datasets"): 
 					table.QueriesByUser(username, form);
@@ -58,6 +58,7 @@ $(document).ready(function() {
 
 	function init () {
 		form.login(signup_login_callback);
+		$("#username").focus();
 		$("#password").keyup(function(event) {
 			if(event.keyCode == 13) {
 				$('#submit').click();
