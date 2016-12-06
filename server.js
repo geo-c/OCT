@@ -8,6 +8,8 @@ var _ = require('underscore');
  */
 program
     .version('1.0.0')
+    .option('-apip --api_port [port]', 'Enter the Port to run the API', '8080')
+    .option('-dbn --database_name [dbname]', 'Enter the Databasename')
     .option('-dbu, --postgres_user [username]', 'Enter the PostgreSQL-User, which is needed to start REST-API', 'admin')
     .option('-dbpw, --postgres_password [password]', 'Enter the PostgreSQL-Password, which is needed to start REST-API', 'password')
     .option('-emu, --email_user [email-address]', 'Enter the SMTP-address (example: user@gmail.com)', 'user@gmail.com')
@@ -27,6 +29,8 @@ if(program.postgres_user != "admin" && program.postgres_password != "password"){
     db_settings.status = true;
     db_settings.user = program.postgres_user;
     db_settings.password = program.postgres_password;
+    db_settings.database_name= program.database_name,
+    db_settings.api_port = program.api_port;
     exports.db_settings = db_settings;
 }
 
@@ -53,7 +57,9 @@ var app = express();
 var server = require('http').createServer(app);
 
 // Set Server-Port
-var port = process.env.PORT || 8080;
+console.log(program.api_port);
+var port = program.api_port;
+console.log(port);
 server.listen(port, function () {
     console.log('Webserver is listening at port %d', port);
 });
@@ -101,6 +107,7 @@ if(db_settings.status && email_settings.status){
     var spatial = require('./routes/spatial');
     var submit = require('./routes/submit');
     var dataset = require('./routes/dataset');
+    var port = require('./routes/port');
 
     // Load Routes
     app.use('/api', signup);
@@ -116,6 +123,7 @@ if(db_settings.status && email_settings.status){
     app.use('/api', spatial);
     app.use('/api', submit);
     app.use('/api', dataset);
+    app.use('/api', port);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");

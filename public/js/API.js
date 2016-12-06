@@ -1,3 +1,3 @@
 var API = function () {
-	this.endpoint = "http://127.0.0.1:8080/api/";
+	this.endpoint = "http://127.0.0.1:"+location.port+"/api/";
 }
