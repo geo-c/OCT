@@ -1,16 +1,34 @@
-var pg = require('pg');
-var _ = require('underscore');
-var jwt = require('jsonwebtoken');
-var db_settings = require('../../server.js').db_settings;
 var errors = require('./../../config/errors');
-
+var client = require('./../db.js');
 var bcrypt = require('bcrypt');
 var secret = require('./../../config/secret');
+var _ = require('underscore');
 
 
 // GET
 exports.request = function(req, res) {
-    var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
+    var queryStr = 'SELECT username, email_address, password FROM Admins WHERE username = $1;';
+    var params = [];
+
+    client.query(queryStr, params, function (err, result) {
+        if(err) {
+            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+            return console.error(errors.database.error_2.message, err);
+        } else {
+            console.log(result);
+            if(bcrypt.hashSync(req.params.password, secret.key) === result[0].password) {
+                res.status(200).send(result.rows[0]);
+            } else {
+                res.status(errors.authentication.error_3.code).send(errors.authentication.error_3.message)
+            }    
+        }
+    });
+
+
+
+
+
+    /*var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
     // Connect to Database
     pg.connect(url, function(err, client, done) {
         if (err) {
@@ -40,6 +58,6 @@ exports.request = function(req, res) {
                 }
             });
         }
-    });
+    });*/
     
 };
