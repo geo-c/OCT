@@ -3,6 +3,7 @@ var Table = function () {
 
 Table.prototype.type = "Apps";
 Table.prototype.data = [];
+Table.prototype.data_all = [];
 Table.prototype.dataTable = null;
 
 /*
@@ -80,7 +81,7 @@ Table.prototype.draw = function (form) {
     $('#table tbody').on( 'click', 'button', function () {
         var data = that.dataTable.row( $(this).parents('tr') ).data();
         $(".modal-footer").empty();
-        form.Modify(data);
+        form.Modify(data[0]);
     } );
 }
 
@@ -127,7 +128,10 @@ Table.prototype.QueriesByUser = function (username, form) {
 	this.empty();
 	var that = this;
 	$.getJSON(new API().endpoint + "database_all/" + username, function(json){
+		that.data_all = [];
 		for(index in json) {
+			that.data_all[json[index].query_id] = json[index];
+
 			_url = json[index].endpoint_host;
 			if(json[index].endpoint_port != null && json[index].endpoint_port != "") {
 				_url += ":" + json[index].endpoint_port + "/";
@@ -141,7 +145,7 @@ Table.prototype.QueriesByUser = function (username, form) {
 				_dsUrl += ":" + json[index].ds_port+"/";
 			}
 			that.data.push([
-				json[index].query_id + '_' + json[index].active,
+				json[index].query_id,
 				json[index].query_extern,
 				json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
 				json[index].query_description,

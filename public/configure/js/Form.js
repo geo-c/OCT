@@ -118,99 +118,12 @@ Form.prototype.addDatabase = function () {
 	});
 }
 
-Form.prototype.Modify = function (data) {
-	var that = this;
+Form.prototype.Modify = function (id) {
 	this.emptyForm();
 	$(".modal-body").append('<div id=inputForm></div>');
 	$('#inputForm').append('<div id="inputContent"></div>');
-	console.log(data)
-	switch(data[6]) {
-		case("POSTGRES"):
-			that.Postgres();
-			break;
-		case("Rest-API"):
-			that.API();
-			break;
-		case("COUCHDB"):
-			$('#myModalLabel').text("Modify this database");
-			$('#additionalText').empty();
-			$('#additionalText').append('<input id="toggle" type="checkbox" data-width="150" checked data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger">');
-			$('#toggle').bootstrapToggle();
-			console.log(data[0].split("_")[1]);
-			if(data[0].split("_")[1] == "false") {
-				console.log("inactive");
-				$('#toggle').bootstrapToggle('off');
-			} else {
-				console.log("active");
-				$('#toggle').bootstrapToggle('on');
-			}
-			categories = data[4].split(',');
-			that.CouchDB(categories);
-			$('#query-id').val(data[1]);
-			$('#query').val(data[2]);
-			$('#query-description').val(data[3]);
-			//$().text(data[4]);
-			//$().text(data[5]);
-			for(i in categories) {
-				category = categories[i].replace(/ /g, '').replace(/,/g, '');
-				that.categories.push(category);
-	    		$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
-	    		$("#list-"+category).hide();
-			}	
-			$("#"+category).click(function (e) {
-	    		_category = $(this).attr('id');
-	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
-	    		var index = that.categories.indexOf(_category);
-				that.categories.splice(index, 1);
-	    		$(this).parent().empty();
-	    		$(this).parent().remove();
-	    	});	
-			break;
-		case("PARLIAMENT"):
-			this.status="Modify-Parliament";
-			$('#myModalLabel').text("Modify this database");
-			$('#additionalText').empty();
-			$('#additionalText').append('<input id="toggle" type="checkbox" data-width="150" checked data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger">');
-			$('#toggle').bootstrapToggle();
-			console.log(data[0].split("_")[1]);
-			if(data[0].split("_")[1] == "false") {
-				console.log("inactive");
-				$('#toggle').bootstrapToggle('off');
-			} else {
-				console.log("active");
-				$('#toggle').bootstrapToggle('on');
-			}
-			var categories = data[4].split(',');
-
-			that.Parliament(categories);
-			$('#query-id').val(data[1]);
-			$('#query').val(data[2]);
-			$('#query-description').val(data[3]);
-
-			$('#db-name').val(data[3]);
-			$('#db-host').val(data[7]);
-			$('#db-description').val(data[3])
-			
-			for(i in categories) {
-				category = categories[i].replace(/ /g, '').replace(/,/g, '');
-				that.categories.push(category);
-	    		$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
-	    		$("#list-"+category).hide();
-			}	
-			$("#"+category).click(function (e) {
-	    		_category = $(this).attr('id');
-	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
-	    		var index = that.categories.indexOf(_category);
-				that.categories.splice(index, 1);
-	    		$(this).parent().empty();
-	    		$(this).parent().remove();
-	    	});
-
-
-			break;
-		default:
-			break;
-	}
+	console.log("start modify");
+	modify = new Modify(this).modify(id);
 }
 
 /*

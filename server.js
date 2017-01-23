@@ -1,6 +1,7 @@
 var program = require('commander');
 var path = require('path');
 var _ = require('underscore');
+var pg = require('pg');
 
 
 /**
@@ -16,6 +17,15 @@ program
     .option('-empw, --email_password [password]', 'Enter the Email-Password', 'password')
     .parse(process.argv);
 
+var api_settings = {
+    status: false,
+    port: 8080
+};
+
+api_settings = _.extend(api_settings, require('./config/api'));
+if(program.api_port) {
+    api_settings.port = program.api_port;
+}   
 
 
 // Check if Postgres-User and Postgres-Password were set, otherwise run only simple webserver without REST-API
@@ -24,15 +34,19 @@ var db_settings = {
     user: "",
     password: ""
 };
+
 db_settings = _.extend(db_settings, require('./config/db'));
 if(program.postgres_user != "admin" && program.postgres_password != "password"){
     db_settings.status = true;
     db_settings.user = program.postgres_user;
+    db_settings.database= program.database_name,
     db_settings.password = program.postgres_password;
-    db_settings.database_name= program.database_name,
-    db_settings.api_port = program.api_port;
     exports.db_settings = db_settings;
+
+    require('./controllers/db').init(db_settings);
 }
+
+
 
 // Check if a SMTP-address and Password were set, otherwise run only simple webserver without REST-API
 var email_settings = {
