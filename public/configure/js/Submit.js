@@ -1,7 +1,7 @@
 var Submit = function (user, categories) {
 	this.user = user;
 	this.categories = categories;
-	this.url = "http://giv-oct.uni-muenster.de:8081/api/";
+	this.url = "http://giv-oct.uni-muenster.de:8080/api/";
 };
 
 
