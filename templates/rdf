@@ -1,0 +1,29 @@
+@prefix dcat: <http://www.w3.org/TR/vocab-dcat/>.
+@prefix dcterms: <http://www.purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix oct: <http://opencitytoolkit.org/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+
+{{#apps}}
+oct:app_{{app_id}} a  foaf:Agent, oct:App;
+foaf:name "{{app_name}}"; 
+dcterms:description "{{app_desc}}"; 
+{{#usages}}
+oct:resourceusage _:rusage_{{usage_id}}
+{{/usages}}.
+
+{{#usages}}
+
+_:rusage_{{usage_id}} a oct:DatasetUse;
+    oct:hasDataset oct:dataset{{dataset_id}};
+    oct:hasAPICalls {{calls}}.
+{{/usages}}.
+{{/apps}}
+
+{{#datasets}}
+
+oct:dataset_{{dataset_id}} a dcat:Dataset, oct:Dataset;
+foaf:name "{{dataset_name}}";
+dcterms:description "{{dataset_desc}}"
+{{/datasets}}.
