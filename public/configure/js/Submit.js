@@ -9,14 +9,20 @@ Submit.prototype.submit = function (status, callback) {
 	switch(status) {
 		case("login"):
 			$.getJSON( new API().endpoint + "admin/login/" + $('#username').val() + "/" + $('#password').val(), function (json) {
+				console.log(json);
 				callback(json);
-			}).error(function (e) {
+			}).fail(function (e) {
 				console.log(e);
 				if(e.status == 401) {
 					alert(e.responseText);
-				}
-				if(e.status == 404) {
-					alert("Fill in username and password");
+				} else {
+					if(e.status == 404) {
+						alert("Fill in username and password");
+					} else {
+						if(e.status == 200) {
+							alert(e.responseText);
+						}
+					}
 				}
 			});
 			break;
@@ -266,17 +272,17 @@ Submit.prototype.submit = function (status, callback) {
 					query_description: query_description,
 					categories: this.categories
 				}
-				$.ajax({
+				/*$.ajax({
 				    type: "POST",
 				    url: new API().endpoint + "querycheck",
 				    contentType: 'application/json',
-				    data: JSON.stringify(data),
-				    success: function(r) {
+				    data: data,
+				    success: function(r) {*/
 				    	$.ajax({
 						    type: "POST",
 						    url: new API().endpoint + "submit",
 						    contentType: 'application/json',
-						    data: JSON.stringify(data),
+						    data: data,
 						    success: function(r) {
 						    	callback(r);
 						    	$('#myModal').modal('hide');
@@ -285,11 +291,11 @@ Submit.prototype.submit = function (status, callback) {
 								callback(e);
 							}
 						});
-					}, 
+					/*}, 
 					error: function (e) {
-						callback(JSON.stringyfy(e));
+						callback(e);
 					}
-				});
+				});*/
 			}
 			break;
 		case("Modify-Parliament"):

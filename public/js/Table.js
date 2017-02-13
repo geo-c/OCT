@@ -35,8 +35,8 @@ Table.prototype.draw = function () {
 	            { title: "More" },
 	            { title: 'Name' },
 	            { title: 'Description' },
-	            { title: 'Searches  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
-	            { title: 'API Calls  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
+	            { title: 'Category Search  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
+	            { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
 			break;
 		case("Categories"):
@@ -53,8 +53,8 @@ Table.prototype.draw = function () {
 				{ title: "" },
 	            { title: "More" },
 	            { title: "Date" },
-	            { title: 'Searches  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
-	            { title: 'API Calls  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
+	            { title: 'Category Search  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
+	            { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
 			break;
 		case("Datasets"):
@@ -62,7 +62,7 @@ Table.prototype.draw = function () {
 				{title: ""},
 				{title: "More"},
 				{title: "Dataset"},
-				{ title: 'API Calls  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
+				{ title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
 			break;
 		default:
@@ -308,7 +308,7 @@ Table.prototype.moreInfo = function (data) {
 					$('#'+ssdata+'-dataset').append('<tr><td>'+json[index].dataset+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<div class="row"><div class="col-md-4"><h3>Searches</h3><div id="'+ssdata+'-categories"></div></div> <div class="col-md-4"><h3>API Calls</h3><div id="'+ssdata+'-dataset"></div></div></div>';
+			return '<div class="row"><div class="col-md-4"><h3>Category Search</h3><div id="'+ssdata+'-categories"></div></div> <div class="col-md-4"><h3>Dataset Search</h3><div id="'+ssdata+'-dataset"></div></div></div>';
 		case("Categories"):
 			$.getJSON(new API().endpoint + "categories/" + data + '/apps', function(json){
 				for(index in json) {
@@ -339,7 +339,7 @@ Table.prototype.moreInfo = function (data) {
 					$('#'+data+'-datasets').append('<tr><td>'+json[index].app_name+'</td><td align="right">'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>API Calls</th></thead><tbody id="'+data+'-datasets"></tbody></table>';
+			return '<table id="'+data+'-detail"><thead><th>Apps</th><th>Dataset Search</th></thead><tbody id="'+data+'-datasets"></tbody></table>';
 		default:
 			return null;
 			break;

@@ -68,7 +68,7 @@ exports.request = function(req, res){
                         } else {
                             query = "SELECT sub_datasets.sd_name, sub_datasets.sd_id, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance, queries.query_intern, queries.query_extern, queries.query_description "
                             query += "FROM sub_datasets INNER JOIN queries ON sub_datasets.sd_id = queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id "
-                            query += "WHERE queries.query_extern = $1"
+                            query += "WHERE queries.query_extern = $1 AND queries.active = 'true';"
                             client.query(query, [
                                 req.params.query_extern
                             ], function(err, result) {
