@@ -8,16 +8,17 @@ var _ = require('underscore');
 // GET
 exports.request = function(req, res) {
     var queryStr = 'SELECT username, email_address, password FROM Admins WHERE username = $1;';
-    var params = [];
+    var params = [
+        req.params.username
+    ];
 
     client.query(queryStr, params, function (err, result) {
         if(err) {
             res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
             return console.error(errors.database.error_2.message, err);
         } else {
-            console.log(result);
             if(bcrypt.hashSync(req.params.password, secret.key) === result[0].password) {
-                res.status(200).send(result.rows[0]);
+                res.status(200).send(result[0]);
             } else {
                 res.status(errors.authentication.error_3.code).send(errors.authentication.error_3.message)
             }    

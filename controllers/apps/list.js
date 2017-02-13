@@ -10,7 +10,8 @@ exports.request = function(req, res) {
 
     client.query(queryStr, params, function (err, result) {
         if(err) {
-            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+            //res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+        	res.status(404).send(_.extend(errors.database.error_2, err));
         } else {
             res.status(200).send(result);
         }

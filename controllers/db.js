@@ -23,8 +23,9 @@ var db = new function () {
 		       		done();
 		       		if (err) {
 		       			return cb(err, null);
-		       		}
-		       		cb(null, result.rows);
+		       		} else {
+		       			cb(null, result.rows);
+		       		}	
 		     	});
 	     	}
 	   });

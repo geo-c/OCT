@@ -1,14 +1,39 @@
-var pg = require('pg');
-var _ = require('underscore');
-var jwt = require('jsonwebtoken');
-var secret = require('./../../config/secret');
-var db_settings = require('../../server.js').db_settings;
 var errors = require('./../../config/errors');
+var client = require('./../db.js');
+var _ = require('underscore');
 
 
 // LIST
 exports.request = function(req, res) {
-    var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
+    queryStr = 'SELECT * FROM Apps WHERE app_hash=$1;';
+    params = [req.params.app_hash];
+
+    client.query(queryStr, params, function (err, result) {
+        if(err) {
+            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+            return console.error(errors.database.error_2.message, err);
+        } else {
+
+            console.log(result);
+            queryStr = 'SELECT count(tags) AS count, tag_name FROM logs INNER JOIN tags on logs.tag_id=tags.tag_id WHERE app_hash=$1 GROUP BY tag_name;';
+            params = [req.params.app_hash];
+
+            client.query(queryStr, params, function (err, result) {
+                if(err) {
+                    res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                    return console.error(errors.database.error_2.message, err);
+                } else {
+                    res.status(200).send(result);
+                }
+
+            });
+        }
+
+    });
+
+
+
+    /*var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
     pg.connect(url, function(err, client, done) {
         if (err) {
@@ -51,5 +76,5 @@ exports.request = function(req, res) {
                 }
             });
         }
-    });
+    });*/
 };
