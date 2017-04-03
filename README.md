@@ -13,5 +13,7 @@ A more detailed documentation of the underlying architecture, as well as the cur
 ### Demo
 A demo of the OCT Transparency Module is accessible at [OCT Core Demo](http://giv-oct.uni-muenster.de:8080/).  
 
+![OCT-Core](/images/OCT-Core.jpg)
+
 ### License
 The code is distributed under the Apache v2 License.
