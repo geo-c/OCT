@@ -111,11 +111,14 @@
     </div>
 
     <footer class="footer container-fluid">
-    <br>
+      <br>
       <center>
         <a href="http://geo-c.eu/"><img src="http://giv-oct.uni-muenster.de/oct/images/logo-geoc.png" width="145px" height="auto" style="float:left;"></a>
-        <div align="right">
+
+        <div class="pull-right">
+          <a></a>
           <a href="https://github.com/geo-c/OCT-Core"><i class="fa fa-github-square fa-2x"></i></a>
+          <a href="https://www.youtube.com/channel/UCWnzB40te4NpqeeaoY9NuDQ"><i class="fa fa-youtube-square fa-2x"></i></a>
           <a href="https://twitter.com/geoc_eu"><i class="fa fa-twitter-square fa-2x"></i></a>
           <a href="https://www.facebook.com/geo.c.opencities"><i class="fa fa-facebook-square fa-2x"></i></a>
           <span style="position: relative; right: 0; top: 0;">
@@ -123,10 +126,24 @@
               <i class="fa fa-square fa-2x" style="position: relative; top: 0; left: 0;"></i>
             </a>
             <a href="http://giv-oct.uni-muenster.de:5000/">
-              <img src="img/ckan-logo-footer-white.png" width="18px" height="auto" style="position: absolute; top: -6px; left: 3px; pointer-events:none;">
+              <img src="../img/ckan-logo-footer-white.png" width="18px" height="auto" style="position: absolute; top: -6px; left: 3px; pointer-events:none;">
             </a>
           </span>
         </div>
+        <div class="pull-right">
+          <div class="dropup">
+            <a href="" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-download"></i>
+            </a>
+            <ul class="dropdown-menu dropup" align="right">
+              <li><a href="http://giv-oct.uni-muenster.de:8081/api/statistics?format=json">JSON</a></li>
+              <li><a href="http://giv-oct.uni-muenster.de:8081/api/statistics?format=rdf">RDF</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Info</a></li>
+            </ul>
+          </div>
+        </div>
+
       </center>
     </footer>
 

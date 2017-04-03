@@ -48,3 +48,14 @@ table td {
   height: 60px;
   background-color: #f5f5f5;
 }
+
+.dropup {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Bottom of button */
+  right: 0;
+  margin-left: -100px; /* More to the left */
+}
