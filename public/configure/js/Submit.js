@@ -1,18 +1,29 @@
 var Submit = function (user, categories) {
 	this.user = user;
 	this.categories = categories;
-	this.url = "http://giv-oct.uni-muenster.de:8080/api/";
 };
 
 
 Submit.prototype.submit = function (status, callback) {
-	console.log(this.user);
-	console.log(status);
 	var validator = new Validator();
 	switch(status) {
 		case("login"):
-			$.getJSON( this.url + "admin/login/" + $('#username').val(), function (json) {
+			$.getJSON( new API().endpoint + "admin/login/" + $('#username').val() + "/" + $('#password').val(), function (json) {
+				console.log(json);
 				callback(json);
+			}).fail(function (e) {
+				console.log(e);
+				if(e.status == 401) {
+					alert(e.responseText);
+				} else {
+					if(e.status == 404) {
+						alert("Fill in username and password");
+					} else {
+						if(e.status == 200) {
+							alert(e.responseText);
+						}
+					}
+				}
 			});
 			break;
 		case("signup"):
@@ -26,8 +37,7 @@ Submit.prototype.submit = function (status, callback) {
 			 console.log(data);
 			$.ajax({
 			    type: "POST",
-			    url: this.url + "admin/signup",
-			    processData: false,
+			    url: new API().endpoint + "admin/signup",
 			    contentType: 'application/json',
 			    data: JSON.stringify(data),
 			    success: function(r) {
@@ -77,15 +87,13 @@ Submit.prototype.submit = function (status, callback) {
 				}
 				$.ajax({
 				    type: "POST",
-				    url: this.url + "querycheck",
-				    processData: false,
+				    url: new API().endpoint + "querycheck",
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: this.url + "submit",
-						    processData: false,
+						    url: new API().endpoint + "submit",
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),
 						    success: function(r) {
@@ -141,15 +149,13 @@ Submit.prototype.submit = function (status, callback) {
 				}
 				$.ajax({
 				    type: "POST",
-				    url: this.url + "querycheck",
-				    processData: false,
+				    url: new API().endpoint + "querycheck",
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: this.url + "submit",
-						    processData: false,
+						    url: new API().endpoint + "submit",
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),
 						    success: function(r) {
@@ -207,15 +213,13 @@ Submit.prototype.submit = function (status, callback) {
 				console.log(data);
 				$.ajax({
 				    type: "POST",
-				    url: this.url + "querycheck",
-				    processData: false,
+				    url: new API().endpoint + "querycheck",
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
 				    	$.ajax({
 						    type: "POST",
-						    url: this.url + "submit",
-						    processData: false,
+						    url: new API().endpoint + "submit",
 						    contentType: 'application/json',
 						    data: JSON.stringify(data),
 						    success: function(r) {
@@ -268,25 +272,91 @@ Submit.prototype.submit = function (status, callback) {
 					query_description: query_description,
 					categories: this.categories
 				}
-				console.log(data);
-			
-		    	$.ajax({
+				/*$.ajax({
 				    type: "POST",
-				    url: this.url + "submit",
+				    url: new API().endpoint + "querycheck",
+				    contentType: 'application/json',
+				    data: data,
+				    success: function(r) {*/
+				    	$.ajax({
+						    type: "POST",
+						    url: new API().endpoint + "submit",
+						    contentType: 'application/json',
+						    data: data,
+						    success: function(r) {
+						    	callback(r);
+						    	$('#myModal').modal('hide');
+							}, 
+							error: function (e) {
+								callback(e);
+							}
+						});
+					/*}, 
+					error: function (e) {
+						callback(e);
+					}
+				});*/
+			}
+			break;
+		case("Modify-Parliament"):
+			if(validator.check(status)) {
+				
+				db_name = $("#db-name").val();
+				db_host = $("#db-host").val();
+				db_description = $("#db-description").val();
+
+				//User
+				username = this.user.username;
+				
+				//query
+				query_name = $("#query-name").val();
+				query = $("#query").val();
+				query_id = $("#query-id").val();
+				query_description = $("#query-description").val();
+
+				data = {
+					ds_type: "PARLIAMENT",
+					ds_description: db_description,
+					ds_host: db_host,
+					db_instance: "",
+					db_user: "",
+					db_password: "",
+					created_by: username,
+					md_name: db_name,
+					md_description: db_description,
+					publisher: "",
+					license: "",
+					sd_name: "",
+					sd_description: "",
+					query_intern: query,
+					query_extern: query_id,
+					query_description: query_description,
+					categories: this.categories
+				}
+				$.ajax({
+				    type: "POST",
+				    url: new API().endpoint + "querycheck",
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
 				    success: function(r) {
-				    	console.log(r);
-				    	callback(r);
-				    	$('#myModal').modal('hide');
+				    	$.ajax({
+						    type: "POST",
+						    url: new API().endpoint + "update",
+						    contentType: 'application/json',
+						    data: JSON.stringify(data),
+						    success: function(r) {
+						    	callback(r);
+						    	$('#myModal').modal('hide');
+							}, 
+							error: function (e) {
+								callback(e);
+							}
+						});
 					}, 
 					error: function (e) {
-						console.log(e);
-						callback(e.responseText);
+						callback(JSON.stringyfy(e));
 					}
 				});
-					
-			
 			}
 			break;
 		default:

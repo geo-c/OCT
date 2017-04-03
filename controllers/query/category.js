@@ -109,7 +109,7 @@ exports.request = function(req, res){
                                     }
                                 }
                             }
-                            query += ";";
+                            query += "AND queries.active='true';";
                             console.log(query);
                             client.query(query, params, function(err, result) {
                                 if(err) {

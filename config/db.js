@@ -5,6 +5,9 @@
 module.exports = {
     host: "127.0.0.1",
     port: 5432,
-    database_name: "oct",
+    max: 10,
+    idleTimeoutMillis: 30000,
     admin: "oct-admin"
 };
+
+

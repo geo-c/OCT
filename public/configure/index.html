@@ -5,20 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OCT Core Statistics</title>
 
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-3.2.0-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="../lib/jquery.datatables.min.css">
   <link rel="stylesheet" href="css/index.css">
+  <link href="../lib//bootstrap-toggle.min.css" rel="stylesheet">
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
+  <script src="../lib/jquery.min.js"></script>
+  <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+  <script src="../lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+  <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>-->
+  <script src="../lib/jquery.datatables.min.js"></script>
   <script src="../lib/Chart.js"></script>
+  <script src="../lib/bootstrap-toggle.min.js"></script>
 
   <!-- Custom -->
+  <script src="../js/API.js" type="text/javascript"></script>
   <script src="js/Validator.js" type="text/javascript"></script>
   <script src="js/Submit.js" type="text/javascript"></script>
   <script src="js/Elements.js" type="text/javascript"></script>
+  <script src="js/Modify.js" type="text/javascript"></script>
   <script src="js/Form.js" type="text/javascript"></script>
   <script src="js/Table.js" type="text/javascript"></script>
   <script src="js/index.js" type="text/javascript"></script>
@@ -59,6 +66,7 @@
             </button>
             <h4 class="modal-title" id="myModalLabel">Add a Database</h4>
             <h5 style="color:red;"></h5>
+            <div id="additionalText"></div>
           </div>
           <div class="modal-body">
           </div>
@@ -74,7 +82,14 @@
       <center>
         <a href="http://geo-c.eu/"><img src="http://giv-oct.uni-muenster.de/oct/images/logo-geoc.png" width="145px" height="auto" style="float:left;"></a>
         <div align="right">
-          <a href="https://github.com/geo-c/Open-City-Toolkit"><i class="fa fa-github-square fa-2x"></i></a>
+          <a></a>
+          <a href="https://github.com/geo-c/OCT-Core"><i class="fa fa-github-square fa-2x"></i></a>
+          <a href=""><i class="fa fa fa-download fa-2x"></i></a>
+          <div class="dropdown-menu" aria-labelledby="dropdownlink">
+            <a>1</a>
+            <a>2</a>
+          </div>
+          <a href="https://www.youtube.com/user/ifgi"><i class="fa fa-youtube-square fa-2x"></i></a>
           <a href="https://twitter.com/geoc_eu"><i class="fa fa-twitter-square fa-2x"></i></a>
           <a href="https://www.facebook.com/geo.c.opencities"><i class="fa fa-facebook-square fa-2x"></i></a>
           <span style="position: relative; right: 0; top: 0;">

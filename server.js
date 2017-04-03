@@ -1,6 +1,7 @@
 var program = require('commander');
 var path = require('path');
 var _ = require('underscore');
+var pg = require('pg');
 
 
 /**
@@ -8,12 +9,23 @@ var _ = require('underscore');
  */
 program
     .version('1.0.0')
+    .option('-apip --api_port [port]', 'Enter the Port to run the API', '8080')
+    .option('-dbn --database_name [dbname]', 'Enter the Databasename')
     .option('-dbu, --postgres_user [username]', 'Enter the PostgreSQL-User, which is needed to start REST-API', 'admin')
     .option('-dbpw, --postgres_password [password]', 'Enter the PostgreSQL-Password, which is needed to start REST-API', 'password')
     .option('-emu, --email_user [email-address]', 'Enter the SMTP-address (example: user@gmail.com)', 'user@gmail.com')
     .option('-empw, --email_password [password]', 'Enter the Email-Password', 'password')
     .parse(process.argv);
 
+var api_settings = {
+    status: false,
+    port: 8080
+};
+
+api_settings = _.extend(api_settings, require('./config/api'));
+if(program.api_port) {
+    api_settings.port = program.api_port;
+}   
 
 
 // Check if Postgres-User and Postgres-Password were set, otherwise run only simple webserver without REST-API
@@ -22,13 +34,19 @@ var db_settings = {
     user: "",
     password: ""
 };
+
 db_settings = _.extend(db_settings, require('./config/db'));
 if(program.postgres_user != "admin" && program.postgres_password != "password"){
     db_settings.status = true;
     db_settings.user = program.postgres_user;
+    db_settings.database= program.database_name,
     db_settings.password = program.postgres_password;
     exports.db_settings = db_settings;
+
+    require('./controllers/db').init(db_settings);
 }
+
+
 
 // Check if a SMTP-address and Password were set, otherwise run only simple webserver without REST-API
 var email_settings = {
@@ -53,7 +71,9 @@ var app = express();
 var server = require('http').createServer(app);
 
 // Set Server-Port
-var port = process.env.PORT || 8080;
+console.log(program.api_port);
+var port = program.api_port;
+console.log(port);
 server.listen(port, function () {
     console.log('Webserver is listening at port %d', port);
 });
@@ -101,6 +121,8 @@ if(db_settings.status && email_settings.status){
     var spatial = require('./routes/spatial');
     var submit = require('./routes/submit');
     var dataset = require('./routes/dataset');
+    var port = require('./routes/port');
+    var stats = require('./routes/stats');
 
     // Load Routes
     app.use('/api', signup);
@@ -116,6 +138,8 @@ if(db_settings.status && email_settings.status){
     app.use('/api', spatial);
     app.use('/api', submit);
     app.use('/api', dataset);
+    app.use('/api', port);
+    app.use('/api', stats);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");

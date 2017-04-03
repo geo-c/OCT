@@ -111,6 +111,6 @@ Elements.prototype.db_description = function () {
  * Show Field for Password
  */
 Elements.prototype.password = function () {
-	$password = $('<input type="text" class="form-control" id="password" placeholder="Password" aria-describedby="basic-addon3">');
+	$password = $('<input type="password" class="form-control" id="password" placeholder="Password" aria-describedby="basic-addon3">');
 	return $password;
 }

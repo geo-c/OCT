@@ -1,10 +1,11 @@
-var pg = require('pg');
+var errors = require('./../../config/errors');
+var client = require('./../db.js');
 var _ = require('underscore');
+
+
 var request = require('request');
 var jwt = require('jsonwebtoken');
 var secret = require('../../config/secret');
-var db_settings = require('../../server.js').db_settings;
-var errors = require('../../config/errors');
 
 var Ajv = require('ajv');
 var schema = require('../../models/query');
@@ -19,7 +20,6 @@ var Parliament_Client = require('../connectors/Parliament_Client.js');
 
 // POST
 exports.request = function(req, res){
-
     // Create timestamp
     var time = Date.now();
     // Check if Header contains Access-Token
@@ -41,128 +41,160 @@ exports.request = function(req, res){
        res.status(errors.authentication.error_2.code).send(errors.authentication.error_2);
        return console.error(errors.authentication.error_2.message); 
     } else {
-        var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
-        // Connect to Database
-        pg.connect(url, function(err, client, done) {
-            if (err) {
-                res.status(errors.database.error_1.code).send(errors.database.error_1);
-                return console.error(errors.database.error_1.message, err);
+        var queryStr = 'SELECT * FROM Apps WHERE app_hash=$1;';
+        var params = [accessToken];
+
+        client.query(queryStr, params, function (err, result) {
+            if(err) {
+                //res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                res.status(404).send(_.extend(errors.database.error_2, err));
             } else {
+                if (result.length === 0) {
+                    res.status(errors.query.error_1.code).send(errors.query.error_1);
+                    console.error(errors.query.error_1.message);
+                } else {
 
-                // Database Query
-                client.query('SELECT * FROM Apps WHERE app_hash=$1;', [
-                    accessToken
-                ], function(err, result) {
-                    done();
+                    var queryStr = "SELECT sub_datasets.sd_name, sub_datasets.sd_id, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance, queries.query_intern, queries.query_extern, queries.query_description "
+                    queryStr += "FROM sub_datasets INNER JOIN queries ON sub_datasets.sd_id = queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id "
+                    queryStr += "WHERE queries.query_extern = $1 AND queries.active = 'true';"
+                    var params = [req.params.query_extern];
 
-                    if (err) {
-                        res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-                        return console.error(errors.database.error_2.message, err);
-                    } else {
-
-                        // Check if App exists
-                        if (result.rows.length === 0) {
-                            res.status(errors.query.error_1.code).send(errors.query.error_1);
-                            console.error(errors.query.error_1.message);
+                    client.query(queryStr, params, function (err, result) {
+                        if(err) {
+                            //res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                            res.status(404).send(_.extend(errors.database.error_2, err));
                         } else {
-                            query = "SELECT sub_datasets.sd_name, sub_datasets.sd_id, sub_datasets.sd_description, main_datasets.md_name, main_datasets.md_description, datastores.ds_type, datastores.ds_host, datastores.ds_port, datastores.db_instance, datastores.db_user, datastores.db_password, datastores.db_instance, queries.query_intern, queries.query_extern, queries.query_description "
-                            query += "FROM sub_datasets INNER JOIN queries ON sub_datasets.sd_id = queries.sd_id INNER JOIN public.main_datasets ON sub_datasets.md_id=main_datasets.md_id INNER JOIN public.datastores ON main_datasets.ds_id=datastores.ds_id "
-                            query += "WHERE queries.query_extern = $1"
-                            client.query(query, [
-                                req.params.query_extern
-                            ], function(err, result) {
-                                if(err) {
-                                    console.log(err);
-                                } else {
-                                    if(result.rows.length === 0) {
-                                        console.log("No entry for this category");
-                                        res.status(errors.query.error_3.code).send(errors.query.error_3);
-                                    } else {
-                                        //res.status(201).send(result.rows);
-                                        var answerCount = 0;
-                                        for(index in result.rows) {
-                                            logDataset(client, accessToken, result.rows[index].sd_id);
-                                            // Prepare Connectors
-                                            switch(result.rows[index].ds_type) {
-                                                /** TODO:
-                                                 * Need to get query from database, then execute
-                                                 */
-                                                case("POSTGRESQL"):
-                                                    answerCount ++;
-                                                    // PostgreSQL
-                                                    _url = "postgres://" + result.rows[index].db_user + ":" + result.rows[index].db_password + "@" + result.rows[index].db_host + ":" + result.rows[index].db_port + "/" + result.rows[index].db_instance;
-                                                    var postgres_Client = new Postgres_Client(_url);
-                                                    postgres_Client.setURL(url);
-                                                    postgres_Client.query(result.rows[index].query_intern, [], function(_result, err) {
-                                                        if(err) {
-                                                            res.status(400).send(err);
-                                                        } else {
-                                                            res.status(200).send(_result);
-                                                        }
-                                                    });
-                                                    break;
-                                                case("REST"):
-                                                    var name = result.rows[index].sd_name;
-                                                    var description = result.rows[index].sd_description;
-                                                    request(result.rows[index].ds_host+result.rows[index].query_intern, function(error, response, body) {
-                                                        if(error) {
-                                                            res.status(400).send(error);
-                                                        } else {
-                                                            res.status(200).send(JSON.parse(body));
-                                                        }
-                                                    });
-                                                    break;
-                                                case("COUCHDB"):
-                                                    var couchdb_Client = new CouchDB_Client(result.rows[index].ds_host, result.rows[index].ds_port);
-                                                    couchdb_Client.useDatabase(result.rows[index].db_instance);
-                                                    couchdb_Client.query(result.rows[index].query_intern, function (error, result) {
-                                                        if(error) {
-                                                            res.status(400).send(error);
-                                                        } else {
-                                                            res.status(200).send(result);
-                                                        }
-                                                    });
-                                                    break;
-                                                case("PARLIAMENT"):
-                                                    var length = result.rows.length;
-                                                    parliament_Client = new Parliament_Client(result.rows[index].ds_host, result.rows[index].ds_port);
-                                                    parliament_Client.query(result.rows[index].query_intern, function (error, result) {
-                                                        if(error) {
-                                                            res.status(400).send(error);
-                                                        } else {
-                                                            res.status(200).send(result);
-                                                        }
-                                                    });
-                                                    break;
-                                                default:
-                                                    answerCount++;
-                                                    console.log("unknown Database");
-                                                    console.log(result.rows[index].ds_type);
-                                                    finish(res, Answer, answerCount, result.rows.length);
-                                                    break;
-                                            }
+                            if(result.length === 0) {
+                                console.log("No entry for this category");
+                                res.status(errors.query.error_3.code).send(errors.query.error_3);
+                            } else {
+                                var answerCount = 0;
+                                for(index in result) {
 
+                                    var userIp = req.headers['x-forwarded-for'] || 
+                                         req.connection.remoteAddress || 
+                                         req.socket.remoteAddress ||
+                                         req.connection.socket.remoteAddress;
+
+                                    var ip = userIp.split(':')[3];
+
+                                    request('http://freegeoip.net/json/' + ip, function (error, response, body) {
+                                        if (!error && response.statusCode == 200) {
+                                            var user_data = JSON.parse(body);
+                                            logDataset(client, accessToken, result[index].sd_id, user_data);
                                         }
+                                    });
+                                    // Prepare Connectors
+                                    switch(result[index].ds_type) {
+                                        /** TODO:
+                                         * Need to get query from database, then execute
+                                         */
+                                        case("POSTGRESQL"):
+                                            answerCount ++;
+                                            // PostgreSQL
+                                            _url = "postgres://" + result[index].db_user + ":" + result[index].db_password + "@" + result[index].db_host + ":" + result[index].db_port + "/" + result[index].db_instance;
+                                            var postgres_Client = new Postgres_Client(_url);
+                                            postgres_Client.setURL(url);
+                                            postgres_Client.query(result[index].query_intern, [], function(_result, err) {
+                                                if(err) {
+                                                    res.status(400).send(err);
+                                                } else {
+                                                    res.status(200).send(_result);
+                                                }
+                                            });
+                                            break;
+                                        case("REST"):
+                                            var name = result[index].sd_name;
+                                            var description = result[index].sd_description;
+                                            request(result[index].ds_host+result[index].query_intern, function(error, response, body) {
+                                                if(error) {
+                                                    res.status(400).send(error);
+                                                } else {
+                                                    res.status(200).send(JSON.parse(body));
+                                                }
+                                            });
+                                            break;
+                                        case("COUCHDB"):
+                                            var couchdb_Client = new CouchDB_Client(result[index].ds_host, result[index].ds_port);
+                                            couchdb_Client.useDatabase(result[index].db_instance);
+                                            couchdb_Client.query(result[index].query_intern, function (error, result) {
+                                                if(error) {
+                                                    res.status(400).send(error);
+                                                } else {
+                                                    res.status(200).send(result);
+                                                }
+                                            });
+                                            break;
+                                        case("PARLIAMENT"):
+                                            var length = result.length;
+                                            parliament_Client = new Parliament_Client(result[index].ds_host, result[index].ds_port);
+                                            parliament_Client.query(result[index].query_intern, function (error, result) {
+                                                if(error) {
+                                                    res.status(400).send(error);
+                                                } else {
+                                                    res.status(200).send(result);
+                                                }
+                                            });
+                                            break;
+                                        default:
+                                            answerCount++;
+                                            console.log("unknown Database");
+                                            console.log(result[index].ds_type);
+                                            finish(res, Answer, answerCount, result.length);
+                                            break;
                                     }
-                                }
 
-                            });
+                                }
+                            }
                         }
+                    });
+                }
+            }
+        });
+
+    }
+};
+
+
+var logDataset = function (client, accessToken, sd_id, user_data) {
+    if(user_data != null) {
+        queryStr = 'INSERT INTO visitors (date, city, country_code, country_name, latitude, longitude, metro_code, region_code, region_name, time_zone, zip_code) VALUES (now(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id AS location_id';
+
+        console.log(user_data.latitude);
+
+         params = [
+            user_data.city,
+            user_data.country_code,
+            user_data.country_name,
+            user_data.latitude,
+            user_data.longitude,
+            user_data.metro_code,
+            user_data.region_code,
+            user_data.region_name,
+            user_data.time_zone,
+            user_data.zip_code
+        ];
+
+        client.query(queryStr, params, function (err, result) {
+            if(err) {
+                console.log(err);
+            } else {
+                var queryStr = 'INSERT INTO Logs(app_hash, timestamp, category_id, sd_id, location_id) VALUES ($1, now(), null, $2, $3);';
+                var params = [
+                    accessToken, 
+                    sd_id,
+                    result[0].location_id
+                ];
+
+                client.query(queryStr, params, function (err, result) {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("OK");
                     }
                 });
             }
         });
     }
-};
-
-
-var logDataset = function (client, accessToken, sd_id) {
-    client.query("INSERT INTO Logs(app_hash, timestamp, category_id, sd_id) VALUES ($1, now(), null, $2)", [accessToken, sd_id], function (err, result) {
-        if(err) {
-            console.log(err);
-        } else {
-            //Logged the search
-        }
-    });
 }

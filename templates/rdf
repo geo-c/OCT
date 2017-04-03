@@ -1,0 +1,57 @@
+@prefix dcat: <http://www.w3.org/TR/vocab-dcat/>.
+@prefix dcterms: <http://www.purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix oct: <http://opencitytoolkit.org/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+
+
+
+{{#apps}}
+
+oct:app_{{app_id}} a  foaf:Agent, oct:App;
+foaf:name "{{app_name}}"; 
+dcterms:description "{{app_desc}}";
+{{#usages_category}}
+oct:resourceusage _:rusage_{{usage_id}};
+{{/usages_category}}
+{{#usages_dataset}}
+oct:resourceusage _:rusage_{{usage_id}}{{#nlast}};{{/nlast}}
+{{/usages_dataset}}.
+
+
+{{#usages_dataset}}
+
+_:rusage_{{usage_id}} a oct:DatasetUse;
+    oct:hasDataset oct:dataset_{{dataset_id}};
+    oct:hasDatasetSearches {{calls}}.
+{{/usages_dataset}}
+
+{{#usages_category}}
+
+_:rusage_{{usage_id}} a oct:DatasetUse;
+    oct:hasCategory oct:category_{{category_id}};
+    oct:hasCategorySearches {{calls}}.
+{{/usages_category}}
+
+
+{{/apps}}
+
+
+{{#categories}}
+
+oc:category_{{category_id}} a skos:Concept;
+foaf:name "{{category_name}}".
+{{/categories}}
+
+
+{{#datasets}}
+
+oct:dataset_{{dataset_id}} a dcat:Dataset, oct:Dataset;
+foaf:name "{{dataset_name}}";
+dcterms:description "{{dataset_desc}}"{{#hasCategory}};{{/hasCategory}}
+{{#categories}} 
+dcat:theme oct:category_{{category_id}}{{#nlast}};{{/nlast}}
+{{/categories}}
+.
+{{/datasets}}

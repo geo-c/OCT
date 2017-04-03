@@ -1,13 +1,26 @@
-var pg = require('pg');
-var _ = require('underscore');
-var jwt = require('jsonwebtoken');
-var secret = require('./../../config/secret');
-var db_settings = require('../../server.js').db_settings;
 var errors = require('./../../config/errors');
+var client = require('./../db.js');
+var _ = require('underscore');
 
 
 // GET
 exports.request = function(req, res) {
+
+    queryStr = 'SELECT logs."timestamp"::timestamp::date as date, count(logs."timestamp"), category_name FROM public.logs INNER JOIN categories ON categories.category_id = logs.category_id WHERE logs."timestamp"::timestamp::date=$1 GROUP BY category_name, date ORDER BY date;';
+    params = [req.params.date];
+
+    client.query(queryStr, params, function (err, result) {
+        if(err) {
+            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+            return console.error(errors.database.error_2.message, err);
+        } else {
+            res.status(200).send(result);
+        }
+
+    });
+
+
+    /*
     var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
 
     pg.connect(url, function(err, client, done) {
@@ -34,4 +47,5 @@ exports.request = function(req, res) {
             });
         }
     });
+    */
 };
