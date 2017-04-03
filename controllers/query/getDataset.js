@@ -160,15 +160,6 @@ exports.request = function(req, res){
 var logDataset = function (client, accessToken, sd_id, user_data) {
     if(user_data != null) {
         queryStr = 'INSERT INTO visitors (date, city, country_code, country_name, latitude, longitude, metro_code, region_code, region_name, time_zone, zip_code) VALUES (now(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id AS location_id';
-        
-        console.log(user_data);
-        console.log(user_data.city)
-
-        for (var key in user_data) {
-          if (user_data.hasOwnProperty(key)) {
-            console.log(key + " -> " + user_data[key]);
-          }
-        }
 
          params = [
             user_data.city,
@@ -182,7 +173,6 @@ var logDataset = function (client, accessToken, sd_id, user_data) {
             user_data.time_zone,
             user_data.zip_code
         ];
-        console.log(params);
 
         client.query(queryStr, params, function (err, result) {
             if(err) {

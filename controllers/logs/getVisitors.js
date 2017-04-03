@@ -6,12 +6,12 @@ var _ = require('underscore');
 // LIST
 exports.request = function(req, res) {
 
-    var queryStr = 'SELECT logs.sd_id, logs.timestamp, latitude, longitude FROM visitors LEFT JOIN logs ON visitors.id = logs.location_id';
+    var queryStr = 'SELECT logs.timestamp, latitude, longitude, query_extern AS dataset, app_name FROM visitors INNER JOIN logs ON visitors.id = logs.location_id INNER JOIN queries ON queries.sd_id = logs.sd_id INNER JOIN apps ON logs.app_hash = apps.app_hash ';
     var params = [];
 
     var flagWhere = false;
 
-    /*
+    
 
     switch(req.params.status) {
         case('app'):
@@ -36,17 +36,14 @@ exports.request = function(req, res) {
         }
         flagWhere = true;
         if(req.params.timeTo != null && req.params.timeTo != "") {
-            queryStr += 'timestamp BETWEEN ' + req.params.timeFrom + '::timestamp AND ' +  req.params.timeTo + '::timestamp ';
+            queryStr += "timestamp BETWEEN to_date('" + req.params.timeFrom + "', 'YYYY-MM-DD'::text) AND to_date('" +  req.params.timeTo + "', 'YYYY-MM-DD'::text) ";
         } else {
-            queryStr += 'timestamp BETWEEN ' + req.params.timeFrom + '::timestamp AND now()::timestamp ';
+            queryStr += "timestamp BETWEEN to_date('" + req.params.timeFrom + "', 'YYYY-MM-DD'::text) AND now() ";
         }
     }
-    */
+    
     queryStr += ';';
 
-    
-    
-    console.log(queryStr);
 
     client.query(queryStr, params, function (err, result) {
         if(err) {
