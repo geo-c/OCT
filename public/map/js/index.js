@@ -11,17 +11,25 @@ $(document).ready(function() {
 		markers = L.markerClusterGroup({ chunkedLoading: true });
 
 		$.getJSON("http://giv-oct.uni-muenster.de:8081/api/visitors/" + status + "/" + value, function(json){ 
-			console.log(json);
 			for(i in json) {
 				
 				//console.log(json[i])
 				marker = L.marker([json[i].latitude, json[i].longitude]);
+
+				marker.bindPopup('<ul><li> Time: '+ json[i].timestamp + '</li><li> Latitude: '+ json[i].latitude + '</li><li> Longitude: ' + json[i].longitude + '</li><li> App_name: ' + json[i].app_name + '</li><li> Dataset: ' + json[i].dataset + '</li></ul>');
+
 				markers.addLayer(marker);
 			}
 			if(json.length != 0) {
 				map.addLayer(markers);
 
 				map.fitBounds(markers.getBounds());
+
+				markers.on('click', function (a) {
+					console.log('marker ' + a.layer);
+				});
+			} else {
+				alert("No Api Usages yet!");
 			}
 			
 		});
