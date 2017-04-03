@@ -161,6 +161,8 @@ var logDataset = function (client, accessToken, sd_id, user_data) {
     if(user_data != null) {
         queryStr = 'INSERT INTO visitors (date, city, country_code, country_name, latitude, longitude, metro_code, region_code, region_name, time_zone, zip_code) VALUES (now(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id AS location_id';
 
+        console.log(user_data.latitude);
+
          params = [
             user_data.city,
             user_data.country_code,
