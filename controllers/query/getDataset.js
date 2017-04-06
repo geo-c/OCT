@@ -69,82 +69,79 @@ exports.request = function(req, res){
                                 console.log("No entry for this category");
                                 res.status(errors.query.error_3.code).send(errors.query.error_3);
                             } else {
-                                var answerCount = 0;
-                                for(index in result) {
+                                var userIp = req.headers['x-forwarded-for'] || 
+                                     req.connection.remoteAddress || 
+                                     req.socket.remoteAddress ||
+                                     req.connection.socket.remoteAddress;
 
-                                    var userIp = req.headers['x-forwarded-for'] || 
-                                         req.connection.remoteAddress || 
-                                         req.socket.remoteAddress ||
-                                         req.connection.socket.remoteAddress;
+                                var ip = userIp.split(':')[3];
 
-                                    var ip = userIp.split(':')[3];
-
-                                    request('http://freegeoip.net/json/' + ip, function (error, response, body) {
-                                        if (!error && response.statusCode == 200) {
-                                            var user_data = JSON.parse(body);
-                                            logDataset(client, accessToken, result[index].sd_id, user_data);
-                                        }
-                                    });
-                                    // Prepare Connectors
-                                    switch(result[index].ds_type) {
-                                        /** TODO:
-                                         * Need to get query from database, then execute
-                                         */
-                                        case("POSTGRESQL"):
-                                            answerCount ++;
-                                            // PostgreSQL
-                                            _url = "postgres://" + result[index].db_user + ":" + result[index].db_password + "@" + result[index].db_host + ":" + result[index].db_port + "/" + result[index].db_instance;
-                                            var postgres_Client = new Postgres_Client(_url);
-                                            postgres_Client.setURL(url);
-                                            postgres_Client.query(result[index].query_intern, [], function(_result, err) {
-                                                if(err) {
-                                                    res.status(400).send(err);
-                                                } else {
-                                                    res.status(200).send(_result);
-                                                }
-                                            });
-                                            break;
-                                        case("REST"):
-                                            var name = result[index].sd_name;
-                                            var description = result[index].sd_description;
-                                            request(result[index].ds_host+result[index].query_intern, function(error, response, body) {
-                                                if(error) {
-                                                    res.status(400).send(error);
-                                                } else {
-                                                    res.status(200).send(JSON.parse(body));
-                                                }
-                                            });
-                                            break;
-                                        case("COUCHDB"):
-                                            var couchdb_Client = new CouchDB_Client(result[index].ds_host, result[index].ds_port);
-                                            couchdb_Client.useDatabase(result[index].db_instance);
-                                            couchdb_Client.query(result[index].query_intern, function (error, result) {
-                                                if(error) {
-                                                    res.status(400).send(error);
-                                                } else {
-                                                    res.status(200).send(result);
-                                                }
-                                            });
-                                            break;
-                                        case("PARLIAMENT"):
-                                            var length = result.length;
-                                            parliament_Client = new Parliament_Client(result[index].ds_host, result[index].ds_port);
-                                            parliament_Client.query(result[index].query_intern, function (error, result) {
-                                                if(error) {
-                                                    res.status(400).send(error);
-                                                } else {
-                                                    res.status(200).send(result);
-                                                }
-                                            });
-                                            break;
-                                        default:
-                                            answerCount++;
-                                            console.log("unknown Database");
-                                            console.log(result[index].ds_type);
-                                            finish(res, Answer, answerCount, result.length);
-                                            break;
+                                request('http://freegeoip.net/json/' + ip, function (error, response, body) {
+                                    if (!error && response.statusCode == 200) {
+                                        var user_data = JSON.parse(body);
+                                        logDataset(client, accessToken, result[0].sd_id, user_data);
                                     }
-
+                                });
+                                // Prepare Connectors
+                                switch(result[0].ds_type) {
+                                    /** TODO:
+                                     * Need to get query from database, then execute
+                                     */
+                                    case("POSTGRESQL"):
+                                        // PostgreSQL
+                                        _url = "postgres://" + result[0].db_user + ":" + result[0].db_password + "@" + result[0].db_host + ":" + result[0].db_port + "/" + result[0].db_instance;
+                                        var postgres_Client = new Postgres_Client(_url);
+                                        postgres_Client.setURL(url);
+                                        postgres_Client.query(result[0].query_intern, [], function(_result, err) {
+                                            if(err) {
+                                                res.status(400).send(err);
+                                            } else {
+                                                console.log(_result);
+                                                res.status(200).send(_result);
+                                            }
+                                        });
+                                        break;
+                                    case("REST"):
+                                        var name = result[0].sd_name;
+                                        var description = result[0].sd_description;
+                                        request(result[0].ds_host+result[0].query_intern, function(error, response, body) {
+                                            if(error) {
+                                                res.status(400).send(error);
+                                            } else {
+                                                res.status(200).send(JSON.parse(body));
+                                            }
+                                        });
+                                        break;
+                                    case("COUCHDB"):
+                                        var couchdb_Client = new CouchDB_Client(result[0].ds_host, result[0].ds_port);
+                                        couchdb_Client.useDatabase(result[0].db_instance);
+                                        couchdb_Client.query(result[0].query_intern, function (error, result) {
+                                            if(error) {
+                                                res.status(400).send(error);
+                                            } else {
+                                                res.status(200).send(result);
+                                            }
+                                        });
+                                        break;
+                                    case("PARLIAMENT"):
+                                        console.log("Parliament")
+                                        var length = result.length;
+                                        parliament_Client = new Parliament_Client(result[0].ds_host, result[0].ds_port);
+                                        parliament_Client.query(result[0].query_intern, function (error, result) {
+                                            if(error) {
+                                                console.log("error")
+                                                console.log(error);
+                                                res.status(400).send(error);
+                                            } else {
+                                                console.log("result");
+                                                res.status(200).send(result);
+                                            }
+                                        });
+                                        break;
+                                    default:
+                                        console.log("unknown Database");
+                                        console.log(result[0].ds_type);
+                                        break;
                                 }
                             }
                         }
@@ -161,7 +158,6 @@ var logDataset = function (client, accessToken, sd_id, user_data) {
     if(user_data != null) {
         queryStr = 'INSERT INTO visitors (date, city, country_code, country_name, latitude, longitude, metro_code, region_code, region_name, time_zone, zip_code) VALUES (now(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id AS location_id';
 
-        console.log(user_data.latitude);
 
          params = [
             user_data.city,
