@@ -1,9 +1,9 @@
-var pg = require('pg');
+var errors = require('./../config/errors');
+var client = require('./db.js');
 var _ = require('underscore');
+
 var jwt = require('jsonwebtoken');
 var secret = require('./../config/secret');
-var db_settings = require('../server.js').db_settings;
-var errors = require('./../config/errors');
 
 var transporter = require('./../config/email.js').transporter;
 var _mailOptions = require('./../config/email.js').mailOptions;
@@ -29,100 +29,86 @@ exports.request = function(req, res) {
 		return console.error(validate.errors[0].dataPath + ": " + validate.errors[0].message);
 	} else {
 
-	    // Create URL
-	    var url = "postgres://" + db_settings.user + ":" + db_settings.password + "@" + db_settings.host + ":" + db_settings.port + "/" + db_settings.database_name;
+		// Create Access-Token
+		accessToken = jwt.sign({
+			app_name: req.body.app_name
+		}, secret.key);
+		
+        // Database Query
+        client.query('INSERT INTO Apps VALUES(now(), now(), $1, $2, $3, $4, $5, $6);', [
+            req.body.app_name,
+            accessToken,
+            req.body.app_description,
+            req.body.email_address,
+            req.body.first_name,
+            req.body.last_name
+        ], function(err, result) {
 
-	    // Connect to Database
-	    pg.connect(url, function(err, client, done) {
-	        if (err) {
-				res.status(errors.database.error_1.code).send(errors.database.error_1);
-				return console.error(errors.database.error_1.message, err);
-	        } else {
+            if (err) {
+                res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+				return console.error(errors.database.error_2.message, err);
+            } else {
 
-				// Create Access-Token
-				accessToken = jwt.sign({
-					app_name: req.body.app_name
-				}, secret.key);
-				
-	            // Database Query
-	            client.query('INSERT INTO Apps VALUES(now(), now(), $1, $2, $3, $4, $5, $6);', [
-	                req.body.app_name,
-	                accessToken,
-	                req.body.app_description,
-	                req.body.email_address,
-	                req.body.first_name,
-	                req.body.last_name
-	            ], function(err, result) {
-	                done();
+                // Database Query
+                client.query('SELECT * FROM Apps WHERE app_name=$1;', [
+                    req.body.app_name
+                ], function(err, result) {
 
-	                if (err) {
-	                    res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
+                    if (err) {
+						res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
 						return console.error(errors.database.error_2.message, err);
-	                } else {
+                    } else {
 
-	                    // Database Query
-	                    client.query('SELECT * FROM Apps WHERE app_name=$1;', [
-	                        req.body.app_name
-	                    ], function(err, result) {
-	                        done();
+                        // Check if App exists
+                        if (result.length === 0) {
+                            res.status(errors.query.error_1.code).send(errors.query.error_1);
+                            console.error(errors.query.error_1.message);
+                        } else {
 
-	                        if (err) {
-								res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-								return console.error(errors.database.error_2.message, err);
-	                        } else {
+							// Prepare result
+							var app = result[0];
 
-	                            // Check if App exists
-	                            if (result.rows.length === 0) {
-	                                res.status(errors.query.error_1.code).send(errors.query.error_1);
-	                                console.error(errors.query.error_1.message);
-	                            } else {
+                            // Read Template
+                            fs.readFile(path.join(__dirname, '../templates/registration.html'), function(err, data) {
+                                if (err) throw err;
 
-									// Prepare result
-									var app = result.rows[0];
+                                // Render HTML-content
+                                var output = mustache.render(data.toString(), app);
+                                console.log(app);
+                                console.log(output);
 
-	                                // Read Template
-	                                fs.readFile(path.join(__dirname, '../templates/registration.html'), function(err, data) {
-	                                    if (err) throw err;
+                                // Create Text for Email-Previews and Email without HTML-support
+                                var text =
+                                    'Hello ' + app.first_name + ' ' + app.last_name + '\n' +
+                                    'Your new Access-Token has been generated!\n\n\n' +
+                                    app.hash_token + 
+                                    'OCT - Institute for Geoinformatics (Heisenbergstraße 2, 48149 Münster, Germany)';
 
-	                                    // Render HTML-content
-	                                    var output = mustache.render(data.toString(), app);
-	                                    console.log(app);
-	                                    console.log(output);
+                                // Set Mail options
+                                var mailOptions = {
+                                    from: _mailOptions.from,
+                                    to: app.email_address,
+                                    subject: 'Registration successful',
+                                    text: text,
+                                    html: output
+                                };
 
-	                                    // Create Text for Email-Previews and Email without HTML-support
-	                                    var text =
-	                                        'Hello ' + app.first_name + ' ' + app.last_name + '\n' +
-	                                        'Your new Access-Token has been generated!\n\n\n' +
-	                                        app.hash_token + 
-	                                        'OCT - Institute for Geoinformatics (Heisenbergstraße 2, 48149 Münster, Germany)';
+                                // Send Email
+                                transporter.sendMail(mailOptions, function(error, info) {
+                                    if (error) {
+                                        return console.log(error);
+                                    } else {
+                                        console.log('Message sent: ' + info.response);
+                                    }
+                                });
+                            });
 
-	                                    // Set Mail options
-	                                    var mailOptions = {
-	                                        from: _mailOptions.from,
-	                                        to: app.email_address,
-	                                        subject: 'Registration successful',
-	                                        text: text,
-	                                        html: output
-	                                    };
-
-	                                    // Send Email
-	                                    transporter.sendMail(mailOptions, function(error, info) {
-	                                        if (error) {
-	                                            return console.log(error);
-	                                        } else {
-	                                            console.log('Message sent: ' + info.response);
-	                                        }
-	                                    });
-	                                });
-
-	                                // Send Result
-	                                res.status(201).send(app);
-	                            }
-	                        }
-	                    });
-	                }
-	            });
-	        }
-	    });
+                            // Send Result
+                            res.status(201).send(app);
+                        }
+                    }
+                });
+            }
+        });
 	}
 };

@@ -92,7 +92,7 @@ $(document).ready(function() {
 			if(data.app_name != "" || data.email_address != "" || data.first_name != "" || data.last_name != "") {
 				$.ajax({
 				    type: "POST",
-				    url: "http://giv-oct.uni-muenster.de:8080/api/signup",
+				    url: new API().endpoint + "signup",
 				    processData: false,
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
