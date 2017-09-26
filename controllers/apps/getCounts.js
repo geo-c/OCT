@@ -5,14 +5,14 @@ var _ = require('underscore');
 
 // LIST
 exports.request = function(req, res) {
-    var queryStr = "SELECT apps.app_hash, apps.app_name, apps.app_description, (SELECT count FROM public.logs_count WHERE logs_count.app_hash = apps.app_hash and logs_count.type='App_Category') AS Searches, (SELECT count FROM public.logs_count WHERE logs_count.app_hash = apps.app_hash AND logs_count.type='App_Dataset') AS API_Calls FROM public.apps;";
-    var params = [];
+    var queryStr = 'SELECT COUNT(logs.category_id) AS Searches, COUNT(logs.sd_id) AS API_Calls FROM public.logs WHERE logs.app_hash = $1;';
+    var params = [req.params.app_hash];
 
     client.query(queryStr, params, function (err, result) {
         if(err) {
             //res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
         	res.status(404).send(_.extend(errors.database.error_2, err));
-        } else {          
+        } else {
             res.status(200).send(result);
         }
     });
