@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-        <title>Registration successful</title>
+        <title>Delete Application</title>
 
         <style>
             body {
@@ -31,19 +31,16 @@
                     <br>
                     <center>
                         <h1 class="display-4">Hello <span class="name">{{first_name}} {{last_name}}</span></h1>
-                        <p>Your new Access-Token has been generated!</p>
+                        <p>To delete your application {{app_name}} please click on the following link. It is available for 24 hours.</p>
+                        <p>If you did not want to delete your account just ignore this message.</p>
                     </center>
                     <br>
                     <hr>
                     <section>
-                        <code>{{app_hash}}</code>
+                        <a href='"' + generatedLink + '"''>{{generatedLink}}</a>
                     </section>
                     <br>
                     <hr>
-                    <center>
-                        <p>To deactivate your app, you need to click on this url and follow the instructions. An email will be send to you.</p>
-                        <a href='"http://giv-oct.uni-muenster.de:8080/api/reset/' + '{{app_hash}}"'>http://giv-oct.uni-muenster.de:8080/api/reset/{{app_hash}}</a>
-                    </center>
                     <br>
                     <center>
                         <small><b>OCT</b> by <a href="https://www.uni-muenster.de/Geoinformatics/en/index.html" target="_blank">Institute for Geoinformatics</a><br>
