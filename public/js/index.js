@@ -1,8 +1,9 @@
 $(document).ready(function() {
 	var url = "api/";
 
-	var table = new Table();
-	var graph = new Graph();
+
+	var table = new Table(data);
+	var graph = new Graph(data);
 	var status = "Apps";
 
 	//Init
@@ -20,7 +21,6 @@ $(document).ready(function() {
 	   	$(".nav").find(".active").removeClass("active");
 	   	$(this).parent().addClass("active");
 	   	status = $(this).html().replace(/\s/g, '');
-	   	console.log(status);
 	   	$("#btn-table").addClass("active");
 	   	$("#btn-graph").removeClass("active");
 	   	showTable();
@@ -52,6 +52,9 @@ $(document).ready(function() {
 			showTable();
 		} else if ($(this).html() == "Graph") {
 			showGraph();
+		} else if ($(this).html() == "Map") {
+			console.log("map")
+			location = location.origin + '/map';
 		}
 	});
 

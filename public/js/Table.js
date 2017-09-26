@@ -1,8 +1,8 @@
-var Table = function () {
+var Table = function (data) {
+	this.data = data;
 }
 
 Table.prototype.type = "Apps";
-Table.prototype.data = [];
 Table.prototype.dataTable = null;
 
 /*
@@ -32,12 +32,38 @@ Table.prototype.draw = function () {
 		case("Apps"):
 			columns = [
 				{ title: "" },
+				{ title: "ID" },
 	            { title: "More" },
 	            { title: 'Name' },
 	            { title: 'Description' },
 	            { title: 'Category Search  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
 	            { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
+			columnDefs = [
+				{
+		            "visible": false,
+		            "targets": [0]
+		        },
+		        {
+		            "visible": false,
+		            "targets": [1]
+		        },
+		        {
+		        	"className": 'details-control',
+		        	"width": '18px',
+		        	"targets":[2]
+		        }
+			]
+			this.dataTable = $('#table').DataTable( {
+		    	destroy: true,
+		    	responsive: true,
+		    	"searching": false,
+		    	"paging": false,
+		    	"info": false,
+		        data: this.data.apps,
+		        columns: columns,
+		        "columnDefs": columnDefs
+		    } );
 			break;
 		case("Categories"):
 			columns = [
@@ -47,6 +73,16 @@ Table.prototype.draw = function () {
 	            { title: 'Searches   <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
 	            {title: 'Number of Datasets  <a id="help-numodata"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>'}
 			];
+			this.dataTable = $('#table').DataTable( {
+		    	destroy: true,
+		    	responsive: true,
+		    	"searching": false,
+		    	"paging": false,
+		    	"info": false,
+		        data: this.data.categories,
+		        columns: columns,
+		        "columnDefs": columnDefs
+		    } );
 			break;
 		case("Usage"):
 			columns = [
@@ -56,6 +92,17 @@ Table.prototype.draw = function () {
 	            { title: 'Category Search  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
 	            { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
+			this.dataTable = $('#table').DataTable( {
+		    	destroy: true,
+		    	responsive: true,
+		    	"searching": false,
+		    	"order": [[2, "desc"]],
+		    	"paging": false,
+		    	"info": false,
+		        data: this.data.usage,
+		        columns: columns,
+		        "columnDefs": columnDefs
+		    } );
 			break;
 		case("Datasets"):
 			columns = [
@@ -64,74 +111,57 @@ Table.prototype.draw = function () {
 				{title: "Dataset"},
 				{ title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 			];
+			this.dataTable = $('#table').DataTable( {
+		    	destroy: true,
+		    	responsive: true,
+		    	"searching": false,
+		    	"paging": false,
+		    	"info": false,
+		        data: this.data.datasets,
+		        columns: columns,
+		        "columnDefs": columnDefs
+		    } );
 			break;
 		default:
 			break;
 	}
-	if(this.type == "Usage") {
-		this.dataTable = $('#table').DataTable( {
-	    	destroy: true,
-	    	responsive: true,
-	    	"searching": false,
-	    	"order": [[2, "desc"]],
-	    	scrollY: '60vh',
-	        scrollCollapse: true,
-	    	"paging": false,
-	    	"info": false,
-	        data: this.data,
-	        columns: columns,
-	        "columnDefs": columnDefs
-	    } );
-	} else {
-		this.dataTable = $('#table').DataTable( {
-	    	destroy: true,
-	    	responsive: true,
-	    	"searching": false,
-	    	scrollY: '60vh',
-	        scrollCollapse: true,
-	    	"paging": false,
-	    	"info": false,
-	        data: this.data,
-	        columns: columns,
-	        "columnDefs": columnDefs
-	    } );
-	}  
 }
 
 /*
  * Get Data From Apps and Parse them
  */
 Table.prototype.Apps = function () {
-	this.type = "Apps";
-	this.data = [];
 	this.empty();
+	this.type = "Apps";	
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
-	$.getJSON(new API().endpoint + "apps", function(json){
-		for(index in json) {
-			that.data.push([json[index].app_hash, '', json[index].app_name, json[index].app_description, json[index].searches, json[index].api_calls]);
-		}
-		that.draw();
 
-		$("thead a").on('click', function (e) {
-			e.stopImmediatePropagation();
-			$('#myModal').modal('show');
-			$("#txtSearch").hide();
-			$("#txtAPI").hide();
-			switch($(this).attr("id")) {
-				case("help-search"):
-					$("#txtSearch").show();
-					break;
-				case("help-api"):
-					$("#txtAPI").show();
-					break;
+	if(this.data.apps.length==0) {
+		$.getJSON(new API().endpoint + "apps", function(json){
+			for(index in json) {
+				that.data.apps.push([json[index].app_hash, index, '', json[index].app_name, json[index].app_description, json[index].searches, json[index].api_calls]);
 			}
-		});
-		//Set listener on Click for more Details
-		$('#table tbody').on('click', 'td.details-control', function () {
-	        var tr = $(this).closest('tr');
-	        var row = that.dataTable.row( tr );
-	 		if(row.data()[4] != 0) {
+			that.draw();
+
+
+			$("thead a").on('click', function (e) {
+				e.stopImmediatePropagation();
+				$('#myModal').modal('show');
+				$("#txtSearch").hide();
+				$("#txtAPI").hide();
+				switch($(this).attr("id")) {
+					case("help-search"):
+						$("#txtSearch").show();
+						break;
+					case("help-api"):
+						$("#txtAPI").show();
+						break;
+				}
+			});
+			//Set listener on Click for more Details
+			$('#table tbody').on('click', 'td.details-control', function () {
+		        var tr = $(this).closest('tr');
+		        var row = that.dataTable.row( tr );
 		        if ( row.child.isShown() ) {
 		            // This row is already open - close it
 		            row.child.hide();
@@ -139,14 +169,14 @@ Table.prototype.Apps = function () {
 		        }
 		        else {
 		            // Open this row
-		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            row.child( that.moreInfo(row.data()[1], row.data()[0]) ).show();
 		            tr.addClass('shown');
 		        }
-		    } else {
-		    	tr.addClass("unavailable");
-		    }
-	    });
-	});	
+		    });
+		});
+	} else {
+		this.draw();
+	}	
 }
 
 /*
@@ -154,49 +184,54 @@ Table.prototype.Apps = function () {
  */
 Table.prototype.Categories = function () {
 	this.type = "Categories";
-	this.data = [];
-	this.empty;
+	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
-	$.getJSON(new API().endpoint + "categories", function(json){
-		for(index in json) {
-			that.data.push([json[index].category_id, '', json[index].category_name, json[index].searches, json[index].datasets]);
-		}
-		that.draw();
-		$("thead a").on('click', function (e) {
-			e.stopImmediatePropagation();
-			$('#myModal').modal('show');
-			$("#txtSearch").hide();
-			$("#txtAPI").hide();
-			switch($(this).attr("id")) {
-				case("help-search"):
-					$("#txtSearch").show();
-					break;
-				case("help-numodata"):
-					$("#txtNumOData").show();
-					break;
+
+	if(this.data.categories.length==0) {
+		$.getJSON(new API().endpoint + "categories", function(json){
+			for(index in json) {
+				that.data.categories.push([json[index].category_id, '', json[index].category_name, json[index].searches, json[index].datasets]);
 			}
+			that.draw();
+
+			$("thead a").on('click', function (e) {
+				e.stopImmediatePropagation();
+				$('#myModal').modal('show');
+				$("#txtSearch").hide();
+				$("#txtAPI").hide();
+				switch($(this).attr("id")) {
+					case("help-search"):
+						$("#txtSearch").show();
+						break;
+					case("help-numodata"):
+						$("#txtNumOData").show();
+						break;
+				}
+			});
+			//Set listener on Click for more Details
+			$('#table tbody').on('click', 'td.details-control', function () {
+		        var tr = $(this).closest('tr');
+		        var row = that.dataTable.row( tr );
+		 		if(row.data()[3] != 0) {
+			        if ( row.child.isShown() ) {
+			            // This row is already open - close it
+			            row.child.hide();
+			            tr.removeClass('shown');
+			        }
+			        else {
+			            // Open this row
+			            row.child( that.moreInfo(row.data()[0]) ).show();
+			            tr.addClass('shown');
+			        }
+		    	} else {
+			    	tr.addClass("unavailable");
+			    }
+		    });
 		});
-		//Set listener on Click for more Details
-		$('#table tbody').on('click', 'td.details-control', function () {
-	        var tr = $(this).closest('tr');
-	        var row = that.dataTable.row( tr );
-	 		if(row.data()[3] != 0) {
-		        if ( row.child.isShown() ) {
-		            // This row is already open - close it
-		            row.child.hide();
-		            tr.removeClass('shown');
-		        }
-		        else {
-		            // Open this row
-		            row.child( that.moreInfo(row.data()[0]) ).show();
-		            tr.addClass('shown');
-		        }
-	    	} else {
-		    	tr.addClass("unavailable");
-		    }
-	    });
-	});	
+	} else {
+		this.draw();
+	}	
 }
 
 /*
@@ -204,111 +239,121 @@ Table.prototype.Categories = function () {
  */
 Table.prototype.Usage = function () {
 	this.type = "Usage";
-	this.data = [];
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
-	$.getJSON(new API().endpoint + "logs/countByDay", function(json){
-		for(index in json) {
-			date =  json[index].date.slice(0, json[index].date.lastIndexOf("T"))
-			that.data.push([date, '',date, json[index].searches, json[index].api_calls]);
-		}
-		that.draw();
-		$("thead a").on('click', function (e) {
-			e.stopImmediatePropagation();
-			$('#myModal').modal('show');
-			$("#txtSearch").hide();
-			$("#txtAPI").hide();
-			switch($(this).attr("id")) {
-				case("help-search"):
-					$("#txtSearch").show();
-					break;
-				case("help-api"):
-					$("#txtAPI").show();
-					break;
+
+	if(this.data.usage.length == 0) {
+		$.getJSON(new API().endpoint + "logs/byDay", function(json){
+			for(index in json) {
+				date =  json[index].date.slice(0, json[index].date.lastIndexOf("T"))
+				that.data.usage.push([date, '',date, json[index].searches, json[index].api_calls]);
 			}
+			that.draw();
+
+			$("thead a").on('click', function (e) {
+				e.stopImmediatePropagation();
+				$('#myModal').modal('show');
+				$("#txtSearch").hide();
+				$("#txtAPI").hide();
+				switch($(this).attr("id")) {
+					case("help-search"):
+						$("#txtSearch").show();
+						break;
+					case("help-api"):
+						$("#txtAPI").show();
+						break;
+				}
+			});
+			//Set listener on Click for more Details
+			$('#table tbody').on('click', 'td.details-control', function () {
+		        var tr = $(this).closest('tr');
+		        var row = that.dataTable.row( tr );
+		 	
+			        if ( row.child.isShown() ) {
+			            // This row is already open - close it
+			            row.child.hide();
+			            tr.removeClass('shown');
+			        }
+			        else {
+			            // Open this row
+			            row.child( that.moreInfo(row.data()[0]) ).show();
+			            tr.addClass('shown');
+			        }
+		    });
 		});
-		//Set listener on Click for more Details
-		$('#table tbody').on('click', 'td.details-control', function () {
-	        var tr = $(this).closest('tr');
-	        var row = that.dataTable.row( tr );
-	 	
-		        if ( row.child.isShown() ) {
-		            // This row is already open - close it
-		            row.child.hide();
-		            tr.removeClass('shown');
-		        }
-		        else {
-		            // Open this row
-		            row.child( that.moreInfo(row.data()[0]) ).show();
-		            tr.addClass('shown');
-		        }
-	    });
-	});
+	} else {
+		this.draw();
+	}
 }
 
 Table.prototype.Datasets = function () {
 	this.type = "Datasets";
-	this.data = [];
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
-	$.getJSON(new API().endpoint + "tdataset", function(json){
-		for(index in json) {
-			that.data.push([json[index].sd_id, '', json[index].dataset, json[index].count]);
-		}
-		that.draw();
-		$("thead a").on('click', function (e) {
-			e.stopImmediatePropagation();
-			$('#myModal').modal('show');
-			$("#txtSearch").hide();
-			$("#txtAPI").hide();
-			switch($(this).attr("id")) {
-				case("help-api"):
-					$("#txtAPI").show();
-					break;
+
+	if(this.data.datasets.length == 0) {
+		$.getJSON(new API().endpoint + "tdataset", function(json){
+			for(index in json) {
+				that.data.datasets.push([json[index].sd_id, '', json[index].dataset, json[index].count]);
 			}
-		});
-		$('#table tbody').on('click', 'td.details-control', function () {
-	        var tr = $(this).closest('tr');
-	        var row = that.dataTable.row( tr );
-	 		if(row.data()[3] != 0) {
-	 			if ( row.child.isShown() ) {
-		            // This row is already open - close it
-		            row.child.hide();
-		            tr.removeClass('shown');
-		        }
-		        else {
-		            // Open this row
-		            row.child( that.moreInfo(row.data()[0]) ).show();
-		            tr.addClass('shown');
-		        }
-	 		} else {
-		    	tr.addClass("unavailable");
-		    }
+			that.draw();
+
+			$("thead a").on('click', function (e) {
+				e.stopImmediatePropagation();
+				$('#myModal').modal('show');
+				$("#txtSearch").hide();
+				$("#txtAPI").hide();
+				switch($(this).attr("id")) {
+					case("help-api"):
+						$("#txtAPI").show();
+						break;
+				}
+			});
+
+			$('#table tbody').on('click', 'td.details-control', function () {
+		        var tr = $(this).closest('tr');
+		        var row = that.dataTable.row( tr );
+		 		if(row.data()[3] != 0) {
+		 			if ( row.child.isShown() ) {
+			            // This row is already open - close it
+			            row.child.hide();
+			            tr.removeClass('shown');
+			        }
+			        else {
+			            // Open this row
+			            row.child( that.moreInfo(row.data()[0]) ).show();
+			            tr.addClass('shown');
+			        }
+		 		} else {
+			    	tr.addClass("unavailable");
+			    }
+		    });
 	    });
-    });
+	} else {
+		this.draw();
+	}
 }
 
 /*
  * Expand Table to show more Information
  */
-Table.prototype.moreInfo = function (data) {
+Table.prototype.moreInfo = function (data, hash) {
 	//Check which Type is active
 	switch(this.type) {
 		case("Apps"):
-			var ssdata = data.substring(0,16);
-			$.getJSON(new API().endpoint + "apps/" + data + '/logsByCategory', function(json){
+			$.getJSON(new API().endpoint + "apps/" + hash + '/logsByCategory', function(json){
 				for(index in json) {
-					$('#'+ssdata+'-categories').append('<tr><td>'+json[index].category_name+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+data+'-categories').append('<tr><td>'+json[index].category_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			$.getJSON(new API().endpoint + "apps/" + data + '/logsByDataset', function(json){
+			$.getJSON(new API().endpoint + "apps/" + hash + '/logsByDataset', function(json){
 				for(index in json) {
-					$('#'+ssdata+'-dataset').append('<tr><td>'+json[index].dataset+'</td><td>'+ json[index].count +'</td></tr>');
+					$('#'+data+'-dataset').append('<tr><td>'+json[index].dataset+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			return '<div class="row"><div class="col-md-4"><h3>Category Search</h3><div id="'+ssdata+'-categories"></div></div> <div class="col-md-4"><h3>Dataset Search</h3><div id="'+ssdata+'-dataset"></div></div></div>';
+			return '<div class="row"><div class="col-md-4"><h3>Category Search</h3><div id="'+data+'-categories"></div></div> <div class="col-md-4"><h3>Dataset Search</h3><div id="'+data+'-dataset"></div></div></div>';
 		case("Categories"):
 			$.getJSON(new API().endpoint + "categories/" + data + '/apps', function(json){
 				for(index in json) {

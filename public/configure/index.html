@@ -1,59 +1,64 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OCT Core Statistics</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1">
+    <title>OCT Core Statistics</title>
 
-  <link rel="stylesheet" href="../lib/bootstrap-3.2.0-dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../lib/jquery.datatables.min.css">
-  <link rel="stylesheet" href="css/index.css">
-  <link href="../lib//bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/bootstrap-3.2.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../lib/jquery.datatables.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link href="../lib//bootstrap-toggle.min.css" rel="stylesheet">
 
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
-  <script src="../lib/jquery.min.js"></script>
-  <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
-  <script src="../lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-  <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>-->
-  <script src="../lib/jquery.datatables.min.js"></script>
-  <script src="../lib/Chart.js"></script>
-  <script src="../lib/bootstrap-toggle.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
+    <script src="../lib/jquery.min.js"></script>
+    <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+    <script src="../lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+    <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>-->
+    <script src="../lib/jquery.datatables.min.js"></script>
+    <script src="../lib/Chart.js"></script>
+    <script src="../lib/bootstrap-toggle.min.js"></script>
 
-  <!-- Custom -->
-  <script src="../js/API.js" type="text/javascript"></script>
-  <script src="js/Validator.js" type="text/javascript"></script>
-  <script src="js/Submit.js" type="text/javascript"></script>
-  <script src="js/Elements.js" type="text/javascript"></script>
-  <script src="js/Modify.js" type="text/javascript"></script>
-  <script src="js/Form.js" type="text/javascript"></script>
-  <script src="js/Table.js" type="text/javascript"></script>
-  <script src="js/index.js" type="text/javascript"></script>
+    <!-- Custom -->
+    <script src="../js/API.js" type="text/javascript"></script>
+    <script src="js/Validator.js" type="text/javascript"></script>
+    <script src="js/Submit.js" type="text/javascript"></script>
+    <script src="js/Elements.js" type="text/javascript"></script>
+    <script src="js/Modify.js" type="text/javascript"></script>
+    <script src="js/Form.js" type="text/javascript"></script>
+    <script src="js/Table.js" type="text/javascript"></script>
+    <script src="js/index.js" type="text/javascript"></script>
 
-  
-</head>
+    
+  </head>
 
   <body>
-    <nav class="navbar navbar-default">
+     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+            <span class="sr-only">Navigation ein-/ausblenden</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
           <a class="navbar-brand" href="http://giv-oct.uni-muenster.de:8080/">OCT Core</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a id="tab2" class="active" href="#">Login</a></li>
-          <li><a id="tab3" href="#">Sign Up</a></li>
-        </ul>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="tab2" class="active" href="#">Login</a></li>
+            <li><a id="tab3" href="#">Sign Up</a></li>
+          </ul>
+        </div>
       </div>
     </nav>
 
-    <div class="row wrapper">
-      <div class="col-sm-1" id="btn-group1">
-      </div>
-      <div class="col-sm-10" id="content">
+    <div class="row container-fluid">
+      <div class="col-md-12 col-sm-12" id="content">
         <table id="table" class="display" width="100%"></table>
         <div id="form"></div>
       </div>
-      <div class="col-sm-1"></div>
     </div>
 
     <!-- Modal -->
@@ -77,19 +82,14 @@
     </div>
 
 
-    <footer class="footer container-fluid">
-      <br>
+    <nav class="navbar navbar-default navbar-fixed-bottom">
       <center>
-        <a href="http://geo-c.eu/"><img src="http://giv-oct.uni-muenster.de/oct/images/logo-geoc.png" width="145px" height="auto" style="float:left;"></a>
-        <div align="right">
+        <a class="navbar-brand" href="http://geo-c.eu/"><img src="http://giv-oct.uni-muenster.de/oct/images/logo-geoc.png" width="145px" height="auto" style="float:left;"></a>
+
+        <div class="pull-right">
           <a></a>
           <a href="https://github.com/geo-c/OCT-Core"><i class="fa fa-github-square fa-2x"></i></a>
-          <a href=""><i class="fa fa fa-download fa-2x"></i></a>
-          <div class="dropdown-menu" aria-labelledby="dropdownlink">
-            <a>1</a>
-            <a>2</a>
-          </div>
-          <a href="https://www.youtube.com/user/ifgi"><i class="fa fa-youtube-square fa-2x"></i></a>
+          <a href="https://www.youtube.com/channel/UCWnzB40te4NpqeeaoY9NuDQ"><i class="fa fa-youtube-square fa-2x"></i></a>
           <a href="https://twitter.com/geoc_eu"><i class="fa fa-twitter-square fa-2x"></i></a>
           <a href="https://www.facebook.com/geo.c.opencities"><i class="fa fa-facebook-square fa-2x"></i></a>
           <span style="position: relative; right: 0; top: 0;">
@@ -101,8 +101,22 @@
             </a>
           </span>
         </div>
+        <div class="pull-right">
+          <div class="dropup">
+            <a href="" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-download"></i>
+            </a>
+            <ul class="dropdown-menu dropup" align="right">
+              <li><a href="http://giv-oct.uni-muenster.de:8081/api/statistics?format=json">JSON</a></li>
+              <li><a href="http://giv-oct.uni-muenster.de:8081/api/statistics?format=rdf">RDF</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Info</a></li>
+            </ul>
+          </div>
+        </div>
+
       </center>
-    </footer>
+    </nav>
 
   </body>
 

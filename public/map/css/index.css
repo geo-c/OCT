@@ -1,1 +1,42 @@
-#mapid { height: 500px; }
+#mapid { height: calc(90%); }
+
+body{
+	overflow-x:hidden;
+}
+
+.row.container-fluid {
+  padding-top: 65px;
+  padding-bottom: 0px; 
+  height: calc(100% - 80px);
+  overflow-y: scroll;
+}
+
+
+/* xs < 768 */
+@media screen and (max-width: 767px) {
+    body {
+        font-size: 1em;
+        zoom:document;
+    }
+}
+
+/* sm */
+@media screen and (min-width: 768px) {
+    body {
+        font-size: 1em;
+    }
+}
+
+/* md */
+@media screen and (min-width: 992px) {
+    body {
+        font-size: 1em;
+    }
+}
+
+/* lg */
+@media screen and (min-width: 1200px) {
+    body {
+        font-size: 1em;
+    }
+}

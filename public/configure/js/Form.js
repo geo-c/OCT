@@ -129,7 +129,7 @@ Form.prototype.Modify = function (id) {
 /*
  * Show Fields for a Postgres Database
  */
-Form.prototype.Postgres = function () {
+Form.prototype.Postgres = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -154,18 +154,24 @@ Form.prototype.Postgres = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-	this.Categories();
+	this.Categories(categories);
 	
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
 /*
  * Show Fields for a Rest-API
  */
-Form.prototype.API = function () {
+Form.prototype.API = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -186,18 +192,24 @@ Form.prototype.API = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-	this.Categories();
+	this.Categories(categories);
 	
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
 /*
  * Show Fields for a CouchDB
  */
-Form.prototype.CouchDB = function (categories) {
+Form.prototype.CouchDB = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -222,13 +234,19 @@ Form.prototype.CouchDB = function (categories) {
 	//Category
 	this.Categories(categories);
 
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
-Form.prototype.Parliament = function (categories) {
+Form.prototype.Parliament = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -250,11 +268,16 @@ Form.prototype.Parliament = function (categories) {
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
 	this.Categories(categories);
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
-	
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
 Form.prototype.Categories = function (categories) {
@@ -377,6 +400,7 @@ Form.prototype.btnSend = function (text, callback) {
 
 	//Listen on Button Clicks
 	$btnSend.click(function (e) {
+		console.log(that.status);
 		submit = new Submit(that.user, that.categories);
 		submit.submit(that.status, callback);
 		//Check which status is active

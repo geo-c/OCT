@@ -10,7 +10,7 @@ $(document).ready(function() {
 		markers = null;
 		markers = L.markerClusterGroup({ chunkedLoading: true });
 
-		$.getJSON("http://giv-oct.uni-muenster.de:8081/api/visitors/" + status + "/" + value, function(json){ 
+		$.getJSON("http://giv-oct.uni-muenster.de:8080/api/visitors/" + status + "/" + value, function(json){ 
 			for(i in json) {
 				
 				//console.log(json[i])
@@ -79,6 +79,14 @@ $(document).ready(function() {
 			})
 		});
 	}
+
+	$('#btn-reset').on('click', function () {
+		if(markers != null) {
+			map.removeLayer(markers);
+		}
+		markers = null;
+		map.setView([51.959076, 7.623653], 12);
+	})
 
 
 	

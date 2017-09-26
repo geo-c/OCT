@@ -4,6 +4,9 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
     	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+    	<!-- Font Awesome -->
+    	<link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
+    	<link rel="stylesheet" href="../css/index.css">
 		<link rel="stylesheet" href="css/index.css" />
 
 
@@ -16,29 +19,80 @@
 	</head>
 
 	<body>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="dropdown">
-					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btn-apps">Apps
-  						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" id="drpdwn-apps">
-					</ul>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="dropdown">
-					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btn-datasets">Datasets
-  						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" id="drpdwn-datasets">
-					</ul>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<button class="btn btn-danger" type="button">Reset</button>
-			</div>
-		</div>
-		<div id="mapid"></div>
+    	<nav class="navbar navbar-default navbar-fixed-top">
+	      	<div class="container-fluid">
+		        <div class="navbar-header">
+		          <a class="navbar-brand" href="#">
+		            OCT Core
+		          </a>
+		        </div>
+	      	</div>
+	    </nav>
+
+	    <div class="row container-fluid">
+          	<div class="row">
+          		<div class="col-md-1 col-sd-1"></div>
+          		<div class="col-md-4 col-sm-4">
+          			<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btn-apps">Apps
+	  						<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" id="drpdwn-apps"></ul>
+					</div>
+          		</div>
+          		<div class="col-md-4 col-sm-4">
+          			<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btn-datasets">Datasets
+	  						<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" id="drpdwn-datasets">
+						</ul>
+					</div>
+          		</div>
+          		<div class="col-md-2 col-sm-2">
+          			<button class="btn btn-danger" type="button" id="btn-reset">Reset</button>
+          		</div>
+          		<div class="col-md-1 col-sd-1"></div>            
+	        </div>
+	      	<div class="col-md-12 col-sm-12" id="content">
+	      		<div id="mapid"></div>
+	      	</div>
+      	</div>
+		
+
+
+		<nav class="navbar navbar-default navbar-fixed-bottom">
+      		<center>
+        		<a class="navbar-brand" href="http://geo-c.eu/"><img src="http://giv-oct.uni-muenster.de/oct/images/logo-geoc.png" width="145px" height="auto" style="float:left;"></a>
+
+        		<div class="pull-right">
+          			<a></a>
+          			<a href="https://github.com/geo-c/OCT-Core"><i class="fa fa-github-square fa-2x"></i></a>
+		          	<a href="https://www.youtube.com/channel/UCWnzB40te4NpqeeaoY9NuDQ"><i class="fa fa-youtube-square fa-2x"></i></a>
+		          	<a href="https://twitter.com/geoc_eu"><i class="fa fa-twitter-square fa-2x"></i></a>
+		          	<a href="https://www.facebook.com/geo.c.opencities"><i class="fa fa-facebook-square fa-2x"></i></a>
+          			<span style="position: relative; right: 0; top: 0;">
+            			<a href="http://giv-oct.uni-muenster.de:5000/">
+              				<i class="fa fa-square fa-2x" style="position: relative; top: 0; left: 0;"></i>
+            			</a>
+            			<a href="http://giv-oct.uni-muenster.de:5000/">
+              				<img src="../img/ckan-logo-footer-white.png" width="18px" height="auto" style="position: absolute; top: -6px; left: 3px; pointer-events:none;">
+            			</a>
+         			</span>
+        		</div>
+        		<div class="pull-right">
+          			<div class="dropup">
+            			<a href="" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              				<i class="fa fa-download"></i>
+            			</a>
+            			<ul class="dropdown-menu dropup" align="right">
+              				<li><a href="#">Info</a></li>
+            			</ul>
+         			</div>
+        		</div>
+      		</center>
+    	</nav>
+
+
 	</body>
 </html>
