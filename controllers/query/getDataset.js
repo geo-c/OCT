@@ -16,7 +16,7 @@ var CouchDB_Client = require('../connectors/CouchDB_Client.js');
 var EnviroCar_Client = require('../connectors/EnviroCar_Client.js');
 var Postgres_Client = require('../connectors/Postgres_Client.js');
 var Parliament_Client = require('../connectors/Parliament_Client.js');
-
+var MongoDB_Client = require('../connectors/MongoDB_Client.js');
 
 // POST
 exports.request = function(req, res){
@@ -138,6 +138,17 @@ exports.request = function(req, res){
                                             }
                                         });
                                         break;
+                                    case("MONGODB"):
+                                        console.log("Mongo");
+                                        mongoDB_Client = new MongoDB_Client("mongodb://46.101.156.62:27017");
+                                        mongoDB_Client.query(
+                                            "query",
+                                            "test",
+                                            function(data) {
+                                                console.log(data);
+                                            }
+                                        );
+                                        break;
                                     default:
                                         console.log("unknown Database");
                                         console.log(result[0].ds_type);
@@ -156,41 +167,59 @@ exports.request = function(req, res){
 
 var logDataset = function (client, accessToken, sd_id, user_data) {
     if(user_data != null) {
-        queryStr = 'INSERT INTO visitors (date, city, country_code, country_name, latitude, longitude, metro_code, region_code, region_name, time_zone, zip_code) VALUES (now(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id AS location_id';
+        if(user_data.longitude != 0 && user_data.latitude != 0) {
+            console.log(user_data)
+            queryStr = 'INSERT INTO visitors (date, city, country_code, country_name, latitude, longitude, metro_code, region_code, region_name, time_zone, zip_code) VALUES (now(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id AS location_id';
 
 
-         params = [
-            user_data.city,
-            user_data.country_code,
-            user_data.country_name,
-            user_data.latitude,
-            user_data.longitude,
-            user_data.metro_code,
-            user_data.region_code,
-            user_data.region_name,
-            user_data.time_zone,
-            user_data.zip_code
-        ];
+            params = [
+                user_data.city,
+                user_data.country_code,
+                user_data.country_name,
+                user_data.latitude,
+                user_data.longitude,
+                user_data.metro_code,
+                user_data.region_code,
+                user_data.region_name,
+                user_data.time_zone,
+                user_data.zip_code
+            ];
 
-        client.query(queryStr, params, function (err, result) {
-            if(err) {
-                console.log(err);
-            } else {
-                var queryStr = 'INSERT INTO Logs(app_hash, timestamp, category_id, sd_id, location_id) VALUES ($1, now(), null, $2, $3);';
-                var params = [
-                    accessToken, 
-                    sd_id,
-                    result[0].location_id
-                ];
+            client.query(queryStr, params, function (err, result) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    var queryStr = 'INSERT INTO Logs(app_hash, timestamp, category_id, sd_id, location_id) VALUES ($1, now(), null, $2, $3);';
+                    var params = [
+                        accessToken, 
+                        sd_id,
+                        result[0].location_id
+                    ];
 
-                client.query(queryStr, params, function (err, result) {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        console.log("OK");
-                    }
-                });
-            }
-        });
+                    client.query(queryStr, params, function (err, result) {
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            console.log("OK");
+                        }
+                    });
+                }
+            });
+
+        } else {
+            var queryStr = 'INSERT INTO Logs(app_hash, timestamp, category_id, sd_id) VALUES ($1, now(), null, $2);';
+            var params = [
+                accessToken, 
+                sd_id
+            ];
+
+            client.query(queryStr, params, function (err, result) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("OK");
+                }
+            });
+        }
     }
 }
