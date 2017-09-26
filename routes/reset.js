@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-var post = require('../controllers/reset');
+var delete_ = require('../controllers/reset');
+var delete_a = require('../controllers/reset_a');
 
 
 // RESET
-router.post('/reset', post.request);
+router.get('/reset/:app_hash', delete_.request);
+router.get('/reset/a/:code', delete_a.request);
 
 
 module.exports = router;
