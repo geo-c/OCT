@@ -123,6 +123,7 @@ if(db_settings.status && email_settings.status){
     var dataset = require('./routes/dataset');
     var port = require('./routes/port');
     var stats = require('./routes/stats');
+    var update = require('./routes/update')
 
     // Load Routes
     app.use('/api', signup);
@@ -140,6 +141,7 @@ if(db_settings.status && email_settings.status){
     app.use('/api', dataset);
     app.use('/api', port);
     app.use('/api', stats);
+    app.use('/api', update);
 
 } else {
     console.log("Simple Webserver (no REST-API, Database and Email-Service started)");
