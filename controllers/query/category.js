@@ -110,7 +110,7 @@ exports.request = function(req, res){
                                 res.status(errors.query.error_3.code).send(errors.query.error_3);
                             } else {
                                 //res.status(201).send(result);
-                                var answerCount = 0;
+                                var answerCount = 1;
                                 for(index in result) {
                                     // Prepare Connectors
                                     var Answer = {

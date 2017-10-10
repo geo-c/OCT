@@ -77,7 +77,7 @@ Form.prototype.addDatabase = function () {
     dropdown += '<li><a href="#">Rest-API</a></li>'
     dropdown += '<li><a href="#">Postgres</a></li>'
     dropdown += '<li><a href="#">CouchDB</a></li>'
-    dropdown += '<li><a href="#">Parliament</a></li>'
+    dropdown += '<li><a href="#">Triple Store</a></li>'
   	dropdown += '</ul>'
 	dropdown += '</div>'
 	dropdown += '<div id="inputContent"></div>'
@@ -107,7 +107,8 @@ Form.prototype.addDatabase = function () {
 			case("CouchDB"):
 				that.CouchDB();
 				break;
-			case("Parliament"):
+			case("TripleStore"):
+				that.status ="Parliament";
 				that.Parliament();
 				break;
 			default:
@@ -129,7 +130,7 @@ Form.prototype.Modify = function (id) {
 /*
  * Show Fields for a Postgres Database
  */
-Form.prototype.Postgres = function () {
+Form.prototype.Postgres = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -154,18 +155,24 @@ Form.prototype.Postgres = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-	this.Categories();
+	this.Categories(categories);
 	
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
 /*
  * Show Fields for a Rest-API
  */
-Form.prototype.API = function () {
+Form.prototype.API = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -186,18 +193,24 @@ Form.prototype.API = function () {
 	$('#panelQuery').append(this.elements.query());
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
-	this.Categories();
+	this.Categories(categories);
 	
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
 /*
  * Show Fields for a CouchDB
  */
-Form.prototype.CouchDB = function (categories) {
+Form.prototype.CouchDB = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -222,13 +235,19 @@ Form.prototype.CouchDB = function (categories) {
 	//Category
 	this.Categories(categories);
 
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
-Form.prototype.Parliament = function (categories) {
+Form.prototype.Parliament = function (categories, modify) {
 	$("#inputContent").empty();
 	$row = $('<div class="row"></div>');
 	$db = this.PanelDatabase();
@@ -250,11 +269,16 @@ Form.prototype.Parliament = function (categories) {
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
 	this.Categories(categories);
-	this.btnSend("Send", function (e) {
-		alert(e);
-		this.Table.Queries();
-	});
-	
+	if(modify) {
+		this.btnSend("Send", function (e) {
+			alert(e);
+		});
+	} else {
+		this.btnSend("Send", function (e) {
+			alert(e);
+			this.Table.Queries();
+		});
+	}	
 }
 
 Form.prototype.Categories = function (categories) {
@@ -270,7 +294,7 @@ Form.prototype.Categories = function (categories) {
 	dropdown += '</div>'
 	$('#panelCategoryDropdown').append($(dropdown));
 
-	$.getJSON( new API().endpoint + "categories/withDatasets/", function (json) {
+	$.getJSON( new API().endpoint + "categories/withDatasets/get", function (json) {
 		list = "";
 		for(i in json) {
 			list += '<li id="list-'+json[i].category_name.replace(/ /g, '').replace(/,/g, '')+'"><a href="#">'+json[i].category_name+'</a></li>';
@@ -286,18 +310,18 @@ Form.prototype.Categories = function (categories) {
 		}
 
 		$('ul.dropdown-menu.category').on('click', 'li a', function (e) {
-			console.log(e);
 		    var $div = $(this).parent().parent().parent(); 
 	    	$div.removeClass('open');
 	    	e.preventDefault();
 	    	category = $(this).text();
+	    	_category = category.replace(/ /g, '').replace(/,/g, '');
 	    	that.categories.push(category);
-	    	$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
+	    	$("#panelCategoryName").append('<div><span class="label label-default">'+category+'</span><a id="'+_category+'" href="#"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:red;"></span></a></div>');
 	    	$(this).parent().hide();
-	    	$("#"+category).click(function (e) {
-	    		_category = $(this).attr('id');
+	    	$("#"+_category).click(function (e) {
+	    		_category2 = $(this).attr('id');
 	    		$("#list-"+_category.replace(/ /g, '').replace(/,/g, '')).show();
-	    		var index = that.categories.indexOf(_category);
+	    		var index = that.categories.indexOf(_category2);
 				that.categories.splice(index, 1);
 	    		$(this).parent().empty();
 	    		$(this).parent().remove();
@@ -377,6 +401,8 @@ Form.prototype.btnSend = function (text, callback) {
 
 	//Listen on Button Clicks
 	$btnSend.click(function (e) {
+		console.log(that.status);
+		console.log(that)
 		submit = new Submit(that.user, that.categories);
 		submit.submit(that.status, callback);
 		//Check which status is active

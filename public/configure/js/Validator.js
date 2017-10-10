@@ -234,5 +234,8 @@ Validator.prototype.check = function (status) {
 				return false;
 			}
 			break;
+		default:
+			return true;
+			break;
 	}
 }

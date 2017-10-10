@@ -4,7 +4,7 @@ var _ = require('underscore');
 
 
 exports.request = function(req, res) { 
-    queryStr = 'SELECT queries.query_extern as dataset, sub_datasets.sd_id, (SELECT COUNT(logs.sd_id) FROM logs WHERE logs.sd_id=sub_datasets.sd_id) FROM queries INNER JOIN sub_datasets ON sub_datasets.sd_id = queries.sd_id;';
+    queryStr = 'SELECT queries.query_extern as dataset, sub_datasets.sd_id, (SELECT count FROM logs_count WHERE logs_count.sd_id=sub_datasets.sd_id) AS COUNT FROM queries INNER JOIN sub_datasets ON sub_datasets.sd_id = queries.sd_id;';
     params = [];
 
     client.query(queryStr, params, function (err, result) {

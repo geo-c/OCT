@@ -125,7 +125,7 @@ Graph.prototype.Usage = function () {
 	$("#content").html('<canvas id="grid" width="400" height="450px"></canvas>');
 	this.reset();
 	var that = this;
-	$.getJSON(new API().endpoint + "logs/countByDay", function (json) {
+	$.getJSON(new API().endpoint + "logs/byDay", function (json) {
 		for(index in json) {
 			that.label.first = "# Searches";
 			that.label.second = "# API Calls";

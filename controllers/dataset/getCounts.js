@@ -3,9 +3,9 @@ var client = require('./../db.js');
 var _ = require('underscore');
 
 
-exports.request = function(req, res) {
-    queryStr = "SELECT c.category_id, c.category_name, (SELECT count FROM logs_count WHERE logs_count.category_id=c.category_id AND logs_count.type='Category_Searches') AS Searches, (SELECT count FROM logs_count WHERE logs_count.category_id=c.category_id AND logs_count.type='Category_Datasets') AS Datasets FROM public.categories c;";
-    params = [];
+exports.request = function(req, res) { 
+    queryStr = 'SELECT COUNT(logs.sd_id) AS count FROM logs WHERE logs.sd_id=$1;';
+    params = [req.params.sd_id];
 
     client.query(queryStr, params, function (err, result) {
         if(err) {
@@ -14,5 +14,6 @@ exports.request = function(req, res) {
         } else {
             res.status(200).send(result);
         }
+
     });
 };
