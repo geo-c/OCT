@@ -77,7 +77,7 @@ Form.prototype.addDatabase = function () {
     dropdown += '<li><a href="#">Rest-API</a></li>'
     dropdown += '<li><a href="#">Postgres</a></li>'
     dropdown += '<li><a href="#">CouchDB</a></li>'
-    dropdown += '<li><a href="#">Parliament</a></li>'
+    dropdown += '<li><a href="#">Triple Store</a></li>'
   	dropdown += '</ul>'
 	dropdown += '</div>'
 	dropdown += '<div id="inputContent"></div>'
@@ -107,7 +107,8 @@ Form.prototype.addDatabase = function () {
 			case("CouchDB"):
 				that.CouchDB();
 				break;
-			case("Parliament"):
+			case("TripleStore"):
+				that.status ="Parliament";
 				that.Parliament();
 				break;
 			default:
