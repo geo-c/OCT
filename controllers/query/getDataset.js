@@ -108,7 +108,12 @@ exports.request = function(req, res){
                                             if(error) {
                                                 res.status(400).send(error);
                                             } else {
-                                                res.status(200).send(JSON.parse(body));
+                                                console.log(body)
+                                                try {
+                                                    res.status(200).send(JSON.parse(body));
+                                                } catch (e) {
+                                                    res.status(200).send(body);
+                                                }
                                             }
                                         });
                                         break;

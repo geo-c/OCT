@@ -18,9 +18,9 @@ router.get('/categories/:category_id/apps', categoryByApp.request);
 //CategoryByDate
 router.get('/categories/byDate/:date', byDate.request);
 
-router.get('/categories/withDatasets', withDatasets.request);
+router.get('/categories/withDatasets/get', withDatasets.request);
 
-router.get('/categories/withDatasets/:category_id', withDatasetsByCategory.request);
+router.get('/categories/withDatasets/get/:category_id', withDatasetsByCategory.request);
 
 // TODO:
 // POST

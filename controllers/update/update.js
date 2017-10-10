@@ -107,7 +107,7 @@ exports.request = function(req, res) {
 	        												res.status(404).send(err);
 	        											} else {
 	        												client.query("INSERT INTO categories_relationships (created, updated, md_id, category_id) VALUES (now(), now(), $1, $2)", [
-	        													md_id,
+	        													req.body.md_id,
 	        													result.category_id
 	        												], function (err, result) {
                                                                 console.log("5")

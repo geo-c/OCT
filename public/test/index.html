@@ -1,0 +1,40 @@
+<html>
+  <head>
+  <h1> My first OCT App </h1>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+
+
+    <script src="../lib/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+  </head>
+  <body>
+    <div id="mapid" style="height:1080px;width:1080px;"></div>
+    <script>
+      map = L.map('mapid').setView([51.959076, 7.623653], 12);
+      L.tileLayer(
+        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+        {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',
+          maxZoom: 18,
+        }
+      ).addTo(map);
+      token =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfbmFtZSI6InRlc3RfXzYuNCgxKSIsImlhdCI6MTQ5MTQ2OTM4MX0.pSzYYz3URIUmqRzwikjQuLuWF4gqBQ3Ulpyn6cnmxyo' ;
+      $.getJSON("http://giv-oct.uni-muenster.de:8081/api/dataset/kiepenkerl?authorization=" + token, function(json){
+        for(index in json.features) {
+          if(json.features[index].geometry.type == "Polygon") {
+            array=[];
+            for(j in json.features[index].geometry.coordinates[0]) {
+              array.push([
+                json.features[index].geometry.coordinates[0][j][1],
+                json.features[index].geometry.coordinates[0][j][0]
+              ]);
+            }
+            polygon = L.polygon(array).addTo(map);
+            map.fitBounds(polygon.getBounds())
+          }
+        }
+      });
+
+    </script>
+  </body>
+</html>

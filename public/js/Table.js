@@ -360,7 +360,7 @@ Table.prototype.moreInfo = function (data, hash) {
 					$('#'+data+'-apps').append('<tr><td>'+json[index].app_name+'</td><td>'+ json[index].count +'</td></tr>');
 				}
 			});
-			$.getJSON(new API().endpoint + "categories/withDatasets/" + data, function(json){
+			$.getJSON(new API().endpoint + "categories/withDatasets/get/" + data, function(json){
 				for(index in json) {
 					$('#'+data+'-datasets').append('<tr><td>'+json[index].md_name+'</td></tr>');
 				}

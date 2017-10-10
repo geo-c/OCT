@@ -209,30 +209,19 @@ Submit.prototype.submit = function (status, callback) {
 					categories: this.categories
 				}
 				console.log(data);
-				/*$.ajax({
+		    	$.ajax({
 				    type: "POST",
-				    url: new API().endpoint + "querycheck",
+				    url: new API().endpoint + "submit",
 				    contentType: 'application/json',
 				    data: JSON.stringify(data),
-				    success: function(r) {*/
-				    	$.ajax({
-						    type: "POST",
-						    url: new API().endpoint + "submit",
-						    contentType: 'application/json',
-						    data: JSON.stringify(data),
-						    success: function(r) {
-						    	callback(r);
-						    	$('#myModal').modal('hide');
-							}, 
-							error: function (e) {
-								callback(e);
-							}
-						});
-					/*}, 
+				    success: function(r) {
+				    	callback(r);
+				    	$('#myModal').modal('hide');
+					}, 
 					error: function (e) {
 						callback(e);
 					}
-				});*/
+				});
 			}
 			break;
 		case("Parliament"):
@@ -270,30 +259,22 @@ Submit.prototype.submit = function (status, callback) {
 					query_description: query_description,
 					categories: this.categories
 				}
-				/*$.ajax({
+				console.log("parliament")
+				console.log(data);
+		    	$.ajax({
 				    type: "POST",
-				    url: new API().endpoint + "querycheck",
+				    url: new API().endpoint + "submit",
 				    contentType: 'application/json',
-				    data: data,
-				    success: function(r) {*/
-				    	$.ajax({
-						    type: "POST",
-						    url: new API().endpoint + "submit",
-						    contentType: 'application/json',
-						    data: data,
-						    success: function(r) {
-						    	callback(r);
-						    	$('#myModal').modal('hide');
-							}, 
-							error: function (e) {
-								callback(e);
-							}
-						});
-					/*}, 
+				    data: JSON.stringify(data),
+				    success: function(r) {
+				    	callback(r);
+				    	$('#myModal').modal('hide');
+					}, 
 					error: function (e) {
+						console.log(e);
 						callback(e);
 					}
-				});*/
+				});
 			}
 			break;
 		case("Modify-CouchDB"):
