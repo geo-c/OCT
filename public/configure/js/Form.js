@@ -156,7 +156,7 @@ Form.prototype.Postgres = function (categories, modify) {
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
 	this.Categories(categories);
-	
+	var that = this;
 	if(modify) {
 		this.btnSend("Send", function (e) {
 			alert(e);
@@ -164,7 +164,7 @@ Form.prototype.Postgres = function (categories, modify) {
 	} else {
 		this.btnSend("Send", function (e) {
 			alert(e);
-			this.Table.Queries();
+			that.Table.Queries();
 		});
 	}	
 }
@@ -194,7 +194,7 @@ Form.prototype.API = function (categories, modify) {
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
 	this.Categories(categories);
-	
+	var that = this;
 	if(modify) {
 		this.btnSend("Send", function (e) {
 			alert(e);
@@ -202,7 +202,7 @@ Form.prototype.API = function (categories, modify) {
 	} else {
 		this.btnSend("Send", function (e) {
 			alert(e);
-			this.Table.Queries();
+			that.Table.Queries();
 		});
 	}	
 }
@@ -234,7 +234,7 @@ Form.prototype.CouchDB = function (categories, modify) {
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
 	this.Categories(categories);
-
+	var that = this;
 	if(modify) {
 		this.btnSend("Send", function (e) {
 			alert(e);
@@ -242,7 +242,7 @@ Form.prototype.CouchDB = function (categories, modify) {
 	} else {
 		this.btnSend("Send", function (e) {
 			alert(e);
-			this.Table.Queries();
+			that.Table.Queries();
 		});
 	}	
 }
@@ -269,6 +269,7 @@ Form.prototype.Parliament = function (categories, modify) {
 	$('#panelQuery').append(this.elements.queryDescription());
 	//Category
 	this.Categories(categories);
+	var that = this;
 	if(modify) {
 		this.btnSend("Send", function (e) {
 			alert(e);
@@ -276,7 +277,7 @@ Form.prototype.Parliament = function (categories, modify) {
 	} else {
 		this.btnSend("Send", function (e) {
 			alert(e);
-			this.Table.Queries();
+			that.Table.Queries();
 		});
 	}	
 }
@@ -401,8 +402,6 @@ Form.prototype.btnSend = function (text, callback) {
 
 	//Listen on Button Clicks
 	$btnSend.click(function (e) {
-		console.log(that.status);
-		console.log(that)
 		submit = new Submit(that.user, that.categories);
 		submit.submit(that.status, callback);
 		//Check which status is active

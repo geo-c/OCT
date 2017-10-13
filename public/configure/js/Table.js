@@ -251,10 +251,7 @@ Table.prototype.QueriesByUser = function (username, form) {
  * Expand Table to show more Information
  */
 Table.prototype.moreInfo = function (data) {
-	console.log(this.data_all);
-	console.log(data);
 	for(i in this.data_all) {
-		console.log(this.data_all[i][1])
 		if(this.data_all[i][1] == data) {
 			return '<center><code>' + this.data_all[i][2] + '</code></center>';
 		}
