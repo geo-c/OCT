@@ -115,11 +115,11 @@ Table.prototype.Queries = function () {
 			if(json[index].ds_port != null && json[index].ds_port != "") {
 				_dsUrl += ":" + json[index].ds_port+"/";
 			}
-			if(json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;").length > 13) {
+			if(json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;").length > 13) {
 				that.data.push([
 					json[index].query_id,
 					json[index].query_extern,
-					json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;").substring(0,10) + '...',
+					json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;").substring(0,10) + '...',
 					json[index].query_description,
 					json[index].category_name,
 					_url,
@@ -130,7 +130,7 @@ Table.prototype.Queries = function () {
 				that.data.push([
 					json[index].query_id,
 					json[index].query_extern,
-					json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
+					json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;"),
 					json[index].query_description,
 					json[index].category_name,
 					_url,
@@ -141,7 +141,7 @@ Table.prototype.Queries = function () {
 			that.data_all.push([
 				json[index].query_id,
 				json[index].query_extern,
-				json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
+				json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;"),
 				json[index].query_description,
 				json[index].category_name,
 				_url,
@@ -192,11 +192,11 @@ Table.prototype.QueriesByUser = function (username, form) {
 			if(json[index].ds_port != null && json[index].ds_port != "") {
 				_dsUrl += ":" + json[index].ds_port+"/";
 			}
-			if(json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;").length > 13) {
+			if(json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;").length > 13) {
 				that.data.push([
 					json[index].query_id,
 					json[index].query_extern,
-					json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;").substring(0,10) + '...',
+					json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;").substring(0,10) + '...',
 					json[index].query_description,
 					json[index].category_name,
 					_url,
@@ -207,7 +207,7 @@ Table.prototype.QueriesByUser = function (username, form) {
 				that.data.push([
 					json[index].query_id,
 					json[index].query_extern,
-					json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
+					json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;"),
 					json[index].query_description,
 					json[index].category_name,
 					_url,
@@ -218,7 +218,7 @@ Table.prototype.QueriesByUser = function (username, form) {
 			that.data_all.push([
 				json[index].query_id,
 				json[index].query_extern,
-				json[index].query_intern.replace("<", "&lt;").replace(">", "&gt;"),
+				json[index].query_intern.replace(/\</g, "&lt;").replace(/\>/g, "&gt;"),
 				json[index].query_description,
 				json[index].category_name,
 				_url,
@@ -251,10 +251,7 @@ Table.prototype.QueriesByUser = function (username, form) {
  * Expand Table to show more Information
  */
 Table.prototype.moreInfo = function (data) {
-	console.log(this.data_all);
-	console.log(data);
 	for(i in this.data_all) {
-		console.log(this.data_all[i][1])
 		if(this.data_all[i][1] == data) {
 			return '<center><code>' + this.data_all[i][2] + '</code></center>';
 		}

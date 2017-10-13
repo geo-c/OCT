@@ -10,8 +10,6 @@ var validate = ajv.compile(schema);
 
 // POST
 exports.request = function(req, res) {
-	console.log("SUBMIT SOME DATA");
-	console.log(req.body);
 	var valid = validate(req.body);
 	if (!valid) {
 		res.status(errors.schema.error_1.code).send(_.extend(errors.schema.error_1, {
