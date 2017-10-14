@@ -31,8 +31,8 @@ exports.request = function(req, res) {
 
 	    client.query(queryStr, params, function (err, result) {
 	        if(err) {
-	            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-	            return console.error(errors.database.error_2.message, err);
+	            res.status(errors.database.error_4.code).send(_.extend(errors.database.error_4, err));
+	            return console.error(errors.database.error_4.message, err);
 	        } else {
 	            var ds_id = result[0].ds_id;
 	            var queryStr = "INSERT INTO main_datasets (created, updated, ds_id, endpoint_id, created_by, md_name, md_description, publisher, published, license) VALUES (now(), now(), $1, 1, $2, $3, $4, '','', '') RETURNING md_id;";
@@ -45,8 +45,8 @@ exports.request = function(req, res) {
 
 				client.query(queryStr, params, function (err, result) {
 			        if(err) {
-			            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-			            return console.error(errors.database.error_2.message, err);
+			            res.status(errors.database.error_4.code).send(_.extend(errors.database.error_4, err));
+			            return console.error(errors.database.error_4.message, err);
 			        } else {
 			        	console.log("1");
 			        	var md_id = result[0].md_id
@@ -59,8 +59,8 @@ exports.request = function(req, res) {
 
 			        	client.query(queryStr, params, function (err, result) {
 					        if(err) {
-					            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-					            return console.error(errors.database.error_2.message, err);
+					            res.status(errors.database.error_4.code).send(_.extend(errors.database.error_4, err));
+					            return console.error(errors.database.error_4.message, err);
 					        } else {
 					        	console.log("2");
 					        	var sd_id = result[0].sd_id
@@ -74,8 +74,8 @@ exports.request = function(req, res) {
 
 							    client.query(queryStr, params, function (err, result) {
 							        if(err) {
-							            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-							            return console.error(errors.database.error_2.message, err);
+							            res.status(errors.database.error_4.code).send(_.extend(errors.database.error_4, err));
+							            return console.error(errors.database.error_4.message, err);
 							        } else {
 							        	console.log("3");
 							        	for(i in req.body.categories) {
@@ -87,8 +87,8 @@ exports.request = function(req, res) {
 
 										    client.query(queryStr, params, function (err, result) {
 										        if(err) {
-										            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-										            return console.error(errors.database.error_2.message, err);
+										            res.status(errors.database.error_4.code).send(_.extend(errors.database.error_4, err));
+										            return console.error(errors.database.error_4.message, err);
 										        } else {
 										        	console.log("4");
 										            var queryStr = "INSERT INTO categories_relationships (created, updated, md_id, category_id) VALUES (now(), now(), $1, $2)";
@@ -99,11 +99,11 @@ exports.request = function(req, res) {
 
 												    client.query(queryStr, params, function (err, result) {
 												        if(err) {
-												            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
-												            return console.error(errors.database.error_2.message, err);
+												            res.status(errors.database.error_4.code).send(_.extend(errors.database.error_4, err));
+												            return console.error(errors.database.error_4.message, err);
 												        } else {
 												        	console.log("5");
-												            res.status(200).send("Eingefügt");
+												            res.status(200).send("Dataset successfully inserted.");
 												        }
 												    });
 										        }
