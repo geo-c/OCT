@@ -20,6 +20,10 @@ module.exports = {
         error_3: {
             code: 400,
             message: 'No valid query parameters'
+        },
+        error_4: {
+            code: 401,
+            message: 'Error registering a Dataset. Please check your input.'
         }
     },
     authentication: {

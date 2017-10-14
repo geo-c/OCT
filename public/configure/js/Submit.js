@@ -161,7 +161,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(e);
+								callback(JSON.stringify(e));
 							}
 						});
 					/*}, 
@@ -219,7 +219,7 @@ Submit.prototype.submit = function (status, callback) {
 				    	$('#myModal').modal('hide');
 					}, 
 					error: function (e) {
-						callback(e);
+						callback(JSON.stringify(e));
 					}
 				});
 			}
@@ -271,8 +271,7 @@ Submit.prototype.submit = function (status, callback) {
 				    	$('#myModal').modal('hide');
 					}, 
 					error: function (e) {
-						console.log(e);
-						callback(e);
+						callback(JSON.stringify(e));
 					}
 				});
 			}
@@ -336,7 +335,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(e);
+								callback(JSON.stringify(e));
 							}
 						});
 					/*}, 
@@ -403,7 +402,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(e);
+								callback(JSON.stringify(e));
 							}
 						});
 					/*}, 
@@ -475,7 +474,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(e);
+								callback(JSON.stringify(e));
 							}
 						});
 					/*}, 
@@ -544,7 +543,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(e);
+								callback(JSON.stringify(e));
 							}
 						});
 					/*}, 
