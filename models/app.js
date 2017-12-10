@@ -21,6 +21,14 @@ module.exports = {
         "last_name": {
             "type": "string",
             "minLength": 1
+        },
+        "type": {
+            "type": "string",
+            "minLength": 1
+        },
+        "url": {
+            "type": "string",
+            "minLength": 1
         }
     },
     "required": [

@@ -35,13 +35,15 @@ exports.request = function(req, res) {
 		}, secret.key);
 		
         // Database Query
-        client.query('INSERT INTO Apps VALUES(now(), now(), $1, $2, $3, $4, $5, $6);', [
+        client.query('INSERT INTO Apps VALUES(now(), now(), $1, $2, $3, $4, $5, $6, $7, $8);', [
             req.body.app_name,
             accessToken,
             req.body.app_description,
             req.body.email_address,
             req.body.first_name,
-            req.body.last_name
+            req.body.last_name,
+            req.body.url,
+            req.body.type
         ], function(err, result) {
 
             if (err) {

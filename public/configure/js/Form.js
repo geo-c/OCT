@@ -26,6 +26,7 @@ Form.prototype.emptyForm = function () {
  * Show Fields for Login
  */
 Form.prototype.login = function (callback) {
+	$('#add-a-query').hide();
 	this.status = "login";
 	this.empty();
 	$("#form").append('<div id=inputForm></div>');
@@ -38,6 +39,7 @@ Form.prototype.login = function (callback) {
  * Show Fields for Signup
  */
 Form.prototype.signup = function (callback) {
+	$('#add-a-query').hide();
 	this.status = "signup";
 	this.empty();
 	$("#form").append('<div id=inputForm></div>');
@@ -51,11 +53,12 @@ Form.prototype.signup = function (callback) {
 
 Form.prototype.addingButton = function () {
 	this.empty();
-	$space = $('<br>')
+	/*$space = $('<br>')
 	$button = $('<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add a Query</button>');
 	$("#form").append($space);
 	$("#form").append($button);
-	$("#form").append($space);
+	$("#form").append($space);*/
+	$('#add-a-query').show();
 
 	this.addDatabase();
 }

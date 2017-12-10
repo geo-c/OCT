@@ -35,9 +35,10 @@ Table.prototype.draw = function () {
 				{ title: "ID" },
 	            { title: "More" },
 	            { title: 'Name' },
-	            { title: 'Description' },
+	           	{ title: 'Description' },
 	            { title: 'Category Search  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
-	            { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
+	            { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
+				{ title: 'App Type' }
 			];
 			columnDefs = [
 				{
@@ -139,7 +140,11 @@ Table.prototype.Apps = function () {
 	if(this.data.apps.length==0) {
 		$.getJSON(new API().endpoint + "apps", function(json){
 			for(index in json) {
-				that.data.apps.push([json[index].app_hash, index, '', json[index].app_name, json[index].app_description, json[index].searches, json[index].api_calls]);
+				//if(json[index].url != "" && json[index.url]) {
+					that.data.apps.push([json[index].app_hash, index, '', '<a href="' + json[index].url + '">' + json[index].app_name + '</a>', json[index].app_description, json[index].searches, json[index].api_calls, json[index].type]);
+				//} else {
+				//	that.data.apps.push([json[index].app_hash, index, '', json[index].app_name , json[index].app_description, json[index].searches, json[index].api_calls]);
+				//}
 			}
 			that.draw();
 

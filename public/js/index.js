@@ -35,7 +35,7 @@ $(document).ready(function() {
 	   	$("#btn-table").addClass("active");
 	   	$("#btn-graph").removeClass("active");
 	   	switch(status) {
-	   		case("GetanAPIKey"):
+	   		case("RegisteranApp"):
 	   			signupForm();
 	   			break;
 	   		default:
@@ -69,6 +69,58 @@ $(document).ready(function() {
 		$('#content').append($('<label for="appname-label">App Name (required)</label>'));
 		$('#content').append($('<input type="text" class="form-control" id="appname" aria-describedby="basic-addon3">'));
 
+		$('#content').append($('<label for="description-label">Type of component</label>'));
+		dropdown =  '<div class="row">'
+		dropdown += '	<div class="col-md-3">'
+		dropdown += '		<div class="radio">'
+  		dropdown += '			<label><input type="radio" name="optradio">MobileApp</label>'
+		dropdown += '		</div>'
+		dropdown += '	</div>'
+		dropdown += '	<div class="col-md-3">'
+		dropdown += '		<div class="radio">'
+  		dropdown += '			<label><input type="radio" name="optradio">WebApp</label>'
+		dropdown += '		</div>'
+		dropdown += '	</div>'
+		dropdown += '	<div class="col-md-3">'
+		dropdown += '		<div class="radio">'
+  		dropdown += '			<label><input type="radio" name="optradio">Service</label>'
+		dropdown += '		</div>'
+		dropdown += '	</div>'
+		dropdown += '	<div class="col-md-3">'
+		dropdown += '		<div class="radio">'
+  		dropdown += '			<label><input type="radio" name="optradio">Guideline</label>'
+		dropdown += '		</div>'
+		dropdown += '	</div>'
+		dropdown += '</div>'
+		/*
+		dropdown = '<div class="dropdown">'
+	  	dropdown += '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
+	    dropdown += 'App'
+	    dropdown += '<span class="caret"></span>'
+	  	dropdown += '</button>'
+	  	dropdown += '<ul class="dropdown-menu" aria-labelledby="dropdownMenu">'
+	    dropdown += '<li><a href="#">App</a></li>'
+	    dropdown += '<li><a href="#">Service</a></li>'
+	    dropdown += '<li><a href="#">Guideline</a></li>'
+	  	dropdown += '</ul>'
+		dropdown += '</div>'*/
+  		$('#content').append($(dropdown));
+
+  		var type = "App";
+  		$('.radio').click(function(e) {
+  			type = $(this).children().text();
+  		});
+  		/*$('ul.dropdown-menu li a').click(function (e) {
+		    var $div = $(this).parent().parent().parent(); 
+		    var $btn = $div.find('button');
+		    $btn.html($(this).text() + ' <span class="caret"></span>');
+		    $div.removeClass('open');
+		    e.preventDefault();
+		    type = $(this).text();
+		});*/
+
+
+
 		$('#content').append($('<label for="description-label">Description</label>'));
 		$('#content').append($('<input type="text" class="form-control" id="description" aria-describedby="basic-addon3">'));
 
@@ -81,6 +133,9 @@ $(document).ready(function() {
 		$('#content').append($('<label for="lastname-label">Last Name (required)</label>'));
 		$('#content').append($('<input type="text" class="form-control" id="lastname" aria-describedby="basic-addon3">'));
 
+		$('#content').append($('<label for="lastname-label">Website</label>'));
+		$('#content').append($('<input type="text" class="form-control" id="website" aria-describedby="basic-addon3">'));
+
 		$btn = $('<br><button type="button" class="btn btn-primary right">Signup</button>');
 		$('#content').append($btn);
 		$btn.click(function () {
@@ -89,9 +144,12 @@ $(document).ready(function() {
 				"app_description": $('#description').val(),
     			"email_address": $('#email').val(),
    				"first_name": $('#firstname').val(),
-    			"last_name": $('#lastname').val()
+    			"last_name": $('#lastname').val(),
+    			"url": $("#website").val(),
+    			"type": type
 			}
 			console.log(data);
+			
 			if(data.app_name != "" || data.email_address != "" || data.first_name != "" || data.last_name != "") {
 				$.ajax({
 				    type: "POST",

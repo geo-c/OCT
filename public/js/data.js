@@ -63,6 +63,7 @@ var columns = {
         { title: "More" },
         { title: 'Name' },
         { title: 'Description' },
+        { title: 'App Type' },
         { title: 'Category Search  <a id="help-search"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' },
         { title: 'Dataset Search  <a id="help-api"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><a>' }
 	],
