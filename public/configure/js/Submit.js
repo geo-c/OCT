@@ -100,7 +100,7 @@ Submit.prototype.submit = function (status, callback) {
 						    	$('#myModal').modal('hide');
 							}, 
 							error: function (e) {
-								callback(e);
+								callback(JSON.stringyfy(e));
 							}
 						});
 					/*}, 

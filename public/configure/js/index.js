@@ -16,9 +16,9 @@ $(document).ready(function() {
 		$menu = $('<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> '+username+'</a><ul class="dropdown-menu"><li><a href="#">All Datasets</a></li><li><a href="#">My Datasets</a></li><li role="separator" class="divider"></li><li><a href="#">Logout</a></li></ul></li>');
 		$(".navbar-right").append($menu);
 
-		table.Queries();
 		form.addingButton();
-
+		table.Queries();
+		
 		$(".navbar-right .dropdown ul li a").on("click", function (e) {
 			switch($(this).text()) {
 				case("Logout"):
