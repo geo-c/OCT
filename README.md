@@ -1,6 +1,6 @@
 # OCT-Core
 
-The OCT-Core (or OCT Transparency Module) is a module of the [Open City Toolkit] (https://github.com/geo-c/Open-City-Toolkit), which provides technical means of linking apps to the datasets that they use, as well as some statistics about the frequency of retrieval of a specific dataset.
+The OCT-Core (or OCT Transparency Module) is a module of the [Open City Toolkit](https://github.com/geo-c/Open-City-Toolkit), which provides technical means of linking apps to the datasets that they use, as well as some statistics about the frequency of retrieval of a specific dataset.
 
 The objective of the OCT transparency module is to help answer the following questions: 
 + What are datasets available in my city? 
