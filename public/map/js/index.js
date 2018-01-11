@@ -10,7 +10,7 @@ $(document).ready(function() {
 		markers = null;
 		markers = L.markerClusterGroup({ chunkedLoading: true });
 
-		$.getJSON("http://giv-oct.uni-muenster.de:8080/api/visitors/" + status + "/" + value, function(json){ 
+		$.getJSON("http://giv-oct2.uni-muenster.de:8080/api/visitors/" + status + "/" + value, function(json){ 
 			for(i in json) {
 				
 				//console.log(json[i])

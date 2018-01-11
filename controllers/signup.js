@@ -35,7 +35,7 @@ exports.request = function(req, res) {
 		}, secret.key);
 		
         // Database Query
-        client.query('INSERT INTO Apps VALUES(now(), now(), $1, $2, $3, $4, $5, $6, $7, $8);', [
+        client.query('INSERT INTO Apps(created, updated, app_name, app_hash, app_description, email_address, first_name, last_name, url, type) VALUES(now(), now(), $1, $2, $3, $4, $5, $6, $7, $8);', [
             req.body.app_name,
             accessToken,
             req.body.app_description,
