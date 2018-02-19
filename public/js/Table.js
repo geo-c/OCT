@@ -134,54 +134,51 @@ Table.prototype.draw = function () {
 Table.prototype.Apps = function () {
 	this.empty();
 	this.type = "Apps";	
+	this.data.apps = [];
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
 
-	if(this.data.apps.length==0) {
-		$.getJSON(new API().endpoint + "apps", function(json){
-			for(index in json) {
-				//if(json[index].url != "" && json[index.url]) {
-					that.data.apps.push([json[index].app_hash, index, '', '<a href="' + json[index].url + '">' + json[index].app_name + '</a>', json[index].app_description, json[index].searches, json[index].api_calls, json[index].type]);
-				//} else {
-				//	that.data.apps.push([json[index].app_hash, index, '', json[index].app_name , json[index].app_description, json[index].searches, json[index].api_calls]);
-				//}
+	$.getJSON(new API().endpoint + "apps", function(json){
+		for(index in json) {
+			//if(json[index].url != "" && json[index.url]) {
+				that.data.apps.push([json[index].app_hash, index, '', '<a href="' + json[index].url + '">' + json[index].app_name + '</a>', json[index].app_description, json[index].searches, json[index].api_calls, json[index].type]);
+			//} else {
+			//	that.data.apps.push([json[index].app_hash, index, '', json[index].app_name , json[index].app_description, json[index].searches, json[index].api_calls]);
+			//}
+		}
+		that.draw();
+
+
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-search"):
+					$("#txtSearch").show();
+					break;
+				case("help-api"):
+					$("#txtAPI").show();
+					break;
 			}
-			that.draw();
-
-
-			$("thead a").on('click', function (e) {
-				e.stopImmediatePropagation();
-				$('#myModal').modal('show');
-				$("#txtSearch").hide();
-				$("#txtAPI").hide();
-				switch($(this).attr("id")) {
-					case("help-search"):
-						$("#txtSearch").show();
-						break;
-					case("help-api"):
-						$("#txtAPI").show();
-						break;
-				}
-			});
-			//Set listener on Click for more Details
-			$('#table tbody').on('click', 'td.details-control', function () {
-		        var tr = $(this).closest('tr');
-		        var row = that.dataTable.row( tr );
-		        if ( row.child.isShown() ) {
-		            // This row is already open - close it
-		            row.child.hide();
-		            tr.removeClass('shown');
-		        }
-		        else {
-		            // Open this row
-		            row.child( that.moreInfo(row.data()[1], row.data()[0]) ).show();
-		            tr.addClass('shown');
-		        }
-		    });
 		});
-	} else {
-		this.draw();
-	}	
+		//Set listener on Click for more Details
+		$('#table tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = that.dataTable.row( tr );
+	        if ( row.child.isShown() ) {
+	            // This row is already open - close it
+	            row.child.hide();
+	            tr.removeClass('shown');
+	        }
+	        else {
+	            // Open this row
+	            row.child( that.moreInfo(row.data()[1], row.data()[0]) ).show();
+	            tr.addClass('shown');
+	        }
+	    });
+	});	
 }
 
 /*
@@ -192,51 +189,47 @@ Table.prototype.Categories = function () {
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
+	this.data.categories = [];
+	$.getJSON(new API().endpoint + "categories", function(json){
+		for(index in json) {
+			that.data.categories.push([json[index].category_id, '', json[index].category_name, json[index].searches, json[index].datasets]);
+		}
+		that.draw();
 
-	if(this.data.categories.length==0) {
-		$.getJSON(new API().endpoint + "categories", function(json){
-			for(index in json) {
-				that.data.categories.push([json[index].category_id, '', json[index].category_name, json[index].searches, json[index].datasets]);
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-search"):
+					$("#txtSearch").show();
+					break;
+				case("help-numodata"):
+					$("#txtNumOData").show();
+					break;
 			}
-			that.draw();
-
-			$("thead a").on('click', function (e) {
-				e.stopImmediatePropagation();
-				$('#myModal').modal('show');
-				$("#txtSearch").hide();
-				$("#txtAPI").hide();
-				switch($(this).attr("id")) {
-					case("help-search"):
-						$("#txtSearch").show();
-						break;
-					case("help-numodata"):
-						$("#txtNumOData").show();
-						break;
-				}
-			});
-			//Set listener on Click for more Details
-			$('#table tbody').on('click', 'td.details-control', function () {
-		        var tr = $(this).closest('tr');
-		        var row = that.dataTable.row( tr );
-		 		if(row.data()[3] != 0) {
-			        if ( row.child.isShown() ) {
-			            // This row is already open - close it
-			            row.child.hide();
-			            tr.removeClass('shown');
-			        }
-			        else {
-			            // Open this row
-			            row.child( that.moreInfo(row.data()[0]) ).show();
-			            tr.addClass('shown');
-			        }
-		    	} else {
-			    	tr.addClass("unavailable");
-			    }
-		    });
 		});
-	} else {
-		this.draw();
-	}	
+		//Set listener on Click for more Details
+		$('#table tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = that.dataTable.row( tr );
+	 		if(row.data()[3] != 0) {
+		        if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	    	} else {
+		    	tr.addClass("unavailable");
+		    }
+	    });
+	});
 }
 
 /*
@@ -247,49 +240,45 @@ Table.prototype.Usage = function () {
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
+	this.data.usage = [];
+	$.getJSON(new API().endpoint + "logs/byDay", function(json){
+		for(index in json) {
+			date =  json[index].date.slice(0, json[index].date.lastIndexOf("T"))
+			that.data.usage.push([date, '',date, json[index].searches, json[index].api_calls]);
+		}
+		that.draw();
 
-	if(this.data.usage.length == 0) {
-		$.getJSON(new API().endpoint + "logs/byDay", function(json){
-			for(index in json) {
-				date =  json[index].date.slice(0, json[index].date.lastIndexOf("T"))
-				that.data.usage.push([date, '',date, json[index].searches, json[index].api_calls]);
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-search"):
+					$("#txtSearch").show();
+					break;
+				case("help-api"):
+					$("#txtAPI").show();
+					break;
 			}
-			that.draw();
-
-			$("thead a").on('click', function (e) {
-				e.stopImmediatePropagation();
-				$('#myModal').modal('show');
-				$("#txtSearch").hide();
-				$("#txtAPI").hide();
-				switch($(this).attr("id")) {
-					case("help-search"):
-						$("#txtSearch").show();
-						break;
-					case("help-api"):
-						$("#txtAPI").show();
-						break;
-				}
-			});
-			//Set listener on Click for more Details
-			$('#table tbody').on('click', 'td.details-control', function () {
-		        var tr = $(this).closest('tr');
-		        var row = that.dataTable.row( tr );
-		 	
-			        if ( row.child.isShown() ) {
-			            // This row is already open - close it
-			            row.child.hide();
-			            tr.removeClass('shown');
-			        }
-			        else {
-			            // Open this row
-			            row.child( that.moreInfo(row.data()[0]) ).show();
-			            tr.addClass('shown');
-			        }
-		    });
 		});
-	} else {
-		this.draw();
-	}
+		//Set listener on Click for more Details
+		$('#table tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = that.dataTable.row( tr );
+	 	
+		        if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	    });
+	});
 }
 
 Table.prototype.Datasets = function () {
@@ -297,48 +286,44 @@ Table.prototype.Datasets = function () {
 	this.empty();
 	$("#content").html('<table id="table" class="display" width="100%"></table>');
 	var that = this;
+	this.data.datasets = [];
+	$.getJSON(new API().endpoint + "tdataset", function(json){
+		for(index in json) {
+			that.data.datasets.push([json[index].sd_id, '', json[index].dataset, json[index].count]);
+		}
+		that.draw();
 
-	if(this.data.datasets.length == 0) {
-		$.getJSON(new API().endpoint + "tdataset", function(json){
-			for(index in json) {
-				that.data.datasets.push([json[index].sd_id, '', json[index].dataset, json[index].count]);
+		$("thead a").on('click', function (e) {
+			e.stopImmediatePropagation();
+			$('#myModal').modal('show');
+			$("#txtSearch").hide();
+			$("#txtAPI").hide();
+			switch($(this).attr("id")) {
+				case("help-api"):
+					$("#txtAPI").show();
+					break;
 			}
-			that.draw();
+		});
 
-			$("thead a").on('click', function (e) {
-				e.stopImmediatePropagation();
-				$('#myModal').modal('show');
-				$("#txtSearch").hide();
-				$("#txtAPI").hide();
-				switch($(this).attr("id")) {
-					case("help-api"):
-						$("#txtAPI").show();
-						break;
-				}
-			});
-
-			$('#table tbody').on('click', 'td.details-control', function () {
-		        var tr = $(this).closest('tr');
-		        var row = that.dataTable.row( tr );
-		 		if(row.data()[3] != 0) {
-		 			if ( row.child.isShown() ) {
-			            // This row is already open - close it
-			            row.child.hide();
-			            tr.removeClass('shown');
-			        }
-			        else {
-			            // Open this row
-			            row.child( that.moreInfo(row.data()[0]) ).show();
-			            tr.addClass('shown');
-			        }
-		 		} else {
-			    	tr.addClass("unavailable");
-			    }
-		    });
+		$('#table tbody').on('click', 'td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = that.dataTable.row( tr );
+	 		if(row.data()[3] != 0) {
+	 			if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child( that.moreInfo(row.data()[0]) ).show();
+		            tr.addClass('shown');
+		        }
+	 		} else {
+		    	tr.addClass("unavailable");
+		    }
 	    });
-	} else {
-		this.draw();
-	}
+    });
 }
 
 /*

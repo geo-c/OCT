@@ -28,6 +28,7 @@ exports.request = function(req, res) {
 		return console.error(validate.errors[0].dataPath + ": " + validate.errors[0].message);
 	} else {
 		var passwordToSave = bcrypt.hashSync(req.body.password, secret.key)
+		console.log(passwordToSave)
 		var queryStr = 'SELECT username, email_address, password FROM Admins WHERE username = $1;';
 	    var params = [
 	        req.params.username
@@ -40,8 +41,6 @@ exports.request = function(req, res) {
 	        req.body.first_name,
 	        req.body.last_name
 	    ], function(err, result) {
-	        done();
-
 	        if (err) {
 	            res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
 				return console.error(errors.database.error_2.message, err);
@@ -50,15 +49,13 @@ exports.request = function(req, res) {
 	            client.query('SELECT * FROM Admins WHERE username=$1;', [
 	                req.body.username
 	            ], function(err, result) {
-	                done();
-
 	                if (err) {
 						res.status(errors.database.error_2.code).send(_.extend(errors.database.error_2, err));
 						return console.error(errors.database.error_2.message, err);
 	                } else {
 
 	                    // Check if App exists
-	                    if (result.rows.length === 0) {
+	                    if (result.length === 0) {
 	                        res.status(errors.query.error_1.code).send(errors.query.error_1);
 	                        console.error(errors.query.error_1.message);
 	                    } else {

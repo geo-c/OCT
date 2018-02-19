@@ -35,6 +35,9 @@ $(document).ready(function() {
 	   	$("#btn-table").addClass("active");
 	   	$("#btn-graph").removeClass("active");
 	   	switch(status) {
+	   		case("StartTour"):
+	   				introJs().start();
+	   			break;
 	   		case("RegisteranApp"):
 	   			signupForm();
 	   			break;
@@ -133,7 +136,7 @@ $(document).ready(function() {
 		$('#content').append($('<label for="lastname-label">Last Name (required)</label>'));
 		$('#content').append($('<input type="text" class="form-control" id="lastname" aria-describedby="basic-addon3">'));
 
-		$('#content').append($('<label for="lastname-label">Website</label>'));
+		$('#content').append($('<label for="lastname-label">Website (required)</label>'));
 		$('#content').append($('<input type="text" class="form-control" id="website" aria-describedby="basic-addon3">'));
 
 		$btn = $('<br><button type="button" class="btn btn-primary right">Signup</button>');
@@ -150,7 +153,7 @@ $(document).ready(function() {
 			}
 			console.log(data);
 			
-			if(data.app_name != "" || data.email_address != "" || data.first_name != "" || data.last_name != "") {
+			if(data.app_name != "" || data.email_address != "" || data.first_name != "" || data.last_name != "" || data.url != "" ) {
 				$.ajax({
 				    type: "POST",
 				    url: new API().endpoint + "signup",
@@ -168,6 +171,10 @@ $(document).ready(function() {
 				    	$('#content').append('<br><br>If you have further Questions please visit: <a>http://giv-oct2.uni-muenster.de:8080/docs/architecture/rest-api/</a>');
 
 				    	console.log(r);
+					}, 
+					error: function(e) {
+						console.log(e);
+						alert("Not all required fields have values")
 					}
 				});
 			} else {

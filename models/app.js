@@ -6,7 +6,7 @@ module.exports = {
     "properties": {
         "app_name": {
             "type": "string",
-            "minLength": 2
+            "minLength": 1
         },
         "app_description": {
             "type": "string"
@@ -35,6 +35,7 @@ module.exports = {
         "app_name",
         "email_address",
         "first_name",
-        "last_name"
+        "last_name",
+        "url"
     ]
 };

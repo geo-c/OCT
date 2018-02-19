@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.1, maximum-scale=1">
     <title>OCT Core Statistics</title>
 
-
-    <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="lib/bootstrap-3.2.0-dist/css/bootstrap.min.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/introjs.css">
+    <link rel="stylesheet" href="css/introjs-modern.css">
 
     <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">-->
     <link rel="stylesheet" href="lib/jquery.datatables.min.css">
@@ -21,6 +22,7 @@
 
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>-->
     <script src="lib/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/intro.min.js"></script>
     <!--<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
     <script src="lib/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
     <!--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>-->
@@ -31,7 +33,7 @@
     <script src="lib/stream_table.min.js"></script>
 
     <!-- Custom -->
-    <script src="js/data.js" type="text/javascript"></script>></s>
+    <script src="js/data.js" type="text/javascript"></script>
     <script src="js/API.js" type="text/javascript"></script>
     <script src="js/index.js" type="text/javascript"></script>
     <script src="js/Table.js" type="text/javascript"></script>
@@ -42,7 +44,7 @@
 
   <body>
 
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-static-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
@@ -51,7 +53,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="#" data-step="1" data-intro="OCT-Core is a platform for citizens & city councils to visualize apps and data usage within the Open City Toolkit.">
             OCT Core
           </a>
         </div>
@@ -59,15 +61,16 @@
 
 
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-left">
-            <li class="active"><a id="tab0" href="#">Apps</a></li>
-            <li><a id="tab1" href="#">Categories</a></li>
-            <li><a id="tab2" href="#">Datasets</a></li> 
-            <li><a id="tab3" href="#">Usage</a></li>
+          <ul class="nav navbar-nav navbar-left" data-step="2" data-intro="Here you can change the type of data?" data-position='right'>
+            <li class="active" data-step="3" data-intro="The first shows you a table of apps" data-position='right'><a id="tab0" href="#">Apps</a></li>
+            <li class="dummy" data-step="4" data-intro="This tab show you categories with linked datasets" data-position='right'><a id="tab1" href="#">Categories</a></li>
+            <li data-step="5" data-intro="Here you can see the registered datasets and their calls" data-position='right'><a id="tab2" href="#">Datasets</a></li> 
+            <li data-step="6" data-intro="Lastly you can see the usage per day" data-position='right'><a id="tab3" href="#">Usage</a></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>  Register an App</a></li>
-            <li><a id="tab3" href="/configure"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configure</a></li>
+          <ul class="nav navbar-nav navbar-right" data-step="7" data-intro="On the right you have administrative functions" data-position='right'>
+            <li><a href="#">Start Tour</a></li>
+            <li data-step="8" data-intro="Click here if you want to register an app" data-position='right'><a href="#"><span class="glyphicon glyphicon-log-in"></span>  Register an App</a></li>
+            <li data-step="9" data-intro="Here you get to a new page where you can register and modify a dataset" data-position='right'><a id="tab3" href="/configure"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Configure</a></li>
           </ul>
 
         </div>
@@ -76,10 +79,10 @@
 
 
 
-    <div class="row container-fluid">
+    <div class="row container-fluid" data-step="12" data-intro="If you want to see more things you can watch this video <a href='http://giv-oct2.uni-muenster.de:8080/videos/OCT.mp4' class='btn btn-info' role='button'><i class='fa fa-film'></i></a>">
       <div class="col-md-1 col-sm-12 col-xs-12" id="btn-group1">
           <div class="row">
-            <div class="btn-group-justified" role="group" aria-label="Basic example">
+            <div class="btn-group-justified" role="group" aria-label="Basic example" data-step="10" data-intro="With this buttons you can change whether you want to see a table, a graph or a map" data-position='right'>
             <div class="col-md-12 col-sm-4 col-xs-4">
               <button type="button" class="btn btn-secondary btn-block active" id="btn-table">Table</button>
             </div>
@@ -92,7 +95,7 @@
           </div>  
         </div>
       </div>
-      <div class="col-md-10 col-sm-12" id="content">
+      <div class="col-md-10 col-sm-12" id="content" data-step="11" data-intro="This pane holds the requested information, a graph, a table or a map" data-position='right'>
       </div>
       <div class="col-md-1 col-sm-0"></div>
     </div>
@@ -128,7 +131,9 @@
 
     <nav class="navbar navbar-default navbar-fixed-bottom">
       <center>
-        <a class="navbar-brand" href="http://geo-c.eu/"><img src="http://giv-oct2.uni-muenster.de/oct/images/logo-geoc.png" width="145px" height="auto" style="float:left;"></a>
+         <a class="navbar-brand" href="http://geo-c.eu/"><img src="http://giv-oct2.uni-muenster.de:8080/img/euflag.jpg" width="auto" height="40px" style="float:left;"></a>
+        <div class="pull-left" style ="width:600px;"><br>GEO-C is funded by the European Commission within the Marie Skłodowska-Curie Actions (ITN - EJD), Grant Agreement Number 642332 -GEO-C- H2020-MSCA-ITN-2014</div>
+     
 
         <div class="pull-right">
           <a></a>
