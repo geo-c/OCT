@@ -6,7 +6,7 @@ var _ = require('underscore');
 // Count of Logs by Day
 exports.request = function(req, res) {
 
-    queryStr = "WITH day AS (SELECT day FROM logs_count WHERE day IS NOT NULL) SELECT day AS date, (SELECT count FROM logs_count WHERE logs_count.day=day.day AND type='Usage_Category') AS Searches, (SELECT count FROM logs_count WHERE logs_count.day=day.day AND type='Usage_Dataset') AS API_Calls FROM day;";
+    queryStr = "WITH day AS (SELECT DISTINCT day FROM logs_count WHERE day IS NOT NULL) SELECT  DISTINCT day AS date, (SELECT DISTINCT count FROM logs_count WHERE logs_count.day=day.day AND type='Usage_Category') AS Searches, (SELECT DISTINCT count FROM logs_count WHERE logs_count.day=day.day AND type='Usage_Dataset') AS API_Calls FROM day;";
     params = [];
 
     client.query(queryStr, params, function (err, result) {
