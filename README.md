@@ -7,8 +7,6 @@ The objective of the OCT transparency module is to help answer the following que
 + How often are these datasets used? 
 + Which apps use these datasets? 
 
-### Documentation
-A more detailed documentation of the underlying architecture, as well as the current implementation status is available [here](http://giv-oct.uni-muenster.de:8080/docs/).
 
 ### Demo
 A demo of the OCT Transparency Module is accessible at [OCT Core Demo](http://giv-oct.uni-muenster.de:8080/).  
