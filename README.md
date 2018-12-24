@@ -13,5 +13,8 @@ A demo of the OCT Transparency Module is accessible at [OCT Core Demo](http://gi
 
 ![OCT-Core](/images/OCT-Core.jpg)
 
+### Installation 
+The OCT-Code can be installed for personal use using Docker. Installation instructions are available [here](https://github.com/geo-c/OCT-CoreDocs/tree/master/Installation).
+
 ### License
 The code is distributed under the Apache v2 License.
